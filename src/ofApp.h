@@ -9,6 +9,9 @@
 class ofApp : public ofBaseApp{
 
 public:
+    double tsKinectFPS;
+    uint32_t kinectFrameCounter;
+    double kinectFPS;
     
     ofxKinectV2 *kinect;
     ofTexture texRGB;

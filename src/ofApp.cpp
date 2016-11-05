@@ -25,6 +25,8 @@ void ofApp::setup() {
     // set background color
     ofBackground(30, 30, 30);
     
+    kinectFrameCounter = 0;
+    
     // ofxKinect2 guarantees that device ID 0 will always refer to the same kinect
     // if there's only ever one plugged in
     // see: https://github.com/ofTheo/ofxKinectV2/blob/a536824/src/ofxKinectV2.h#L20
@@ -33,18 +35,18 @@ void ofApp::setup() {
     kinect = new ofxKinectV2();
     
     // connect to the kinect. updates occur on a separate thread
-    bool didOpenSuccessfudlly = kinect->open(kinectId);
+    bool didOpenSuccessfully = kinect->open(kinectId);
     
-    if (!didOpenSuccessfudlly) {
+    if (!didOpenSuccessfully) {
         std::exit(1);
     }
     
-    model_parameters.model_location = MODEL_LOCATION;
-    model_parameters.face_detector_location = FACE_DETECTOR_LOCATION;
-    model_parameters.use_face_template = true;
-    // This is so that the model would not try re-initialising itself
-    model_parameters.reinit_video_every = -1;
-    model_parameters.curr_face_detector = LandmarkDetector::FaceModelParameters::HOG_SVM_DETECTOR;
+//    model_parameters.model_location = MODEL_LOCATION;
+//    model_parameters.face_detector_location = FACE_DETECTOR_LOCATION;
+//    model_parameters.use_face_template = true;
+//    // This is so that the model would not try re-initialising itself
+//    model_parameters.reinit_video_every = -1;
+//    model_parameters.curr_face_detector = LandmarkDetector::FaceModelParameters::HOG_SVM_DETECTOR;
 
     
     //model = new LandmarkDetector::CLNF(model_parameters.model_location);
@@ -59,7 +61,14 @@ void ofApp::update() {
     
     if (kinect->isFrameNew()) {
         initialized = true;
-        // ofLog() << "Loading new frame to buffers";
+        
+        // Update Kinect FPS tracking
+        if (++kinectFrameCounter == 15) {
+            double tsNow = (double)ofGetElapsedTimeMillis();
+            kinectFPS = (double)kinectFrameCounter / ((tsNow/1000) - (tsKinectFPS/1000));
+            tsKinectFPS = tsNow;
+            kinectFrameCounter = 0;
+        }
         
         ofPixels pixelsRGB = kinect->getRgbPixels();
         
@@ -77,22 +86,22 @@ void ofApp::update() {
         
         
         //LandmarkDetector::DetectLandmarksInVideo(matGrayscale, *model, model_parameters);
-        
-        ofLog() << "size:" << face_detections.size();
-        
-        
-        if (ofGetFrameNum() % 10 == 0) {
-            ofLog() << "Running model (" << ofGetFrameNum() << ")";
-
-           // if (model->tracking_initialised) {
-           //     ofLog() << "tracking initialized!";
-           // }
-            
-            //2D landmark location (in image):
-            
-            //clnf_model.detected_landmarks contains a double matrix in following format [x1;x2;...xn;y1;y2...yn]
-            // describing the detected landmark locations in the image
-        }
+//        
+//        ofLog() << "size:" << face_detections.size();
+//        
+//        
+//        if (ofGetFrameNum() % 10 == 0) {
+//            ofLog() << "Running model (" << ofGetFrameNum() << ")";
+//
+//           // if (model->tracking_initialised) {
+//           //     ofLog() << "tracking initialized!";
+//           // }
+//            
+//            //2D landmark location (in image):
+//            
+//            //clnf_model.detected_landmarks contains a double matrix in following format [x1;x2;...xn;y1;y2...yn]
+//            // describing the detected landmark locations in the image
+//        }
     }
     
 }
@@ -101,15 +110,11 @@ void ofApp::update() {
 void ofApp::draw() {
     if (!initialized) return;
     
-    //ofEnableAlphaBlending();
-    //ofSetColor(255,255,255,100);
-    //texDepth.draw(0, 0, 1920, 1080);
-    //ofSetColor(255,255,255,75);
-    
     texRGB.draw(0, 0);
     texDepth.draw(0, 0); //512 x 424
-    
-    //ofxCv::drawMat(matGrayscale, 0, 0);
+
+    ofDrawBitmapStringHighlight("Kinect FPS: " + ofToString(kinectFPS, 2), 0, 10);
+    ofDrawBitmapString("Draw FPS: " + ofToString(ofGetFrameRate(), 2), 0, 30);
     
     for (int i = 0; i < face_detections.size(); i++) {
         cv::Rect d = face_detections[i];
@@ -120,6 +125,7 @@ void ofApp::draw() {
         }
         drawBoundingBox(d.x, d.y, d.width, d.height, 5);
     }
+    
 }
 
 //--------------------------------------------------------------

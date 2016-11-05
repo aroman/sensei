@@ -27,6 +27,7 @@
 		77D7C33A9AFE9D7F89F21360 /* frame_listener_impl.cpp in Sources */ = {isa = PBXBuildFile; fileRef = D514C0EBF0EA01B68AC77810 /* frame_listener_impl.cpp */; };
 		8026D4DC6CBB03BE372112C9 /* depth_packet_stream_parser.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 6616899E2B8A6F79888CE06E /* depth_packet_stream_parser.cpp */; };
 		8036B3970F848021B97A1AC5 /* ObjectFinder.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 679F564F373651AED34E26FD /* ObjectFinder.cpp */; };
+		820CC0DB1DCE865B00DD2484 /* libturbojpeg.0.dylib in Frameworks */ = {isa = PBXBuildFile; fileRef = 820CC0DA1DCE865B00DD2484 /* libturbojpeg.0.dylib */; };
 		82D95CB61DCC723E002E563C /* libopencv_core.3.1.0.dylib in Frameworks */ = {isa = PBXBuildFile; fileRef = 82D95CB51DCC723E002E563C /* libopencv_core.3.1.0.dylib */; };
 		82D95CB81DCC725F002E563C /* libLandmarkDetector.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 82D95CB71DCC725F002E563C /* libLandmarkDetector.a */; };
 		82D95CBA1DCC72A4002E563C /* libtbb.dylib in Frameworks */ = {isa = PBXBuildFile; fileRef = 82D95CB91DCC72A4002E563C /* libtbb.dylib */; };
@@ -134,6 +135,7 @@
 		7D8421EFA6D834D7FF72FEB4 /* windows_common.h */ = {isa = PBXFileReference; explicitFileType = sourcecode.c.h; fileEncoding = 30; name = windows_common.h; path = ../openFrameworks/addons/ofxKinectV2/libs/libusb/include/libusb/os/windows_common.h; sourceTree = SOURCE_ROOT; };
 		7E9517082FD1BE6E74984BAE /* hotplug.h */ = {isa = PBXFileReference; explicitFileType = sourcecode.c.h; fileEncoding = 30; name = hotplug.h; path = ../openFrameworks/addons/ofxKinectV2/libs/libusb/include/libusb/hotplug.h; sourceTree = SOURCE_ROOT; };
 		7F927977A66F92BF7B856F13 /* version_nano.h */ = {isa = PBXFileReference; explicitFileType = sourcecode.c.h; fileEncoding = 30; name = version_nano.h; path = ../openFrameworks/addons/ofxKinectV2/libs/libusb/include/libusb/version_nano.h; sourceTree = SOURCE_ROOT; };
+		820CC0DA1DCE865B00DD2484 /* libturbojpeg.0.dylib */ = {isa = PBXFileReference; lastKnownFileType = "compiled.mach-o.dylib"; name = libturbojpeg.0.dylib; path = "../../../../usr/local/Cellar/jpeg-turbo/1.5.0/lib/libturbojpeg.0.dylib"; sourceTree = "<group>"; };
 		82D95CB51DCC723E002E563C /* libopencv_core.3.1.0.dylib */ = {isa = PBXFileReference; lastKnownFileType = "compiled.mach-o.dylib"; name = libopencv_core.3.1.0.dylib; path = "../../../../usr/local/Cellar/opencv3/HEAD-6c12533_4/lib/libopencv_core.3.1.0.dylib"; sourceTree = "<group>"; };
 		82D95CB71DCC725F002E563C /* libLandmarkDetector.a */ = {isa = PBXFileReference; lastKnownFileType = archive.ar; name = libLandmarkDetector.a; path = ../../../../usr/local/bin/libLandmarkDetector.a; sourceTree = "<group>"; };
 		82D95CB91DCC72A4002E563C /* libtbb.dylib */ = {isa = PBXFileReference; lastKnownFileType = "compiled.mach-o.dylib"; name = libtbb.dylib; path = "../../../../usr/local/Cellar/tbb/4.4-20160916/lib/libtbb.dylib"; sourceTree = "<group>"; };
@@ -202,6 +204,7 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				820CC0DB1DCE865B00DD2484 /* libturbojpeg.0.dylib in Frameworks */,
 				82D95CC21DCC7329002E563C /* libopencv_calib3d.3.1.0.dylib in Frameworks */,
 				82D95CC01DCC7307002E563C /* libopencv_imgproc.3.1.0.dylib in Frameworks */,
 				82D95CBC1DCC72C9002E563C /* libopencv_objdetect.3.1.0.dylib in Frameworks */,
@@ -406,6 +409,7 @@
 		82D95CB41DCC723E002E563C /* Frameworks */ = {
 			isa = PBXGroup;
 			children = (
+				820CC0DA1DCE865B00DD2484 /* libturbojpeg.0.dylib */,
 				82D95CC11DCC7329002E563C /* libopencv_calib3d.3.1.0.dylib */,
 				82D95CBF1DCC7307002E563C /* libopencv_imgproc.3.1.0.dylib */,
 				82D95CBD1DCC72E4002E563C /* libdlib.a */,
@@ -896,6 +900,7 @@
 					../openFrameworks/addons/ofxKinectV2/src,
 					/usr/local/include,
 					lib/3rdParty/dlib/include,
+					"/usr/local/opt/jpeg-turbo/include",
 				);
 				ICON = "$(ICON_NAME_DEBUG)";
 				ICON_FILE = "$(ICON_FILE_PATH)$(ICON)";
@@ -908,6 +913,8 @@
 					/usr/local/lib,
 					"/usr/local/Cellar/tbb/4.4-20160916/lib",
 					"$(PROJECT_DIR)/lib/3rdParty/dlib/build",
+					"/usr/local/opt/jpeg-turbo/lib",
+					"/usr/local/Cellar/jpeg-turbo/1.5.0/lib",
 				);
 				OTHER_LDFLAGS = (
 					"$(OF_CORE_FRAMEWORKS)",
@@ -943,6 +950,7 @@
 					../openFrameworks/addons/ofxKinectV2/src,
 					/usr/local/include,
 					lib/3rdParty/dlib/include,
+					"/usr/local/opt/jpeg-turbo/include",
 				);
 				ICON = "$(ICON_NAME_RELEASE)";
 				ICON_FILE = "$(ICON_FILE_PATH)$(ICON)";
@@ -955,6 +963,8 @@
 					/usr/local/lib,
 					"/usr/local/Cellar/tbb/4.4-20160916/lib",
 					"$(PROJECT_DIR)/lib/3rdParty/dlib/build",
+					"/usr/local/opt/jpeg-turbo/lib",
+					"/usr/local/Cellar/jpeg-turbo/1.5.0/lib",
 				);
 				OTHER_LDFLAGS = (
 					"$(OF_CORE_FRAMEWORKS)",
