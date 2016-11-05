@@ -1,0 +1,3 @@
+/Users/avi/Developer/OpenFace/lib/3rdParty/dlib/build/CMakeFiles/edit_cache.dir
+/Users/avi/Developer/OpenFace/lib/3rdParty/dlib/build/CMakeFiles/rebuild_cache.dir
+/Users/avi/Developer/OpenFace/lib/3rdParty/dlib/build/CMakeFiles/dlib.dir
