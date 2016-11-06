@@ -84,7 +84,6 @@ void ofApp::setup() {
     
     det_parameters.push_back(model_parameters);
     
-    LandmarkDetector::CLNF model(model_parameters.model_location);
     model.face_detector_HAAR.load(model_parameters.face_detector_location);
     model.face_detector_location = model_parameters.face_detector_location;
     
@@ -160,7 +159,7 @@ void ofApp::updateKinect() {
         
         // Convert depth frame to mat
         matDepth = cv::Mat(pixelsDepthRaw.getHeight(), pixelsDepthRaw.getWidth(), ofxCv::getCvImageType(pixelsDepthRaw), pixelsDepthRaw.getData(), 0);
-        
+
         initialized = true;
     }
 }
@@ -174,12 +173,10 @@ void ofApp::detectFaces() {
 //    LandmarkDetector::DetectFacesHOG(face_detections, matGrayscale, model->face_detector_HOG, confidences);
     
     
-    ofLog() << "faces detected:" << face_detections.size();
+//    ofLog() << "faces detected:" << face_detections.size();
 }
 
 void ofApp::updateFeatures() {
-    
-
     float fx, fy, cx, cy;
     int d = 0;
     
@@ -206,9 +203,6 @@ void ofApp::updateFeatures() {
 
     // The actual facial landmark detection / tracking
     bool detection_success;
-    
-    vector<cv::Rect_<double> > face_detections;
-    
 
     if (model_parameters.curr_face_detector == LandmarkDetector::FaceModelParameters::HOG_SVM_DETECTOR) {
         vector<double> confidences;
@@ -224,40 +218,43 @@ void ofApp::updateFeatures() {
     for (int i = 0; i < face_detections.size(); i++) {
         ofLog() << "Face detected at:" << face_detections[i].x << "," << face_detections[i].y;
     }
-//
-//    // Go through every model and update the tracking
-//    tbb::parallel_for(0, (int)models.size(), [&](int model_ind) {
-//        bool detection_success = false;
-//        
-//        // If the current model has failed more than 4 times in a row, remove it
-//        if (models[model_ind].failures_in_a_row > 4) {
-//            active_models[model_ind] = false;
-//            models[model_ind].Reset();
-//        }
-//        
-//        // If the model is inactive reactivate it with new detections
-//        if (!active_models[model_ind]) {
-//            for (size_t detection_ind = 0; detection_ind < face_detections.size(); ++detection_ind) {
-//                // if it was not taken by another tracker take it (if it is false swap it to true and enter detection, this makes it parallel safe)
-//                if (face_detections_used[detection_ind].compare_and_swap(true, false) == false) {
-//                    // Reinitialise the model
-//                    models[model_ind].Reset();
-//                    // This ensures that a wider window is used for the initial landmark localisation
-//                    models[model_ind].detection_success = false;
-//                    
-//                    detection_success = LandmarkDetector::DetectLandmarksInVideo(matGrayscale, matDepth, face_detections[detection_ind], models[model_ind], det_parameters[model_ind]);
-//                    
-//                    // This activates the model
-//                    active_models[model_ind] = true;
-//                    // break out of the loop as the tracker has been reinitialised
-//                    break;
-//                }
-//            }
-//        } else {
-//            // The actual facial landmark detection / tracking
-//            detection_success = LandmarkDetector::DetectLandmarksInVideo(matGrayscale, matDepth, models[model_ind], det_parameters[model_ind]);
-//        }
-//    });
+
+    // Go through every model and update the tracking
+    tbb::parallel_for(0, (int)models.size(), [&](int model_ind) {
+        detection_success = false;
+
+        // If the current model has failed more than 4 times in a row, remove it
+        if (models[model_ind].failures_in_a_row > 4) {
+            active_models[model_ind] = false;
+            models[model_ind].Reset();
+        }
+
+        cv::Mat_<float> depth_image;
+
+        // If the model is inactive reactivate it with new detections
+        if (!active_models[model_ind]) {
+            for (size_t detection_ind = 0; detection_ind < face_detections.size(); ++detection_ind) {
+                // if it was not taken by another tracker take it (if it is false swap it to true and enter detection, this makes it parallel safe)
+                if (face_detections_used[detection_ind].compare_and_swap(true, false) == false) {
+                    // Reinitialise the modelm
+                    models[model_ind].Reset();
+                    // This ensures that a wider window is used for the initial landmark localisation
+
+                    models[model_ind].detection_success = false;
+
+                    detection_success = LandmarkDetector::DetectLandmarksInVideo(matGrayscale, models[model_ind], det_parameters[model_ind]);
+
+                    // This activates the model
+                    active_models[model_ind] = true;
+                    // break out of the loop as the tracker has been reinitialised
+                    break;
+                }
+            }
+        } else {
+            // The actual facial landmark detection / tracking
+            detection_success = LandmarkDetector::DetectLandmarksInVideo(matGrayscale, models[model_ind], det_parameters[model_ind]);
+        }
+    });
     
     // Go through every model and visualise the results
     for (size_t model_ind = 0; model_ind < models.size(); ++model_ind) {
@@ -319,20 +316,17 @@ void ofApp::updateFeatures() {
 //        clnf_models[i].Reset();
 //        active_models[i] = false;
 //    }
-    
-    
+
 }
 
 //--------------------------------------------------------------
 void ofApp::update() {
     updateKinect();
-    if (initialized) {
-//        detectFaces();
-    }
+    if (!initialized) return;
     
     bool all_models_active = true;
-    for (unsigned int model = 0; model < models.size(); ++model) {
-        if (!active_models[model]) {
+    for (unsigned int i = 0; i < models.size(); ++i) {
+        if (!active_models[i]) {
             all_models_active = false;
         }
     }
@@ -357,16 +351,16 @@ void ofApp::draw() {
     textFont.drawString("Draw FPS: " + ofToString(ofGetFrameRate(), 2), 10, ofGetHeight() - (3 * textFont.getSize()));
     ofSetColor(ofColor::white);
     
-    for (int i = 0; i < face_detections.size(); i++) {
-        cv::Rect d = face_detections[i];
-        // skip tiny "faces" because there's a huge false-positive rate
-        ofLog() << d.width * d.height;
-        if ((d.width * d.height) < 5000) {
-            continue;
-        }
-        drawBoundingBox(d.x, d.y, d.width, d.height, 5);
-    }
-    
+//    for (int i = 0; i < face_detections.size(); i++) {
+//        cv::Rect d = face_detections[i];
+//        // skip tiny "faces" because there's a huge false-positive rate
+//        ofLog() << d.width * d.height;
+//        if ((d.width * d.height) < 5000) {
+//            continue;
+//        }
+//        drawBoundingBox(d.x, d.y, d.width, d.height, 5);
+//    }
+//
 }
 
 //--------------------------------------------------------------
