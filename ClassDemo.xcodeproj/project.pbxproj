@@ -31,6 +31,7 @@
 		820CC1A81DCEADFA00DD2484 /* classifiers in CopyFiles */ = {isa = PBXBuildFile; fileRef = 820CC1A51DCEADFA00DD2484 /* classifiers */; };
 		820CC1A91DCEADFA00DD2484 /* Hack-Regular.ttf in CopyFiles */ = {isa = PBXBuildFile; fileRef = 820CC1A61DCEADFA00DD2484 /* Hack-Regular.ttf */; };
 		820CC1AA1DCEADFA00DD2484 /* model in CopyFiles */ = {isa = PBXBuildFile; fileRef = 820CC1A71DCEADFA00DD2484 /* model */; };
+		829422DD1DCED8BE001877B9 /* libFaceAnalyser.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 829422DC1DCED8BE001877B9 /* libFaceAnalyser.a */; };
 		82C39F9E1DCEB96100BDB3C0 /* libdlib.19.1.0.dylib in Frameworks */ = {isa = PBXBuildFile; fileRef = 82C39F9D1DCEB96100BDB3C0 /* libdlib.19.1.0.dylib */; };
 		82D95CB61DCC723E002E563C /* libopencv_core.3.1.0.dylib in Frameworks */ = {isa = PBXBuildFile; fileRef = 82D95CB51DCC723E002E563C /* libopencv_core.3.1.0.dylib */; };
 		82D95CB81DCC725F002E563C /* libLandmarkDetector.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 82D95CB71DCC725F002E563C /* libLandmarkDetector.a */; };
@@ -145,6 +146,7 @@
 		820CC1A51DCEADFA00DD2484 /* classifiers */ = {isa = PBXFileReference; lastKnownFileType = folder; name = classifiers; path = resources/classifiers; sourceTree = "<group>"; };
 		820CC1A61DCEADFA00DD2484 /* Hack-Regular.ttf */ = {isa = PBXFileReference; lastKnownFileType = file; name = "Hack-Regular.ttf"; path = "resources/Hack-Regular.ttf"; sourceTree = "<group>"; };
 		820CC1A71DCEADFA00DD2484 /* model */ = {isa = PBXFileReference; lastKnownFileType = folder; name = model; path = resources/model; sourceTree = "<group>"; };
+		829422DC1DCED8BE001877B9 /* libFaceAnalyser.a */ = {isa = PBXFileReference; lastKnownFileType = archive.ar; name = libFaceAnalyser.a; path = ../../../../usr/local/bin/libFaceAnalyser.a; sourceTree = "<group>"; };
 		82C39F9D1DCEB96100BDB3C0 /* libdlib.19.1.0.dylib */ = {isa = PBXFileReference; lastKnownFileType = "compiled.mach-o.dylib"; name = libdlib.19.1.0.dylib; path = ../../../../usr/local/Cellar/dlib/19.1_2/lib/libdlib.19.1.0.dylib; sourceTree = "<group>"; };
 		82D95CB51DCC723E002E563C /* libopencv_core.3.1.0.dylib */ = {isa = PBXFileReference; lastKnownFileType = "compiled.mach-o.dylib"; name = libopencv_core.3.1.0.dylib; path = "../../../../usr/local/Cellar/opencv3/HEAD-6c12533_4/lib/libopencv_core.3.1.0.dylib"; sourceTree = "<group>"; };
 		82D95CB71DCC725F002E563C /* libLandmarkDetector.a */ = {isa = PBXFileReference; lastKnownFileType = archive.ar; name = libLandmarkDetector.a; path = ../../../../usr/local/bin/libLandmarkDetector.a; sourceTree = "<group>"; };
@@ -221,6 +223,7 @@
 				82D95CBC1DCC72C9002E563C /* libopencv_objdetect.3.1.0.dylib in Frameworks */,
 				82D95CB61DCC723E002E563C /* libopencv_core.3.1.0.dylib in Frameworks */,
 				82D95CBA1DCC72A4002E563C /* libtbb.dylib in Frameworks */,
+				829422DD1DCED8BE001877B9 /* libFaceAnalyser.a in Frameworks */,
 				82D95CB81DCC725F002E563C /* libLandmarkDetector.a in Frameworks */,
 				E4328149138ABC9F0047C5CB /* openFrameworksDebug.a in Frameworks */,
 				B3ACFAB69F9C4AC9F6E8577E /* OpenCL.framework in Frameworks */,
@@ -429,6 +432,7 @@
 		82D95CB41DCC723E002E563C /* Frameworks */ = {
 			isa = PBXGroup;
 			children = (
+				829422DC1DCED8BE001877B9 /* libFaceAnalyser.a */,
 				82C39F9D1DCEB96100BDB3C0 /* libdlib.19.1.0.dylib */,
 				820CC0DA1DCE865B00DD2484 /* libturbojpeg.0.dylib */,
 				82D95CC11DCC7329002E563C /* libopencv_calib3d.3.1.0.dylib */,
