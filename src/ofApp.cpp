@@ -62,7 +62,7 @@ void ofApp::setup() {
     // see: https://github.com/ofTheo/ofxKinectV2/blob/a536824/src/ofxKinectV2.h#L20
     int kinectId = 0;
     
-    textFont.loadFont("../Resources/Hack-Regular.ttf", 28, true);
+    textFont.load("../Resources/Hack-Regular.ttf", 28, true);
     
     kinect = new ofxKinectV2();
     
