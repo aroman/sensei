@@ -28,6 +28,9 @@
 		8026D4DC6CBB03BE372112C9 /* depth_packet_stream_parser.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 6616899E2B8A6F79888CE06E /* depth_packet_stream_parser.cpp */; };
 		8036B3970F848021B97A1AC5 /* ObjectFinder.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 679F564F373651AED34E26FD /* ObjectFinder.cpp */; };
 		820CC0DB1DCE865B00DD2484 /* libturbojpeg.0.dylib in Frameworks */ = {isa = PBXBuildFile; fileRef = 820CC0DA1DCE865B00DD2484 /* libturbojpeg.0.dylib */; };
+		820CC1A81DCEADFA00DD2484 /* classifiers in CopyFiles */ = {isa = PBXBuildFile; fileRef = 820CC1A51DCEADFA00DD2484 /* classifiers */; };
+		820CC1A91DCEADFA00DD2484 /* Hack-Regular.ttf in CopyFiles */ = {isa = PBXBuildFile; fileRef = 820CC1A61DCEADFA00DD2484 /* Hack-Regular.ttf */; };
+		820CC1AA1DCEADFA00DD2484 /* model in CopyFiles */ = {isa = PBXBuildFile; fileRef = 820CC1A71DCEADFA00DD2484 /* model */; };
 		82D95CB61DCC723E002E563C /* libopencv_core.3.1.0.dylib in Frameworks */ = {isa = PBXBuildFile; fileRef = 82D95CB51DCC723E002E563C /* libopencv_core.3.1.0.dylib */; };
 		82D95CB81DCC725F002E563C /* libLandmarkDetector.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 82D95CB71DCC725F002E563C /* libLandmarkDetector.a */; };
 		82D95CBA1DCC72A4002E563C /* libtbb.dylib in Frameworks */ = {isa = PBXBuildFile; fileRef = 82D95CB91DCC72A4002E563C /* libtbb.dylib */; };
@@ -78,8 +81,11 @@
 			isa = PBXCopyFilesBuildPhase;
 			buildActionMask = 2147483647;
 			dstPath = "";
-			dstSubfolderSpec = 10;
+			dstSubfolderSpec = 7;
 			files = (
+				820CC1A81DCEADFA00DD2484 /* classifiers in CopyFiles */,
+				820CC1A91DCEADFA00DD2484 /* Hack-Regular.ttf in CopyFiles */,
+				820CC1AA1DCEADFA00DD2484 /* model in CopyFiles */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -136,6 +142,9 @@
 		7E9517082FD1BE6E74984BAE /* hotplug.h */ = {isa = PBXFileReference; explicitFileType = sourcecode.c.h; fileEncoding = 30; name = hotplug.h; path = ../openFrameworks/addons/ofxKinectV2/libs/libusb/include/libusb/hotplug.h; sourceTree = SOURCE_ROOT; };
 		7F927977A66F92BF7B856F13 /* version_nano.h */ = {isa = PBXFileReference; explicitFileType = sourcecode.c.h; fileEncoding = 30; name = version_nano.h; path = ../openFrameworks/addons/ofxKinectV2/libs/libusb/include/libusb/version_nano.h; sourceTree = SOURCE_ROOT; };
 		820CC0DA1DCE865B00DD2484 /* libturbojpeg.0.dylib */ = {isa = PBXFileReference; lastKnownFileType = "compiled.mach-o.dylib"; name = libturbojpeg.0.dylib; path = "../../../../usr/local/Cellar/jpeg-turbo/1.5.0/lib/libturbojpeg.0.dylib"; sourceTree = "<group>"; };
+		820CC1A51DCEADFA00DD2484 /* classifiers */ = {isa = PBXFileReference; lastKnownFileType = folder; name = classifiers; path = resources/classifiers; sourceTree = "<group>"; };
+		820CC1A61DCEADFA00DD2484 /* Hack-Regular.ttf */ = {isa = PBXFileReference; lastKnownFileType = file; name = "Hack-Regular.ttf"; path = "resources/Hack-Regular.ttf"; sourceTree = "<group>"; };
+		820CC1A71DCEADFA00DD2484 /* model */ = {isa = PBXFileReference; lastKnownFileType = folder; name = model; path = resources/model; sourceTree = "<group>"; };
 		82D95CB51DCC723E002E563C /* libopencv_core.3.1.0.dylib */ = {isa = PBXFileReference; lastKnownFileType = "compiled.mach-o.dylib"; name = libopencv_core.3.1.0.dylib; path = "../../../../usr/local/Cellar/opencv3/HEAD-6c12533_4/lib/libopencv_core.3.1.0.dylib"; sourceTree = "<group>"; };
 		82D95CB71DCC725F002E563C /* libLandmarkDetector.a */ = {isa = PBXFileReference; lastKnownFileType = archive.ar; name = libLandmarkDetector.a; path = ../../../../usr/local/bin/libLandmarkDetector.a; sourceTree = "<group>"; };
 		82D95CB91DCC72A4002E563C /* libtbb.dylib */ = {isa = PBXFileReference; lastKnownFileType = "compiled.mach-o.dylib"; name = libtbb.dylib; path = "../../../../usr/local/Cellar/tbb/4.4-20160916/lib/libtbb.dylib"; sourceTree = "<group>"; };
@@ -395,6 +404,16 @@
 			name = CLD;
 			sourceTree = "<group>";
 		};
+		820CC1AB1DCEAE0600DD2484 /* Resources */ = {
+			isa = PBXGroup;
+			children = (
+				820CC1A51DCEADFA00DD2484 /* classifiers */,
+				820CC1A61DCEADFA00DD2484 /* Hack-Regular.ttf */,
+				820CC1A71DCEADFA00DD2484 /* model */,
+			);
+			name = Resources;
+			sourceTree = "<group>";
+		};
 		829924D1AFD56F167390B293 /* protonect */ = {
 			isa = PBXGroup;
 			children = (
@@ -559,6 +578,7 @@
 		E4B69B4A0A3A1720003C02F2 = {
 			isa = PBXGroup;
 			children = (
+				820CC1AB1DCEAE0600DD2484 /* Resources */,
 				E4B6FCAD0C3E899E008CF71C /* openFrameworks-Info.plist */,
 				E4EB6923138AFD0F00A09F29 /* Project.xcconfig */,
 				E4B69E1C0A3A1BDC003C02F2 /* src */,

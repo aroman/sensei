@@ -13,10 +13,12 @@ public:
     uint32_t kinectFrameCounter;
     double kinectFPS;
     
+    ofTrueTypeFont textFont;
+    
     ofxKinectV2 *kinect;
     ofTexture texRGB;
     ofTexture texDepth;
-    cv::Mat_<uchar> matGrayscale;
+    cv::Mat matGrayscale;
     
     LandmarkDetector::FaceModelParameters model_parameters;
     LandmarkDetector::CLNF *model;
@@ -28,6 +30,10 @@ public:
     void setup();
     void update();
     void draw();
+    
+    void updateKinect();
+    void detectFaces();
+    void updateFeatures();
 
     void keyPressed(int key);
     void keyReleased(int key);
