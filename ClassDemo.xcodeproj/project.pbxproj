@@ -934,14 +934,16 @@
 				INSTALL_PATH = /Applications;
 				LIBRARY_SEARCH_PATHS = (
 					"$(inherited)",
-					"/usr/local/Cellar/opencv3/HEAD-6c12533_4/lib",
 					/usr/local/bin,
 					/usr/local/lib,
-					"/usr/local/Cellar/tbb/4.4-20160916/lib",
-					"$(PROJECT_DIR)/lib/3rdParty/dlib/build",
 					"/usr/local/opt/jpeg-turbo/lib",
 					"/usr/local/Cellar/jpeg-turbo/1.5.0/lib",
 					/usr/local/Cellar/dlib/19.1_2/lib,
+				);
+				OTHER_CPLUSPLUSFLAGS = (
+					"-D__MACOSX_CORE__",
+					"-Wshadow",
+					"-mtune=native",
 				);
 				OTHER_LDFLAGS = (
 					"$(OF_CORE_FRAMEWORKS)",
@@ -985,14 +987,16 @@
 				INSTALL_PATH = /Applications;
 				LIBRARY_SEARCH_PATHS = (
 					"$(inherited)",
-					"/usr/local/Cellar/opencv3/HEAD-6c12533_4/lib",
 					/usr/local/bin,
 					/usr/local/lib,
-					"/usr/local/Cellar/tbb/4.4-20160916/lib",
-					"$(PROJECT_DIR)/lib/3rdParty/dlib/build",
 					"/usr/local/opt/jpeg-turbo/lib",
 					"/usr/local/Cellar/jpeg-turbo/1.5.0/lib",
 					/usr/local/Cellar/dlib/19.1_2/lib,
+				);
+				OTHER_CPLUSPLUSFLAGS = (
+					"-D__MACOSX_CORE__",
+					"-Wshadow",
+					"-mtune=native",
 				);
 				OTHER_LDFLAGS = (
 					"$(OF_CORE_FRAMEWORKS)",
