@@ -42,17 +42,13 @@ void NonOverlapingDetections(const vector<LandmarkDetector::CLNF>& models, vecto
     }
 }
 
-
-
 /**
  * @brief   Initial openFrameworks setup
  *
  * General set-up, initializations, etc. Called once, before update() or draw() get called.
  */
 void ofApp::setup() {
-    
     initialized = false;
-    ofBackground(30, 30, 30);
     kinectFrameCounter = 0;
     
     // ofxKinect2 guarantees that device ID 0 will always refer to the same kinect
@@ -79,13 +75,9 @@ void ofApp::setup() {
     default_parameters.reinit_video_every = -1;
     default_parameters.curr_face_detector = LandmarkDetector::FaceModelParameters::HOG_SVM_DETECTOR;
     default_parameters.model_location = "../Resources/model";
-    default_parameters.face_detector_location = "../Resources/classifiers/haarcascade_frontalface_default.xml";
     default_parameters.track_gaze = true;
 
     LandmarkDetector::CLNF default_model(default_parameters.model_location);
-
-    default_model.face_detector_HAAR.load(default_parameters.face_detector_location);
-    default_model.face_detector_location = default_parameters.face_detector_location;
     
     models.reserve(NUM_FACES_MAX);
     for (int i = 0; i < NUM_FACES_MAX; ++i) {
@@ -154,21 +146,14 @@ void ofApp::updateKinect() {
 }
 
 bool ofApp::detectFaces() {
-    // The actual facial landmark detection / tracking
-    bool detection_success = false;
+    vector<double> confidences;
+    bool detection_success = LandmarkDetector::DetectFacesHOG(faces_detected, matGrayscale, confidences);
+
+    // Keep only non overlapping detectionsb
+    NonOverlapingDetections(models, faces_detected);
     
-    if (model_parameters[0].curr_face_detector == LandmarkDetector::FaceModelParameters::HOG_SVM_DETECTOR) {
-        vector<double> confidences;
-        detection_success = LandmarkDetector::DetectFacesHOG(face_detections, matGrayscale, models[0].face_detector_HOG, confidences);
-    } else {
-        detection_success = LandmarkDetector::DetectFaces(face_detections, matGrayscale, models[0].face_detector_HAAR);
-    }
-    
-    // Keep only non overlapping detections
-    NonOverlapingDetections(models, face_detections);
-    
-    for (int i = 0; i < face_detections.size(); i++) {
-        ofLog() << "Face detected at:" << face_detections[i].x << "," << face_detections[i].y;
+    for (int i = 0; i < faces_detected.size(); i++) {
+        ofLog() << "Face detected at:" << faces_detected[i].x << "," << faces_detected[i].y;
     }
     
     return detection_success;
@@ -187,7 +172,7 @@ bool ofApp::detectLandmarks() {
     vector<cv::Mat_<double>> detected_landmarks_video;
 
     // also convert to a concurrent vector
-    vector<tbb::atomic<bool>> face_detections_used(face_detections.size());
+    vector<tbb::atomic<bool>> faces_used(faces_detected.size());
     
     // Go through every model and update the tracking
     tbb::parallel_for(0, (int)models.size(), [&](int model_ind) {
@@ -199,9 +184,9 @@ bool ofApp::detectLandmarks() {
 
         // If the model is inactive reactivate it with new detections
         if (!active_models[model_ind]) {
-            for (size_t detection_ind = 0; detection_ind < face_detections.size(); ++detection_ind) {
+            for (size_t detection_ind = 0; detection_ind < faces_detected.size(); ++detection_ind) {
                 // if it was not taken by another tracker take it (if it is false swap it to true and enter detection, this makes it parallel safe)
-                if (face_detections_used[detection_ind].compare_and_swap(true, false) == false) {
+                if (faces_used[detection_ind].compare_and_swap(true, false) == false) {
                     // Reinitialise the modelm
                     models[model_ind].Reset();
                     // This ensures that a wider window is used for the initial landmark localisation
@@ -266,8 +251,7 @@ void ofApp::update() {
     if (!initialized) return;
 
     if (ofGetFrameNum() % 8 == 0) {
-        ofLog() << "Running model (" << ofGetFrameNum() << ")";
-        detectFaces();
+        bool success = detectFaces();
     }
 
     bool all_models_active = true;
@@ -296,8 +280,8 @@ void ofApp::draw() {
     textFont.drawString("Draw FPS: " + ofToString(ofGetFrameRate(), 2), 10, ofGetHeight() - (3 * textFont.getSize()));
     ofSetColor(ofColor::white);
     
-    for (int i = 0; i < face_detections.size(); i++) {
-        cv::Rect d = face_detections[i];
+    for (int i = 0; i < faces_detected.size(); i++) {
+        cv::Rect d = faces_detected[i];
         drawBoundingBox(d.x, d.y, d.width, d.height, 5);
     }
 

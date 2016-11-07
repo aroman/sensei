@@ -29,8 +29,9 @@ public:
     vector<LandmarkDetector::CLNF> models;
     vector<LandmarkDetector::FaceModelParameters> model_parameters;
     vector<bool> active_models;
-    vector<cv::Rect_<double> > face_detections;
+    vector<cv::Rect_<double> > faces_detected;
     FaceAnalysis::FaceAnalyser face_analyser;
+    
     
     void setup();
     void update();
