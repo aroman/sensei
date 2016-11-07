@@ -25,14 +25,14 @@ public:
     
     bool initialized;
     
-    LandmarkDetector::FaceModelParameters model_parameters;
-    // wtf is this, actually?
+    float fx, fy, cx, cy;
     vector<LandmarkDetector::FaceModelParameters> det_parameters;
     LandmarkDetector::CLNF model;
     // The modules that are being used for tracking
     vector<LandmarkDetector::CLNF> models;
     vector<bool> active_models;
     vector<cv::Rect_<double> > face_detections;
+    FaceAnalysis::FaceAnalyser face_analyser;
     
     
     void setup();
@@ -40,8 +40,8 @@ public:
     void draw();
     
     void updateKinect();
-    void detectFaces();
-    void updateFeatures();
+    bool detectFaces();
+    bool detectLandmarks();
 
     void keyPressed(int key);
     void keyReleased(int key);

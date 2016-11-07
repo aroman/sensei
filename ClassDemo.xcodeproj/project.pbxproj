@@ -943,6 +943,7 @@
 				OTHER_CPLUSPLUSFLAGS = (
 					"-D__MACOSX_CORE__",
 					"-Wshadow",
+					"-Wunused-variable",
 					"-mtune=native",
 				);
 				OTHER_LDFLAGS = (
@@ -996,6 +997,7 @@
 				OTHER_CPLUSPLUSFLAGS = (
 					"-D__MACOSX_CORE__",
 					"-Wshadow",
+					"-Wunused-variable",
 					"-mtune=native",
 				);
 				OTHER_LDFLAGS = (
