@@ -81,24 +81,25 @@ void ofApp::setup() {
     default_parameters.model_location = "../Resources/model";
     default_parameters.face_detector_location = "../Resources/classifiers/haarcascade_frontalface_default.xml";
     default_parameters.track_gaze = true;
-    
-    model.face_detector_HAAR.load(default_parameters.face_detector_location);
-    model.face_detector_location = default_parameters.face_detector_location;
+
+    LandmarkDetector::CLNF default_model(default_parameters.model_location);
+
+    default_model.face_detector_HAAR.load(default_parameters.face_detector_location);
+    default_model.face_detector_location = default_parameters.face_detector_location;
     
     models.reserve(NUM_FACES_MAX);
     for (int i = 0; i < NUM_FACES_MAX; ++i) {
-        models.push_back(model);
+        models.push_back(default_model);
+        model_parameters.push_back(default_parameters);
         active_models.push_back(false);
-        det_parameters.push_back(default_parameters);
     }
-    
-//     Grab camera parameters, if they are not defined (approximate values will be used)
-//    LandmarkDetector::get_camera_params(d, fx, fy, cx, cy);
 
-    vector<string> output_similarity_align;
+//    // Grab camera parameters, if they are not defined (approximate values will be used)
+//    LandmarkDetector::get_camera_params(d, fx, fy, cx, cy);
 
     // Used for image masking
     const string tri_loc = "../Resources/model/tris_68_full.txt";
+    
     string au_loc;
     
     bool dynamic = true;
@@ -156,7 +157,7 @@ bool ofApp::detectFaces() {
     // The actual facial landmark detection / tracking
     bool detection_success = false;
     
-    if (det_parameters[0].curr_face_detector == LandmarkDetector::FaceModelParameters::HOG_SVM_DETECTOR) {
+    if (model_parameters[0].curr_face_detector == LandmarkDetector::FaceModelParameters::HOG_SVM_DETECTOR) {
         vector<double> confidences;
         detection_success = LandmarkDetector::DetectFacesHOG(face_detections, matGrayscale, models[0].face_detector_HOG, confidences);
     } else {
@@ -207,7 +208,7 @@ bool ofApp::detectLandmarks() {
 
                     models[model_ind].detection_success = false;
 
-                    detection_success = LandmarkDetector::DetectLandmarksInVideo(matGrayscale, models[model_ind], det_parameters[model_ind]);
+                    detection_success = LandmarkDetector::DetectLandmarksInVideo(matGrayscale, models[model_ind], model_parameters[model_ind]);
 
                     // This activates the model
                     active_models[model_ind] = true;
@@ -217,7 +218,7 @@ bool ofApp::detectLandmarks() {
                 }
             }
         } else {
-            detection_success = LandmarkDetector::DetectLandmarksInVideo(matGrayscale, models[model_ind], det_parameters[model_ind]);
+            detection_success = LandmarkDetector::DetectLandmarksInVideo(matGrayscale, models[model_ind], model_parameters[model_ind]);
         }
     });
     
@@ -263,7 +264,12 @@ bool ofApp::detectLandmarks() {
 void ofApp::update() {
     updateKinect();
     if (!initialized) return;
-    
+
+    if (ofGetFrameNum() % 8 == 0) {
+        ofLog() << "Running model (" << ofGetFrameNum() << ")";
+        detectFaces();
+    }
+
     bool all_models_active = true;
     for (unsigned int i = 0; i < models.size(); ++i) {
         if (!active_models[i]) {
@@ -271,9 +277,9 @@ void ofApp::update() {
         }
     }
     
-    if ((ofGetFrameNum() % 30 == 0) && !all_models_active) {
-        ofLog() << "Running model (" << ofGetFrameNum() << ")";
-        detectLandmarks();
+    if ((ofGetFrameNum() % 60 == 0) && !all_models_active) {
+//        ofLog() << "Running model (" << ofGetFrameNum() << ")";
+//        detectLandmarks();
     }
 }
 

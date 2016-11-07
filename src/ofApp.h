@@ -21,19 +21,16 @@ public:
     ofTexture texRGB;
     ofTexture texDepth;
     cv::Mat_<uchar> matGrayscale;
-    cv::Mat_<float>  matDepth;
+    cv::Mat_<float> matDepth;
     
     bool initialized;
     
     float fx, fy, cx, cy;
-    vector<LandmarkDetector::FaceModelParameters> det_parameters;
-    LandmarkDetector::CLNF model;
-    // The modules that are being used for tracking
     vector<LandmarkDetector::CLNF> models;
+    vector<LandmarkDetector::FaceModelParameters> model_parameters;
     vector<bool> active_models;
     vector<cv::Rect_<double> > face_detections;
     FaceAnalysis::FaceAnalyser face_analyser;
-    
     
     void setup();
     void update();
