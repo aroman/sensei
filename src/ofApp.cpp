@@ -7,7 +7,18 @@
 static const int NUM_FACES_MAX = 5;
 static const int MODEL_MAX_FAILURES_IN_A_ROW = 4;
 
-void drawBoundingBox(double x, double y, double width, double height, double thickness) {
+/**
+ * @brief   Creates an ofPath representing a bounding box with the given parameters
+ *
+ * @param 		  	x          The x position of the top-left corner of the bounding box
+ * @param 		  	y          The y position of the top-left corner of the bounding box
+ * @param 		  	width      The width of the bounding box
+ * @param 		  	height     The height of the bounding box
+ * @param 		  	thickness  The thickness of the bounding box
+ *
+ * @retval the ofPath instance created
+ */
+ofPath createBoundingBoxPath(double x, double y, double width, double height, double thickness) {
     ofPath path;
     path.setFillColor(ofColor::blue);
     path.rectangle(x, y, width, height);
@@ -16,7 +27,7 @@ void drawBoundingBox(double x, double y, double width, double height, double thi
                    y + (thickness / 2),
                    width - thickness,
                    height - thickness);
-    path.draw();
+    return path;
 }
 
 /**
@@ -71,7 +82,7 @@ void ofApp::setup() {
 
     default_parameters.use_face_template = true;
     // Model should not try to re-initialising itself
-    // TODO: more accurate comment
+    // TODO @avi more accurate comment
     default_parameters.reinit_video_every = -1;
     default_parameters.curr_face_detector = LandmarkDetector::FaceModelParameters::HOG_SVM_DETECTOR;
     default_parameters.model_location = "../Resources/model";
@@ -85,9 +96,6 @@ void ofApp::setup() {
         model_parameters.push_back(default_parameters);
         active_models.push_back(false);
     }
-
-//    // Grab camera parameters, if they are not defined (approximate values will be used)
-//    LandmarkDetector::get_camera_params(d, fx, fy, cx, cy);
 
     // Used for image masking
     const string tri_loc = "../Resources/model/tris_68_full.txt";
@@ -112,10 +120,45 @@ void ofApp::setup() {
     fx = (fx + fy) / 2.0;
     fy = fx;
 
-    // Creating a face analyser that will be used for AU extraction
-    face_analyser = FaceAnalysis::FaceAnalyser(vector<cv::Vec3d>(), 0.7, 112, 112, au_loc, tri_loc);
-} 
+//    // Creating a face analyser that will be used for AU extraction
+//    face_analyser = FaceAnalysis::FaceAnalyser(vector<cv::Vec3d>(), 0.7, 112, 112, au_loc, tri_loc);
+}
 
+
+//// Visualising the results
+//void visualise_tracking(cv::Mat& captured_image, const LandmarkDetector::CLNF& face_model, const LandmarkDetector::FaceModelParameters& det_parameters, cv::Point3f gazeDirection0, cv::Point3f gazeDirection1, int frame_count, double fx, double fy, double cx, double cy) {
+//    // Drawing the facial landmarks on the face and the bounding box around it if tracking is successful and initialised
+//    double detection_certainty = face_model.detection_certainty;
+//    bool detection_success = face_model.detection_success;
+//    double visualisation_boundary = 0.2;
+//    // Only draw if the reliability is reasonable, the value is slightly ad-hoc
+//    if (detection_certainty < visualisation_boundary) {
+//        LandmarkDetector::Draw(captured_image, face_model);
+//        double vis_certainty = detection_certainty;
+//        if (vis_certainty > 1)
+//            vis_certainty = 1;
+//        if (vis_certainty < -1)
+//            vis_certainty = -1;
+//        vis_certainty = (vis_certainty + 1) / (visualisation_boundary + 1);
+//        // A rough heuristic for box around the face width
+//        int thickness = (int)std::ceil(2.0* ((double)captured_image.cols) / 640.0);
+//        cv::Vec6d pose_estimate_to_draw = LandmarkDetector::GetCorrectedPoseWorld(face_model, fx, fy, cx, cy);
+//        // Draw it in reddish if uncertain, blueish if certain
+//        LandmarkDetector::DrawBox(captured_image, pose_estimate_to_draw, cv::Scalar((1 - vis_certainty)*255.0, 0, vis_certainty * 255), thickness, fx, fy, cx, cy);
+//        if (det_parameters.track_gaze && detection_success && face_model.eye_model) {
+//            FaceAnalysis::DrawGaze(captured_image, face_model, gazeDirection0, gazeDirection1, fx, fy, cx, cy);
+//        }
+//        else {
+//            fx;
+//        }
+//    }
+//}
+
+/**
+ * @brief   Update Kinect frames
+ *
+ * General  Requests new depth depth and RGB frames from the kinect, and converts to OpenCV (Mat) format
+ */
 void ofApp::updateKinect() {
     kinect->update();
     
@@ -145,6 +188,14 @@ void ofApp::updateKinect() {
     }
 }
 
+/**
+ * @brief        Detects faces in the current frame
+ *
+ * General       Runs the HOG SVM landmark detector via OpenFace on the grayscale verison of the latest RBG depth frame
+ *
+ * @retval true  1 or more faces were detected in the current frame
+ * @retval false 0 faces were detected in the curernt frame
+ */
 bool ofApp::detectFaces() {
     vector<double> confidences;
     bool detection_success = LandmarkDetector::DetectFacesHOG(faces_detected, matGrayscale, confidences);
@@ -159,6 +210,14 @@ bool ofApp::detectFaces() {
     return detection_success;
 }
 
+/**
+ * @brief        Detects landmarks and facial features in the current frame based on detected faces
+ *
+ * General       TODO @avi
+ *
+ * @retval true  TODO @avi
+ * @retval false TODO @avi
+ */
 bool ofApp::detectLandmarks() {
     bool detection_success = false;
     
@@ -224,7 +283,7 @@ bool ofApp::detectLandmarks() {
         cv::Mat_<double> hog_descriptor;
        
 //        // But only if needed in output
-//        if (!output_similarity_align.empty() || hog_output_file.is_open() || output_AUs) {
+//        if (!output_similarity_align.empty()) {
 //            face_analyser.AddNextFrame(captured_image, clnf_models[model], time_stamp, false, !det_parameters[model].quiet_mode);
 //            face_analyser.GetLatestAlignedFace(sim_warped_img);
 //            if (hog_output_file.is_open()) {
@@ -246,6 +305,11 @@ bool ofApp::detectLandmarks() {
     }
 }
 
+/**
+ * @brief        Updates kinect and face tracking/analysis
+ *
+ * General       Called up to n times per second, where n is the max FPS setting
+ */
 void ofApp::update() {
     updateKinect();
     if (!initialized) return;
@@ -267,6 +331,11 @@ void ofApp::update() {
     }
 }
 
+/**
+ * @brief        Draws to screen
+ *
+ * General       Called up to n times per second, where n is the max FPS setting
+ */
 void ofApp::draw() {
     if (!initialized) return;
     
@@ -282,62 +351,30 @@ void ofApp::draw() {
     
     for (int i = 0; i < faces_detected.size(); i++) {
         cv::Rect d = faces_detected[i];
-        drawBoundingBox(d.x, d.y, d.width, d.height, 5);
+        ofPath boundingBox = createBoundingBoxPath(d.x, d.y, d.width, d.height, 5);
+        boundingBox.draw();
     }
 
 }
 
-//--------------------------------------------------------------
-void ofApp::keyPressed(int key){
+void ofApp::keyPressed(int key){}
 
-}
+void ofApp::keyReleased(int key){}
 
-//--------------------------------------------------------------
-void ofApp::keyReleased(int key){
+void ofApp::mouseMoved(int x, int y){}
 
-}
+void ofApp::mouseDragged(int x, int y, int button){}
 
-//--------------------------------------------------------------
-void ofApp::mouseMoved(int x, int y ){
+void ofApp::mousePressed(int x, int y, int button){}
 
-}
+void ofApp::mouseReleased(int x, int y, int button){}
 
-//--------------------------------------------------------------
-void ofApp::mouseDragged(int x, int y, int button){
+void ofApp::mouseEntered(int x, int y){}
 
-}
+void ofApp::mouseExited(int x, int y){}
 
-//--------------------------------------------------------------
-void ofApp::mousePressed(int x, int y, int button){
+void ofApp::windowResized(int w, int h){}
 
-}
+void ofApp::gotMessage(ofMessage msg){}
 
-//--------------------------------------------------------------
-void ofApp::mouseReleased(int x, int y, int button){
-
-}
-
-//--------------------------------------------------------------
-void ofApp::mouseEntered(int x, int y){
-
-}
-
-//--------------------------------------------------------------
-void ofApp::mouseExited(int x, int y){
-
-}
-
-//--------------------------------------------------------------
-void ofApp::windowResized(int w, int h){
-
-}
-
-//--------------------------------------------------------------
-void ofApp::gotMessage(ofMessage msg){
-
-}
-
-//--------------------------------------------------------------
-void ofApp::dragEvent(ofDragInfo dragInfo){ 
-
-}
+void ofApp::dragEvent(ofDragInfo dragInfo){}
