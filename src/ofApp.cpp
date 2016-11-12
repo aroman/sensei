@@ -84,9 +84,8 @@ void ofApp::setup() {
     // Model should not try to re-initialising itself
     // TODO @avi more accurate comment
     default_parameters.reinit_video_every = -1;
-    default_parameters.curr_face_detector = LandmarkDetector::FaceModelParameters::HOG_SVM_DETECTOR;
     default_parameters.model_location = "../Resources/model";
-    default_parameters.track_gaze = true;
+    default_parameters.track_gaze = false;
 
     LandmarkDetector::CLNF default_model(default_parameters.model_location);
     
@@ -119,6 +118,9 @@ void ofApp::setup() {
     fy = 500 * (1080 / 480.0);
     fx = (fx + fy) / 2.0;
     fy = fx;
+
+    tracker.setFaceDetectorImageSize(1920*1200);
+    tracker.setup();
 
 //    // Creating a face analyser that will be used for AU extraction
 //    face_analyser = FaceAnalysis::FaceAnalyser(vector<cv::Vec3d>(), 0.7, 112, 112, au_loc, tri_loc);
@@ -196,7 +198,7 @@ void ofApp::updateKinect() {
  * @retval true  1 or more faces were detected in the current frame
  * @retval false 0 faces were detected in the curernt frame
  */
-bool ofApp::detectFaces() {
+bool ofApp::detectFacesWithOpenFace() {
     vector<double> confidences;
     bool detection_success = LandmarkDetector::DetectFacesHOG(faces_detected, matGrayscale, confidences);
 
@@ -206,7 +208,7 @@ bool ofApp::detectFaces() {
     for (int i = 0; i < faces_detected.size(); i++) {
         ofLog() << "Face detected at:" << faces_detected[i].x << "," << faces_detected[i].y;
     }
-    
+
     return detection_success;
 }
 
@@ -314,9 +316,9 @@ void ofApp::update() {
     updateKinect();
     if (!initialized) return;
 
-    if (ofGetFrameNum() % 8 == 0) {
+//    if (ofGetFrameNum() % 8 == 0) {
         bool success = detectFaces();
-    }
+//    }
 
     bool all_models_active = true;
     for (unsigned int i = 0; i < models.size(); ++i) {
@@ -348,12 +350,15 @@ void ofApp::draw() {
     textFont.drawString("Kinect FPS: " + ofToString(kinectFPS, 2), 10, ofGetHeight() - textFont.getSize() + 10);
     textFont.drawString("Draw FPS: " + ofToString(ofGetFrameRate(), 2), 10, ofGetHeight() - (3 * textFont.getSize()));
     ofSetColor(ofColor::white);
-    
-    for (int i = 0; i < faces_detected.size(); i++) {
-        cv::Rect d = faces_detected[i];
-        ofPath boundingBox = createBoundingBoxPath(d.x, d.y, d.width, d.height, 5);
-        boundingBox.draw();
-    }
+
+    tracker.drawDebug();
+//    tracker.drawDebugPose();
+
+//    for (int i = 0; i < faces_detected.size(); i++) {
+//        cv::Rect d = faces_detected[i];
+//        ofPath boundingBox = createBoundingBoxPath(d.x, d.y, d.width, d.height, 5);
+//        boundingBox.draw();
+//    }
 
 }
 

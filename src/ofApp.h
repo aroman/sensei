@@ -4,6 +4,7 @@
 #include "ofxCv.h"
 #include "ofxKinectV2.h"
 #include "LandmarkCoreIncludes.h"
+#include "ofxFaceTracker2.h"
 #include <FaceAnalyser.h>
 
 
@@ -31,14 +32,15 @@ public:
     vector<bool> active_models;
     vector<cv::Rect_<double> > faces_detected;
     FaceAnalysis::FaceAnalyser face_analyser;
-    
+
+    ofxFaceTracker2 tracker;
     
     void setup();
     void update();
     void draw();
     
     void updateKinect();
-    bool detectFaces();
+    bool detectFacesWithOpenFace();
     bool detectLandmarks();
 
     void keyPressed(int key);
