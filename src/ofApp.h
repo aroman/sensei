@@ -7,6 +7,8 @@
 #include "ofxFaceTracker2.h"
 #include <FaceAnalyser.h>
 
+#include "FaceDetector.hpp"
+
 
 class ofApp : public ofBaseApp{
 
@@ -30,10 +32,11 @@ public:
     vector<LandmarkDetector::CLNF> models;
     vector<LandmarkDetector::FaceModelParameters> model_parameters;
     vector<bool> active_models;
-    vector<cv::Rect_<double> > faces_detected;
+    vector<cv::Rect_<double>> faces_detected;
     FaceAnalysis::FaceAnalyser face_analyser;
 
     ofxFaceTracker2 tracker;
+    FaceDetector faceDetector;
     
     void setup();
     void update();

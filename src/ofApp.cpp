@@ -31,29 +31,6 @@ ofPath createBoundingBoxPath(double x, double y, double width, double height, do
 }
 
 /**
- * @brief   Non overlaping detections
- *
- * Go over the model and eliminate detections that are not informative (there already is a tracker there)
- *
- * @param 		  	models          The clnf models.
- * @param [in,out]	face_detections	The face detections.
- */
-void NonOverlapingDetections(const vector<LandmarkDetector::CLNF>& models, vector<cv::Rect_<double> >& face_detections) {
-    for (size_t model = 0; model < models.size(); ++model) {
-        // See if the detections intersect
-        cv::Rect_<double> model_rect = models[model].GetBoundingBox();
-        for (int detection = face_detections.size() - 1; detection >= 0; --detection) {
-            double intersection_area = (model_rect & face_detections[detection]).area();
-            double union_area = model_rect.area() + face_detections[detection].area() - 2 * intersection_area;
-            // If the model is already tracking what we're detecting ignore the detection, this is determined by amount of overlap
-            if (intersection_area / union_area > 0.5) {
-                face_detections.erase(face_detections.begin() + detection);
-            }
-        }
-    }
-}
-
-/**
  * @brief   Initial openFrameworks setup
  *
  * General set-up, initializations, etc. Called once, before update() or draw() get called.
@@ -119,8 +96,10 @@ void ofApp::setup() {
     fx = (fx + fy) / 2.0;
     fy = fx;
 
-    tracker.setFaceDetectorImageSize(1920*1200);
-    tracker.setup();
+//    tracker.setFaceDetectorImageSize(1920*1200);
+//    tracker.setup();
+
+    faceDetector.startThread();
 
 //    // Creating a face analyser that will be used for AU extraction
 //    face_analyser = FaceAnalysis::FaceAnalyser(vector<cv::Vec3d>(), 0.7, 112, 112, au_loc, tri_loc);
@@ -199,17 +178,20 @@ void ofApp::updateKinect() {
  * @retval false 0 faces were detected in the curernt frame
  */
 bool ofApp::detectFacesWithOpenFace() {
+
     vector<double> confidences;
-    bool detection_success = LandmarkDetector::DetectFacesHOG(faces_detected, matGrayscale, confidences);
 
-    // Keep only non overlapping detectionsb
-    NonOverlapingDetections(models, faces_detected);
-    
-    for (int i = 0; i < faces_detected.size(); i++) {
-        ofLog() << "Face detected at:" << faces_detected[i].x << "," << faces_detected[i].y;
-    }
-
-    return detection_success;
+    return true;
+//    bool detection_success = LandmarkDetector::DetectFacesHOG(faces_detected, matGrayscale, confidences);
+//
+//    // Keep only non overlapping detectionsb
+//    NonOverlapingDetections(models, faces_detected);
+//    
+//    for (int i = 0; i < faces_detected.size(); i++) {
+//        ofLog() << "Face detected at:" << faces_detected[i].x << "," << faces_detected[i].y;
+//    }
+//
+//    return detection_success;
 }
 
 /**
@@ -316,9 +298,11 @@ void ofApp::update() {
     updateKinect();
     if (!initialized) return;
 
-//    if (ofGetFrameNum() % 8 == 0) {
-    tracker.update(matGrayscale);
-//        bool success = detectFacesWith();
+//    if (kinectFrameCounter == 0) {
+//    tracker.update(matGrayscale);
+        faceDetector.updateImage(matGrayscale);
+        faces_detected = faceDetector.faces_detected;
+//        bool success = detectFacesWithOpenFace();
 //    }
 
     bool all_models_active = true;
@@ -356,11 +340,11 @@ void ofApp::draw() {
     tracker.drawDebug();
 //    tracker.drawDebugPose();
 
-//    for (int i = 0; i < faces_detected.size(); i++) {
-//        cv::Rect d = faces_detected[i];
-//        ofPath boundingBox = createBoundingBoxPath(d.x, d.y, d.width, d.height, 5);
-//        boundingBox.draw();
-//    }
+    for (int i = 0; i < faces_detected.size(); i++) {
+        cv::Rect d = faces_detected[i];
+        ofPath boundingBox = createBoundingBoxPath(d.x, d.y, d.width, d.height, 5);
+        boundingBox.draw();
+    }
 
 }
 

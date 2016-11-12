@@ -35,6 +35,7 @@
 		826B1AA11DD6FCEB00542E63 /* ofxFaceTracker2.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 826B1A131DD6FCEB00542E63 /* ofxFaceTracker2.cpp */; };
 		826B1AA21DD6FCEB00542E63 /* ofxFaceTracker2Instance.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 826B1A161DD6FCEB00542E63 /* ofxFaceTracker2Instance.cpp */; };
 		826B1AA31DD6FCEB00542E63 /* ofxFaceTracker2Landmarks.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 826B1A181DD6FCEB00542E63 /* ofxFaceTracker2Landmarks.cpp */; };
+		826B1AA71DD7050A00542E63 /* FaceDetector.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 826B1AA51DD7050A00542E63 /* FaceDetector.cpp */; };
 		829422DD1DCED8BE001877B9 /* libFaceAnalyser.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 829422DC1DCED8BE001877B9 /* libFaceAnalyser.a */; };
 		82D95CB61DCC723E002E563C /* libopencv_core.3.1.0.dylib in Frameworks */ = {isa = PBXBuildFile; fileRef = 82D95CB51DCC723E002E563C /* libopencv_core.3.1.0.dylib */; };
 		82D95CB81DCC725F002E563C /* libLandmarkDetector.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 82D95CB71DCC725F002E563C /* libLandmarkDetector.a */; };
@@ -157,6 +158,8 @@
 		826B1A171DD6FCEB00542E63 /* ofxFaceTracker2Instance.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ofxFaceTracker2Instance.h; sourceTree = "<group>"; };
 		826B1A181DD6FCEB00542E63 /* ofxFaceTracker2Landmarks.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = ofxFaceTracker2Landmarks.cpp; sourceTree = "<group>"; };
 		826B1A191DD6FCEB00542E63 /* ofxFaceTracker2Landmarks.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ofxFaceTracker2Landmarks.h; sourceTree = "<group>"; };
+		826B1AA51DD7050A00542E63 /* FaceDetector.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = FaceDetector.cpp; sourceTree = "<group>"; };
+		826B1AA61DD7050A00542E63 /* FaceDetector.hpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.h; path = FaceDetector.hpp; sourceTree = "<group>"; };
 		829422DC1DCED8BE001877B9 /* libFaceAnalyser.a */ = {isa = PBXFileReference; lastKnownFileType = archive.ar; name = libFaceAnalyser.a; path = ../../../../usr/local/bin/libFaceAnalyser.a; sourceTree = "<group>"; };
 		82C39F9D1DCEB96100BDB3C0 /* libdlib.19.1.0.dylib */ = {isa = PBXFileReference; lastKnownFileType = "compiled.mach-o.dylib"; name = libdlib.19.1.0.dylib; path = ../../../../usr/local/Cellar/dlib/19.1_2/lib/libdlib.19.1.0.dylib; sourceTree = "<group>"; };
 		82D95CB51DCC723E002E563C /* libopencv_core.3.1.0.dylib */ = {isa = PBXFileReference; lastKnownFileType = "compiled.mach-o.dylib"; name = libopencv_core.3.1.0.dylib; path = "../../../../usr/local/Cellar/opencv3/HEAD-6c12533_4/lib/libopencv_core.3.1.0.dylib"; sourceTree = "<group>"; };
@@ -638,6 +641,8 @@
 				E4B69E1D0A3A1BDC003C02F2 /* main.cpp */,
 				E4B69E1E0A3A1BDC003C02F2 /* ofApp.cpp */,
 				E4B69E1F0A3A1BDC003C02F2 /* ofApp.h */,
+				826B1AA51DD7050A00542E63 /* FaceDetector.cpp */,
+				826B1AA61DD7050A00542E63 /* FaceDetector.hpp */,
 			);
 			path = src;
 			sourceTree = SOURCE_ROOT;
@@ -803,6 +808,7 @@
 				B5EBF1F3A4FA4AF475084008 /* rgb_packet_processor.cpp in Sources */,
 				993E61889C46D973958ABAB8 /* rgb_packet_stream_parser.cpp in Sources */,
 				2112380E5D5593B4415C3948 /* transfer_pool.cpp in Sources */,
+				826B1AA71DD7050A00542E63 /* FaceDetector.cpp in Sources */,
 				2AB513EF150D0C1B22DA492D /* usb_control.cpp in Sources */,
 				01E8CED6AE08D8423ED652BD /* ofProtonect.cpp in Sources */,
 				8C8E2710648FA11B9DC9B167 /* ofRGBPacketProcessor.cpp in Sources */,
