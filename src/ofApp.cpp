@@ -317,7 +317,8 @@ void ofApp::update() {
     if (!initialized) return;
 
 //    if (ofGetFrameNum() % 8 == 0) {
-        bool success = detectFaces();
+    tracker.update(matGrayscale);
+//        bool success = detectFacesWith();
 //    }
 
     bool all_models_active = true;
@@ -345,10 +346,11 @@ void ofApp::draw() {
     texDepth.draw(0, 0); //512 x 424
 
     ofSetColor(ofColor::black);
-    ofDrawRectangle(0, ofGetHeight() - 140, 410, 140);
+    ofDrawRectangle(0, ofGetHeight() - 140, 410, 6 * textFont.getSize());
     ofSetColor(ofColor::red);
     textFont.drawString("Kinect FPS: " + ofToString(kinectFPS, 2), 10, ofGetHeight() - textFont.getSize() + 10);
     textFont.drawString("Draw FPS: " + ofToString(ofGetFrameRate(), 2), 10, ofGetHeight() - (3 * textFont.getSize()));
+    textFont.drawString("Tracker FPS: " + ofToString(tracker.getThreadFps(), 2), 10, ofGetHeight() - (6 * textFont.getSize()));
     ofSetColor(ofColor::white);
 
     tracker.drawDebug();
