@@ -26,16 +26,13 @@ public:
     cv::Mat_<uchar> matGrayscale;
     cv::Mat_<float> matDepth;
     
-    bool initialized;
-    
     float fx, fy, cx, cy;
     vector<LandmarkDetector::CLNF> models;
     vector<LandmarkDetector::FaceModelParameters> model_parameters;
     vector<bool> active_models;
-    vector<cv::Rect_<double>> faces_detected;
     FaceAnalysis::FaceAnalyser face_analyser;
 
-    ofxFaceTracker2 tracker;
+//    ofxFaceTracker2 tracker;
     FaceDetector faceDetector;
     
     void setup();

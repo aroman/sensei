@@ -36,7 +36,6 @@ ofPath createBoundingBoxPath(double x, double y, double width, double height, do
  * General set-up, initializations, etc. Called once, before update() or draw() get called.
  */
 void ofApp::setup() {
-    initialized = false;
     kinectFrameCounter = 0;
     
     // ofxKinect2 guarantees that device ID 0 will always refer to the same kinect
@@ -164,8 +163,6 @@ void ofApp::updateKinect() {
         
         // Convert depth frame to mat
         matDepth = cv::Mat(pixelsDepthRaw.getHeight(), pixelsDepthRaw.getWidth(), ofxCv::getCvImageType(pixelsDepthRaw), pixelsDepthRaw.getData(), 0);
-
-        initialized = true;
     }
 }
 
@@ -215,7 +212,7 @@ bool ofApp::detectLandmarks() {
     vector<cv::Mat_<double>> detected_landmarks_video;
 
     // also convert to a concurrent vector
-    vector<tbb::atomic<bool>> faces_used(faces_detected.size());
+    vector<tbb::atomic<bool>> faces_used(faceDetector.faces_detected.size());
     
     // Go through every model and update the tracking
     tbb::parallel_for(0, (int)models.size(), [&](int model_ind) {
@@ -227,7 +224,7 @@ bool ofApp::detectLandmarks() {
 
         // If the model is inactive reactivate it with new detections
         if (!active_models[model_ind]) {
-            for (size_t detection_ind = 0; detection_ind < faces_detected.size(); ++detection_ind) {
+            for (size_t detection_ind = 0; detection_ind < faceDetector.faces_detected.size(); ++detection_ind) {
                 // if it was not taken by another tracker take it (if it is false swap it to true and enter detection, this makes it parallel safe)
                 if (faces_used[detection_ind].compare_and_swap(true, false) == false) {
                     // Reinitialise the modelm
@@ -296,12 +293,10 @@ bool ofApp::detectLandmarks() {
  */
 void ofApp::update() {
     updateKinect();
-    if (!initialized) return;
 
 //    if (kinectFrameCounter == 0) {
 //    tracker.update(matGrayscale);
         faceDetector.updateImage(matGrayscale);
-        faces_detected = faceDetector.faces_detected;
 //        bool success = detectFacesWithOpenFace();
 //    }
 
@@ -324,8 +319,6 @@ void ofApp::update() {
  * General       Called up to n times per second, where n is the max FPS setting
  */
 void ofApp::draw() {
-    if (!initialized) return;
-    
     texRGB.draw(0, 0);
     texDepth.draw(0, 0); //512 x 424
 
@@ -334,14 +327,14 @@ void ofApp::draw() {
     ofSetColor(ofColor::red);
     textFont.drawString("Kinect FPS: " + ofToString(kinectFPS, 2), 10, ofGetHeight() - textFont.getSize() + 10);
     textFont.drawString("Draw FPS: " + ofToString(ofGetFrameRate(), 2), 10, ofGetHeight() - (3 * textFont.getSize()));
-    textFont.drawString("Tracker FPS: " + ofToString(tracker.getThreadFps(), 2), 10, ofGetHeight() - (6 * textFont.getSize()));
+//    textFont.drawString("Tracker FPS: " + ofToString(tracker.getThreadFps(), 2), 10, ofGetHeight() - (6 * textFont.getSize()));
     ofSetColor(ofColor::white);
 
-    tracker.drawDebug();
+//    tracker.drawDebug();
 //    tracker.drawDebugPose();
 
-    for (int i = 0; i < faces_detected.size(); i++) {
-        cv::Rect d = faces_detected[i];
+    for (int i = 0; i < faceDetector.faces_detected.size(); i++) {
+        cv::Rect d = faceDetector.faces_detected[i];
         ofPath boundingBox = createBoundingBoxPath(d.x, d.y, d.width, d.height, 5);
         boundingBox.draw();
     }
