@@ -130,34 +130,37 @@ void ofApp::setup() {
 }
 
 
-//// Visualising the results
-//void visualise_tracking(cv::Mat& captured_image, const LandmarkDetector::CLNF& face_model, const LandmarkDetector::FaceModelParameters& det_parameters, cv::Point3f gazeDirection0, cv::Point3f gazeDirection1, int frame_count, double fx, double fy, double cx, double cy) {
-//    // Drawing the facial landmarks on the face and the bounding box around it if tracking is successful and initialised
-//    double detection_certainty = face_model.detection_certainty;
-//    bool detection_success = face_model.detection_success;
-//    double visualisation_boundary = 0.2;
-//    // Only draw if the reliability is reasonable, the value is slightly ad-hoc
-//    if (detection_certainty < visualisation_boundary) {
-//        LandmarkDetector::Draw(captured_image, face_model);
-//        double vis_certainty = detection_certainty;
-//        if (vis_certainty > 1)
-//            vis_certainty = 1;
-//        if (vis_certainty < -1)
-//            vis_certainty = -1;
-//        vis_certainty = (vis_certainty + 1) / (visualisation_boundary + 1);
-//        // A rough heuristic for box around the face width
-//        int thickness = (int)std::ceil(2.0* ((double)captured_image.cols) / 640.0);
-//        cv::Vec6d pose_estimate_to_draw = LandmarkDetector::GetCorrectedPoseWorld(face_model, fx, fy, cx, cy);
-//        // Draw it in reddish if uncertain, blueish if certain
-//        LandmarkDetector::DrawBox(captured_image, pose_estimate_to_draw, cv::Scalar((1 - vis_certainty)*255.0, 0, vis_certainty * 255), thickness, fx, fy, cx, cy);
-//        if (det_parameters.track_gaze && detection_success && face_model.eye_model) {
-//            FaceAnalysis::DrawGaze(captured_image, face_model, gazeDirection0, gazeDirection1, fx, fy, cx, cy);
-//        }
-//        else {
-//            fx;
-//        }
-//    }
-//}
+// Visualising the results
+void visualise_tracking(cv::Mat& captured_image, const LandmarkDetector::CLNF& face_model, const LandmarkDetector::FaceModelParameters& det_parameters, cv::Point3f gazeDirection0, cv::Point3f gazeDirection1, double fx, double fy, double cx, double cy) {
+
+    // Drawing the facial landmarks on the face and the bounding box around it if tracking is successful and initialised
+    double detection_certainty = face_model.detection_certainty;
+    bool detection_success = face_model.detection_success;
+    double visualisation_boundary = 0.2;
+
+    // Only draw if the reliability is reasonable, the value is slightly ad-hoc
+    if (detection_certainty < visualisation_boundary) {
+        LandmarkDetector::Draw(captured_image, face_model);
+        double vis_certainty = detection_certainty;
+        if (vis_certainty > 1)
+            vis_certainty = 1;
+        if (vis_certainty < -1)
+            vis_certainty = -1;
+        vis_certainty = (vis_certainty + 1) / (visualisation_boundary + 1);
+        // A rough heuristic for box around the face width
+        int thickness = (int)std::ceil(2.0* ((double)captured_image.cols) / 640.0);
+        cv::Vec6d pose_estimate_to_draw = LandmarkDetector::GetCorrectedPoseWorld(face_model, fx, fy, cx, cy);
+        // Draw it in reddish if uncertain, blueish if certain
+        LandmarkDetector::DrawBox(captured_image, pose_estimate_to_draw, cv::Scalar((1 - vis_certainty)*255.0, 0, vis_certainty * 255), thickness, fx, fy, cx, cy);
+        if (det_parameters.track_gaze && detection_success && face_model.eye_model) {
+            FaceAnalysis::DrawGaze(captured_image, face_model, gazeDirection0, gazeDirection1, fx, fy, cx, cy);
+        }
+        else {
+            fx;
+        }
+    }
+}
+
 
 /**
  * @brief   Update Kinect frames
@@ -196,33 +199,25 @@ void ofApp::updateKinect() {
  * @brief        Detects landmarks and facial features in the current frame based on detected faces
  *
  * General       TODO @avi
- *
- * @retval true  TODO @avi
- * @retval false TODO @avi
  */
-bool ofApp::detectLandmarks() {
+void ofApp::detectLandmarks() {
     bool detection_success = false;
-    
-    // XXX: @avi do we want world coordinates?
-    const bool use_world_coordinates = true;
-    
+
     // This is useful for a second pass run (if want AU predictions)
     vector<cv::Vec6d> params_global_video;
     vector<bool> successes_video;
     vector<cv::Mat_<double>> params_local_video;
     vector<cv::Mat_<double>> detected_landmarks_video;
 
-    NonOverlapingDetections(models, faceDetector.faces_detected);
-
     // also convert to a concurrent vector
     vector<tbb::atomic<bool>> faces_used(faceDetector.faces_detected.size());
     
     // Go through every model and update the tracking
     tbb::parallel_for(0, (int)models.size(), [&](int model_ind) {
-//    for (int model_ind = 0; model_ind < models.size(); model_ind++) {
         // If the current model has failed more than MODEL_MAX_FAILURES_IN_A_ROW, remove it
         if (models[model_ind].failures_in_a_row > MODEL_MAX_FAILURES_IN_A_ROW) {
             active_models[model_ind] = false;
+            ofLog() << "Resetting model #" << model_ind;
             models[model_ind].Reset();
         }
 
@@ -235,6 +230,7 @@ bool ofApp::detectLandmarks() {
                     models[model_ind].Reset();
                     // This ensures that a wider window is used for the initial landmark localisation
 
+                    ofLog() << "Reinitializing model #" << model_ind;
                     models[model_ind].detection_success = false;
 
                     detection_success = LandmarkDetector::DetectLandmarksInVideo(matGrayscale, models[model_ind], model_parameters[model_ind]);
@@ -250,45 +246,6 @@ bool ofApp::detectLandmarks() {
             detection_success = LandmarkDetector::DetectLandmarksInVideo(matGrayscale, models[model_ind], model_parameters[model_ind]);
         }
     });
-//    }
-
-    // Go through every model and visualise the results
-    for (size_t model_ind = 0; model_ind < models.size(); ++model_ind) {
-        if (!models[model_ind].detection_success) {
-            continue;
-        }
-        
-        // Gaze tracking, absolute gaze direction
-        cv::Point3f gazeDirection0(0, 0, -1);
-        cv::Point3f gazeDirection1(0, 0, -1);
-        FaceAnalysis::EstimateGaze(models[model_ind], gazeDirection0, fx, fy, cx, cy, true);
-        FaceAnalysis::EstimateGaze(models[model_ind], gazeDirection1, fx, fy, cx, cy, false);
-
-        // Do face alignment
-        cv::Mat sim_warped_img;
-        cv::Mat_<double> hog_descriptor;
-       
-//        // But only if needed in output
-//        if (!output_similarity_align.empty()) {
-//            face_analyser.AddNextFrame(captured_image, clnf_models[model], time_stamp, false, !det_parameters[model].quiet_mode);
-//            face_analyser.GetLatestAlignedFace(sim_warped_img);
-//            if (hog_output_file.is_open()) {
-//                FaceAnalysis::Extract_FHOG_descriptor(hog_descriptor, sim_warped_img, num_hog_rows, num_hog_cols);
-//                if (visualise_hog && !det_parameters[model].quiet_mode) {
-//                    cv::Mat_<double> hog_descriptor_vis;
-//                    FaceAnalysis::Visualise_FHOG(hog_descriptor, num_hog_rows, num_hog_cols, hog_descriptor_vis);
-//                }
-//            }
-//        }
-        
-        // Work out the pose of the head from the tracked model
-        cv::Vec6d pose_estimate;
-        if (use_world_coordinates) {
-            pose_estimate = LandmarkDetector::GetCorrectedPoseWorld(models[model_ind], fx, fy, cx, cy);
-        } else {
-            pose_estimate = LandmarkDetector::GetCorrectedPoseCamera(models[model_ind], fx, fy, cx, cy);
-        }
-    }
 }
 
 /**
@@ -301,6 +258,7 @@ void ofApp::update() {
 
 //    tracker.update(matGrayscale);
     faceDetector.updateImage(matGrayscale);
+    NonOverlapingDetections(models, faceDetector.faces_detected);
 
     bool all_models_active = true;
     for (unsigned int i = 0; i < models.size(); ++i) {
@@ -309,8 +267,7 @@ void ofApp::update() {
         }
     }
     
-    if ((ofGetFrameNum() % 60 == 0) && !all_models_active) {
-        ofLog() << "Running model (" << ofGetFrameNum() << ")";
+    if ((ofGetFrameNum() % 2 == 0) && !all_models_active) {
         detectLandmarks();
     }
 }
@@ -321,6 +278,47 @@ void ofApp::update() {
  * General       Called up to n times per second, where n is the max FPS setting
  */
 void ofApp::draw() {
+    // Go through every model and visualise the results
+    for (size_t model_ind = 0; model_ind < models.size(); ++model_ind) {
+        if (!models[model_ind].detection_success) {
+            continue;
+        }
+
+        // Gaze tracking, absolute gaze direction
+        cv::Point3f gazeDirection0(0, 0, -1);
+        cv::Point3f gazeDirection1(0, 0, -1);
+        FaceAnalysis::EstimateGaze(models[model_ind], gazeDirection0, fx, fy, cx, cy, true);
+        FaceAnalysis::EstimateGaze(models[model_ind], gazeDirection1, fx, fy, cx, cy, false);
+
+        // Do face alignment
+        cv::Mat sim_warped_img;
+        cv::Mat_<double> hog_descriptor;
+
+        //        // But only if needed in output
+        //        if (!output_similarity_align.empty()) {
+        //            face_analyser.AddNextFrame(captured_image, clnf_models[model], time_stamp, false, !det_parameters[model].quiet_mode);
+        //            face_analyser.GetLatestAlignedFace(sim_warped_img);
+        //            if (hog_output_file.is_open()) {
+        //                FaceAnalysis::Extract_FHOG_descriptor(hog_descriptor, sim_warped_img, num_hog_rows, num_hog_cols);
+        //                if (visualise_hog && !det_parameters[model].quiet_mode) {
+        //                    cv::Mat_<double> hog_descriptor_vis;
+        //                    FaceAnalysis::Visualise_FHOG(hog_descriptor, num_hog_rows, num_hog_cols, hog_descriptor_vis);
+        //                }
+        //            }
+        //        }
+
+        // Work out the pose of the head from the tracked model
+        cv::Vec6d pose_estimate;
+        // XXX: @avi do we want world coordinates?
+        pose_estimate = LandmarkDetector::GetCorrectedPoseWorld(models[model_ind], fx, fy, cx, cy);
+
+        ofPixels texPixels;
+        texRGB.readToPixels(texPixels);
+        cv::Mat matForDrawing = ofxCv::toCv(texPixels);
+        visualise_tracking(matForDrawing, models[model_ind], model_parameters[model_ind], gazeDirection0, gazeDirection1, fx, fy, cx, cy);
+        texRGB.loadData(texPixels);
+    }
+
     texRGB.draw(0, 0);
     texDepth.draw(0, 0); //512 x 424
 
@@ -335,11 +333,12 @@ void ofApp::draw() {
 //    tracker.drawDebug();
 //    tracker.drawDebugPose();
 
-    for (int i = 0; i < faceDetector.faces_detected.size(); i++) {
-        cv::Rect d = faceDetector.faces_detected[i];
-        ofPath boundingBox = createBoundingBoxPath(d.x, d.y, d.width, d.height, 5);
-        boundingBox.draw();
-    }
+//    for (int i = 0; i < faceDetector.faces_detected.size(); i++) {
+//        cv::Rect d = faceDetector.faces_detected[i];
+//        ofPath boundingBox = createBoundingBoxPath(d.x, d.y, d.width, d.height, 5);
+//        boundingBox.draw();
+//        
+//    }
 
 }
 

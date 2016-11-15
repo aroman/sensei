@@ -40,8 +40,7 @@ public:
     void draw();
     
     void updateKinect();
-    bool detectFacesWithOpenFace();
-    bool detectLandmarks();
+    void detectLandmarks();
 
     void keyPressed(int key);
     void keyReleased(int key);
