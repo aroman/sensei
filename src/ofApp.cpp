@@ -31,6 +31,30 @@ ofPath createBoundingBoxPath(double x, double y, double width, double height, do
 }
 
 /**
+ * @brief   Non overlaping detections
+ *
+ * Go over the model and eliminate detections that are not informative (there already is a tracker there)
+ *
+ * @param 		  	models          The clnf models.
+ * @param [in,out]	face_detections	The face detections.
+ */
+void NonOverlapingDetections(const vector<LandmarkDetector::CLNF>& models, vector<cv::Rect_<double> >& face_detections) {
+    for (size_t model = 0; model < models.size(); ++model) {
+        // See if the detections intersect
+        cv::Rect_<double> model_rect = models[model].GetBoundingBox();
+        for (int detection = face_detections.size() - 1; detection >= 0; --detection) {
+            double intersection_area = (model_rect & face_detections[detection]).area();
+            double union_area = model_rect.area() + face_detections[detection].area() - 2 * intersection_area;
+            // If the model is already tracking what we're detecting ignore the detection, this is determined by amount of overlap
+            if (intersection_area / union_area > 0.5) {
+                face_detections.erase(face_detections.begin() + detection);
+            }
+        }
+    }
+}
+
+
+/**
  * @brief   Initial openFrameworks setup
  *
  * General set-up, initializations, etc. Called once, before update() or draw() get called.
@@ -60,8 +84,9 @@ void ofApp::setup() {
     // Model should not try to re-initialising itself
     // TODO @avi more accurate comment
     default_parameters.reinit_video_every = -1;
-    default_parameters.model_location = "../Resources/model";
-    default_parameters.track_gaze = false;
+//    default_parameters.model_location = "../Resources/model";
+    default_parameters.model_location = "/Users/avi/Developer/OpenFace/lib/local/LandmarkDetector/model/main_clnf_general.txt";
+    default_parameters.track_gaze = true;
 
     LandmarkDetector::CLNF default_model(default_parameters.model_location);
     
@@ -101,7 +126,7 @@ void ofApp::setup() {
     faceDetector.startThread();
 
 //    // Creating a face analyser that will be used for AU extraction
-//    face_analyser = FaceAnalysis::FaceAnalyser(vector<cv::Vec3d>(), 0.7, 112, 112, au_loc, tri_loc);
+    face_analyser = FaceAnalysis::FaceAnalyser(vector<cv::Vec3d>(), 0.7, 112, 112, au_loc, tri_loc);
 }
 
 
@@ -166,30 +191,6 @@ void ofApp::updateKinect() {
     }
 }
 
-/**
- * @brief        Detects faces in the current frame
- *
- * General       Runs the HOG SVM landmark detector via OpenFace on the grayscale verison of the latest RBG depth frame
- *
- * @retval true  1 or more faces were detected in the current frame
- * @retval false 0 faces were detected in the curernt frame
- */
-bool ofApp::detectFacesWithOpenFace() {
-
-    vector<double> confidences;
-
-    return true;
-//    bool detection_success = LandmarkDetector::DetectFacesHOG(faces_detected, matGrayscale, confidences);
-//
-//    // Keep only non overlapping detectionsb
-//    NonOverlapingDetections(models, faces_detected);
-//    
-//    for (int i = 0; i < faces_detected.size(); i++) {
-//        ofLog() << "Face detected at:" << faces_detected[i].x << "," << faces_detected[i].y;
-//    }
-//
-//    return detection_success;
-}
 
 /**
  * @brief        Detects landmarks and facial features in the current frame based on detected faces
@@ -211,11 +212,14 @@ bool ofApp::detectLandmarks() {
     vector<cv::Mat_<double>> params_local_video;
     vector<cv::Mat_<double>> detected_landmarks_video;
 
+    NonOverlapingDetections(models, faceDetector.faces_detected);
+
     // also convert to a concurrent vector
     vector<tbb::atomic<bool>> faces_used(faceDetector.faces_detected.size());
     
     // Go through every model and update the tracking
     tbb::parallel_for(0, (int)models.size(), [&](int model_ind) {
+//    for (int model_ind = 0; model_ind < models.size(); model_ind++) {
         // If the current model has failed more than MODEL_MAX_FAILURES_IN_A_ROW, remove it
         if (models[model_ind].failures_in_a_row > MODEL_MAX_FAILURES_IN_A_ROW) {
             active_models[model_ind] = false;
@@ -246,7 +250,8 @@ bool ofApp::detectLandmarks() {
             detection_success = LandmarkDetector::DetectLandmarksInVideo(matGrayscale, models[model_ind], model_parameters[model_ind]);
         }
     });
-    
+//    }
+
     // Go through every model and visualise the results
     for (size_t model_ind = 0; model_ind < models.size(); ++model_ind) {
         if (!models[model_ind].detection_success) {
@@ -258,7 +263,7 @@ bool ofApp::detectLandmarks() {
         cv::Point3f gazeDirection1(0, 0, -1);
         FaceAnalysis::EstimateGaze(models[model_ind], gazeDirection0, fx, fy, cx, cy, true);
         FaceAnalysis::EstimateGaze(models[model_ind], gazeDirection1, fx, fy, cx, cy, false);
-        
+
         // Do face alignment
         cv::Mat sim_warped_img;
         cv::Mat_<double> hog_descriptor;
@@ -294,11 +299,8 @@ bool ofApp::detectLandmarks() {
 void ofApp::update() {
     updateKinect();
 
-//    if (kinectFrameCounter == 0) {
 //    tracker.update(matGrayscale);
-        faceDetector.updateImage(matGrayscale);
-//        bool success = detectFacesWithOpenFace();
-//    }
+    faceDetector.updateImage(matGrayscale);
 
     bool all_models_active = true;
     for (unsigned int i = 0; i < models.size(); ++i) {
@@ -308,8 +310,8 @@ void ofApp::update() {
     }
     
     if ((ofGetFrameNum() % 60 == 0) && !all_models_active) {
-//        ofLog() << "Running model (" << ofGetFrameNum() << ")";
-//        detectLandmarks();
+        ofLog() << "Running model (" << ofGetFrameNum() << ")";
+        detectLandmarks();
     }
 }
 
