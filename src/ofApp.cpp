@@ -330,8 +330,8 @@ void ofApp::draw() {
 //    textFont.drawString("Tracker FPS: " + ofToString(tracker.getThreadFps(), 2), 10, ofGetHeight() - (6 * textFont.getSize()));
     ofSetColor(ofColor::white);
 
-   tracker.drawDebug();
-   tracker.drawDebugPose();
+  //  tracker.drawDebug();
+  //  tracker.drawDebugPose();
 
    for (int i = 0; i < faceDetector.faces_detected.size(); i++) {
        cv::Rect d = faceDetector.faces_detected[i];
