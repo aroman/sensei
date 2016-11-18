@@ -80,8 +80,22 @@
 # PROJECT_LDFLAGS=-Wl,-rpath=./libs
 
 PROJECT_LDFLAGS += -ltbb
-PROJECT_LDFLAGS += -lfaceAnalyser
-PROJECT_LDFLAGS += -llandmarkDetector
+
+PROJECT_LDFLAGS += -L/usr/local/lib
+# PROJECT_LDFLAGS += -L/lib/x86_64-linux-gnu
+
+# needed on linux for some reason
+PROJECT_LDFLAGS += -lusb-1.0
+PROJECT_LDFLAGS += -lturbojpeg
+PROJECT_LDFLAGS += -lOpenCL
+PROJECT_LDFLAGS += -lblas
+PROJECT_LDFLAGS += -lopenblas
+PROJECT_LDFLAGS += -ldlib
+PROJECT_LDFLAGS += -lboost_filesystem
+PROJECT_LDFLAGS += -lFaceAnalyser
+PROJECT_LDFLAGS += -lLandmarkDetector
+# end linux
+
 PROJECT_LDFLAGS += $(shell pkg-config --libs opencv)
 
 ################################################################################
@@ -111,6 +125,10 @@ PROJECT_LDFLAGS += $(shell pkg-config --libs opencv)
 #   Note: Leave a leading space when adding list items with the += operator
 ################################################################################
 # PROJECT_CFLAGS =
+
+# linux only
+PROJECT_CFLAGS = -I/usr/include/boost
+# end linux
 
 ################################################################################
 # PROJECT OPTIMIZATION CFLAGS
