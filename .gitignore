@@ -3,6 +3,7 @@ build/
 
 ## Build generated
 build/
+obj/
 DerivedData/
 
 ## Various settings
