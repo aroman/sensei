@@ -4,7 +4,7 @@
 #include "ofxCv.h"
 #include "ofxKinectV2.h"
 #include "LandmarkCoreIncludes.h"
-#include "ofxFaceTracker2.h"
+/* #include "ofxFaceTracker2.h" */
 #include <FaceAnalyser.h>
 
 #include "FaceDetector.hpp"
