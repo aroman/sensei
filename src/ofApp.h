@@ -13,19 +13,19 @@
 class ofApp : public ofBaseApp{
 
 public:
-    
+
     ofxKinectV2 *kinect;
     double tsKinectFPS;
     uint32_t kinectFrameCounter;
     double kinectFPS;
-    
+
     ofTrueTypeFont textFont;
-    
+
     ofTexture texRGB;
     ofTexture texDepth;
     cv::Mat_<uchar> matGrayscale;
     cv::Mat_<float> matDepth;
-    
+
     float fx, fy, cx, cy;
     vector<LandmarkDetector::CLNF> models;
     vector<LandmarkDetector::FaceModelParameters> model_parameters;
@@ -34,11 +34,11 @@ public:
 
 //    ofxFaceTracker2 tracker;
     FaceDetector faceDetector;
-    
+
     void setup();
     void update();
     void draw();
-    
+
     void updateKinect();
     void detectLandmarks();
 
@@ -53,5 +53,5 @@ public:
     void windowResized(int w, int h);
     void dragEvent(ofDragInfo dragInfo);
     void gotMessage(ofMessage msg);
-    
+
 };

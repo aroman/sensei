@@ -8,7 +8,7 @@ int main( ) {
     // Set the framework to something sane, otherwise the frame rate will be unbounded
     // and eat your CPU alive.
     ofSetFrameRate(30);
-    
+
 	// this kicks off the running of my app
 	// can be OF_WINDOW or OF_FULLSCREEN
 	// pass in width and height too:

@@ -61,23 +61,23 @@ void NonOverlapingDetections(const vector<LandmarkDetector::CLNF>& models, vecto
  */
 void ofApp::setup() {
     kinectFrameCounter = 0;
-    
+
     // ofxKinect2 guarantees that device ID 0 will always refer to the same kinect
     // if there's only ever one plugged in
     // see: https://github.com/ofTheo/ofxKinectV2/blob/a536824/src/ofxKinectV2.h#L20
     int kinectId = 0;
-    
+
     textFont.load("../Resources/Hack-Regular.ttf", 28, true);
-    
+
     kinect = new ofxKinectV2();
-    
+
     // connect to the kinect. updates occur on a separate thread
     bool didOpenSuccessfully = kinect->open(kinectId);
-    
+
     if (!didOpenSuccessfully) {
         std::exit(1);
     }
-    
+
     LandmarkDetector::FaceModelParameters default_parameters;
 
     default_parameters.use_face_template = true;
@@ -89,7 +89,7 @@ void ofApp::setup() {
     default_parameters.track_gaze = true;
 
     LandmarkDetector::CLNF default_model(default_parameters.model_location);
-    
+
     models.reserve(NUM_FACES_MAX);
     for (int i = 0; i < NUM_FACES_MAX; ++i) {
         models.push_back(default_model);
@@ -99,9 +99,9 @@ void ofApp::setup() {
 
     // Used for image masking
     const string tri_loc = "../Resources/model/tris_68_full.txt";
-    
+
     string au_loc;
-    
+
     bool dynamic = true;
     // Indicates if a dynamic AU model should be used (dynamic is useful if the video is long enough to include neutral expressions)
     if (dynamic) {
@@ -109,11 +109,11 @@ void ofApp::setup() {
     } else {
         au_loc = "../Resources/AU_predictors/AU_all_static.txt";
     }
-    
+
     // If optical centers are not defined just use center of image
     cx = 1920 / 2.0f;
     cy = 1080 / 2.0f;
-    
+
     // Use a rough guess-timate of focal length
     fx = 500 * (1920 / 640.0);
     fy = 500 * (1080 / 480.0);
@@ -169,7 +169,7 @@ void visualise_tracking(cv::Mat& captured_image, const LandmarkDetector::CLNF& f
  */
 void ofApp::updateKinect() {
     kinect->update();
-    
+
     if (kinect->isFrameNew()) {
         // Update Kinect FPS tracking
         if (++kinectFrameCounter == 15) {
@@ -182,13 +182,13 @@ void ofApp::updateKinect() {
         ofPixels pixelsRGB = kinect->getRgbPixels();
         ofPixels pixelsDepth = kinect->getDepthPixels();
         ofFloatPixels pixelsDepthRaw = kinect->getRawDepthPixels();
-        
+
         texRGB.loadData(pixelsRGB);
         texDepth.loadData(pixelsDepth);
-        
+
         // Convert RGB frame grayscale
         cv::cvtColor(ofxCv::toCv(pixelsRGB), matGrayscale, CV_BGR2GRAY);
-        
+
         // Convert depth frame to mat
         matDepth = cv::Mat(pixelsDepthRaw.getHeight(), pixelsDepthRaw.getWidth(), ofxCv::getCvImageType(pixelsDepthRaw), pixelsDepthRaw.getData(), 0);
     }
@@ -211,7 +211,7 @@ void ofApp::detectLandmarks() {
 
     // also convert to a concurrent vector
     vector<tbb::atomic<bool>> faces_used(faceDetector.faces_detected.size());
-    
+
     // Go through every model and update the tracking
     tbb::parallel_for(0, (int)models.size(), [&](int model_ind) {
         // If the current model has failed more than MODEL_MAX_FAILURES_IN_A_ROW, remove it
@@ -237,7 +237,7 @@ void ofApp::detectLandmarks() {
 
                     // This activates the model
                     active_models[model_ind] = true;
-                    
+
                     // break out of the loop as the tracker has been reinitialised
                     break;
                 }
@@ -266,7 +266,7 @@ void ofApp::update() {
             all_models_active = false;
         }
     }
-    
+
     if ((ofGetFrameNum() % 2 == 0) && !all_models_active) {
         detectLandmarks();
     }
@@ -330,15 +330,15 @@ void ofApp::draw() {
 //    textFont.drawString("Tracker FPS: " + ofToString(tracker.getThreadFps(), 2), 10, ofGetHeight() - (6 * textFont.getSize()));
     ofSetColor(ofColor::white);
 
-//    tracker.drawDebug();
-//    tracker.drawDebugPose();
+   tracker.drawDebug();
+   tracker.drawDebugPose();
 
-//    for (int i = 0; i < faceDetector.faces_detected.size(); i++) {
-//        cv::Rect d = faceDetector.faces_detected[i];
-//        ofPath boundingBox = createBoundingBoxPath(d.x, d.y, d.width, d.height, 5);
-//        boundingBox.draw();
-//        
-//    }
+   for (int i = 0; i < faceDetector.faces_detected.size(); i++) {
+       cv::Rect d = faceDetector.faces_detected[i];
+       ofPath boundingBox = createBoundingBoxPath(d.x, d.y, d.width, d.height, 5);
+       boundingBox.draw();
+
+   }
 
 }
 

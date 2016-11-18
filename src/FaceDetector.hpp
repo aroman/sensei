@@ -22,7 +22,7 @@ public:
 //    FaceDetector();
     void threadedFunction();
     void updateImage(cv::Mat grayscaleImage);
-    
+
     vector<cv::Rect_<double>> faces_detected;
 
 private:
