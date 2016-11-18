@@ -84,8 +84,7 @@ void ofApp::setup() {
     // Model should not try to re-initialising itself
     // TODO @avi more accurate comment
     default_parameters.reinit_video_every = -1;
-//    default_parameters.model_location = "../Resources/model";
-    default_parameters.model_location = "/Users/avi/Developer/OpenFace/lib/local/LandmarkDetector/model/main_clnf_general.txt";
+    default_parameters.model_location = "/opt/sensei/model/main_clnf_general.txt";
     default_parameters.track_gaze = true;
 
     LandmarkDetector::CLNF default_model(default_parameters.model_location);
@@ -98,16 +97,16 @@ void ofApp::setup() {
     }
 
     // Used for image masking
-    const string tri_loc = "../Resources/model/tris_68_full.txt";
+    const string tri_loc = "/opt/sensei/model/tris_68_full.txt";
 
     string au_loc;
 
     bool dynamic = true;
     // Indicates if a dynamic AU model should be used (dynamic is useful if the video is long enough to include neutral expressions)
     if (dynamic) {
-        au_loc = "../Resources/AU_predictors/AU_all_best.txt";
+        au_loc = "/opt/sensei/AU_predictors/AU_all_best.txt";
     } else {
-        au_loc = "../Resources/AU_predictors/AU_all_static.txt";
+        au_loc = "/opt/sensei/AU_predictors/AU_all_static.txt";
     }
 
     // If optical centers are not defined just use center of image
@@ -126,7 +125,7 @@ void ofApp::setup() {
     faceDetector.startThread();
 
 //    // Creating a face analyser that will be used for AU extraction
-    face_analyser = FaceAnalysis::FaceAnalyser(vector<cv::Vec3d>(), 0.7, 112, 112, au_loc, tri_loc);
+    /* face_analyser = FaceAnalysis::FaceAnalyser(vector<cv::Vec3d>(), 0.7, 112, 112, au_loc, tri_loc); */
 }
 
 
