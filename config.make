@@ -79,12 +79,14 @@
 # TODO: should this be a default setting?
 # PROJECT_LDFLAGS=-Wl,-rpath=./libs
 
-PROJECT_LDFLAGS += -ltbb
 
 PROJECT_LDFLAGS += -L/usr/local/lib
+PROJECT_LDFLAGS += -L/usr/local/bin
+PROJECT_LDFLAGS += -L/home/sensei/Developer/OpenFace/build/lib/3rdParty/dlib
+PROJECT_LDFLAGS += -L/home/sensei/Developer/opencv-3.1.0/3rdparty/ippicv/unpack/ippicv_lnx/lib/intel64
 # PROJECT_LDFLAGS += -L/lib/x86_64-linux-gnu
 
-# needed on linux for some reason
+PROJECT_LDFLAGS += -ltbb
 PROJECT_LDFLAGS += -lusb-1.0
 PROJECT_LDFLAGS += -lturbojpeg
 PROJECT_LDFLAGS += -lOpenCL
@@ -94,7 +96,6 @@ PROJECT_LDFLAGS += -ldlib
 PROJECT_LDFLAGS += -lboost_filesystem
 PROJECT_LDFLAGS += -lFaceAnalyser
 PROJECT_LDFLAGS += -lLandmarkDetector
-# end linux
 
 PROJECT_LDFLAGS += $(shell pkg-config --libs opencv)
 
@@ -128,6 +129,7 @@ PROJECT_LDFLAGS += $(shell pkg-config --libs opencv)
 
 # linux only
 PROJECT_CFLAGS = -I/usr/include/boost
+PROJECT_CFLAGS += -I/home/sensei/Developer/OpenFace/lib/3rdParty/dlib/include
 # end linux
 
 ################################################################################
