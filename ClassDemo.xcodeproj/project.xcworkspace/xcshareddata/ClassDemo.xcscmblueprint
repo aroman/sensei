@@ -4,38 +4,24 @@
 
   },
   "DVTSourceControlWorkspaceBlueprintWorkingCopyStatesKey" : {
-    "EF914D2D8B3604490B174A39EDD558835BBD372E" : 9223372036854775807,
-    "A28F8AC9F1FAE4BA4186366DA50D3280282A7B93" : 9223372036854775807,
-    "EEB9E539451D781D2F274E9B5556EEE75483207C" : 9223372036854775807,
     "37526DA425E5430474A14FBFA1BC4525160B5FC1" : 9223372036854775807,
-    "3408B309914B0639E8D618139E80EF3032A46163" : 9223372036854775807
+    "EF914D2D8B3604490B174A39EDD558835BBD372E" : 9223372036854775807,
+    "EEB9E539451D781D2F274E9B5556EEE75483207C" : 9223372036854775807
   },
-  "DVTSourceControlWorkspaceBlueprintIdentifierKey" : "8F9CA9A2-98D2-47D7-A930-4FD9F20A8C58",
+  "DVTSourceControlWorkspaceBlueprintIdentifierKey" : "AAA12D9B-18DA-490B-BED6-46B56AFAD2F4",
   "DVTSourceControlWorkspaceBlueprintWorkingCopyPathsKey" : {
-    "EF914D2D8B3604490B174A39EDD558835BBD372E" : "openFrameworks\/addons\/ofxKinectV2\/",
-    "A28F8AC9F1FAE4BA4186366DA50D3280282A7B93" : "OpenFace\/",
-    "EEB9E539451D781D2F274E9B5556EEE75483207C" : "ClassDemo\/",
-    "37526DA425E5430474A14FBFA1BC4525160B5FC1" : "openFrameworks\/addons\/ofxCv\/",
-    "3408B309914B0639E8D618139E80EF3032A46163" : "openFrameworks\/addons\/ofxFaceTracker2\/"
+    "37526DA425E5430474A14FBFA1BC4525160B5FC1" : "..\/..\/addons\/ofxCv",
+    "EF914D2D8B3604490B174A39EDD558835BBD372E" : "..\/..\/addons\/ofxKinectV2",
+    "EEB9E539451D781D2F274E9B5556EEE75483207C" : "ClassDemo\/"
   },
   "DVTSourceControlWorkspaceBlueprintNameKey" : "ClassDemo",
   "DVTSourceControlWorkspaceBlueprintVersion" : 204,
   "DVTSourceControlWorkspaceBlueprintRelativePathToProjectKey" : "ClassDemo.xcodeproj",
   "DVTSourceControlWorkspaceBlueprintRemoteRepositoriesKey" : [
     {
-      "DVTSourceControlWorkspaceBlueprintRemoteRepositoryURLKey" : "github.com:HalfdanJ\/ofxFaceTracker2.git",
-      "DVTSourceControlWorkspaceBlueprintRemoteRepositorySystemKey" : "com.apple.dt.Xcode.sourcecontrol.Git",
-      "DVTSourceControlWorkspaceBlueprintRemoteRepositoryIdentifierKey" : "3408B309914B0639E8D618139E80EF3032A46163"
-    },
-    {
-      "DVTSourceControlWorkspaceBlueprintRemoteRepositoryURLKey" : "github.com:kylemcdonald\/ofxCv.git",
+      "DVTSourceControlWorkspaceBlueprintRemoteRepositoryURLKey" : "https:\/\/github.com\/kylemcdonald\/ofxCv.git",
       "DVTSourceControlWorkspaceBlueprintRemoteRepositorySystemKey" : "com.apple.dt.Xcode.sourcecontrol.Git",
       "DVTSourceControlWorkspaceBlueprintRemoteRepositoryIdentifierKey" : "37526DA425E5430474A14FBFA1BC4525160B5FC1"
-    },
-    {
-      "DVTSourceControlWorkspaceBlueprintRemoteRepositoryURLKey" : "github.com:TadasBaltrusaitis\/OpenFace.git",
-      "DVTSourceControlWorkspaceBlueprintRemoteRepositorySystemKey" : "com.apple.dt.Xcode.sourcecontrol.Git",
-      "DVTSourceControlWorkspaceBlueprintRemoteRepositoryIdentifierKey" : "A28F8AC9F1FAE4BA4186366DA50D3280282A7B93"
     },
     {
       "DVTSourceControlWorkspaceBlueprintRemoteRepositoryURLKey" : "github.com:aroman\/ClassDemo.git",
@@ -43,7 +29,7 @@
       "DVTSourceControlWorkspaceBlueprintRemoteRepositoryIdentifierKey" : "EEB9E539451D781D2F274E9B5556EEE75483207C"
     },
     {
-      "DVTSourceControlWorkspaceBlueprintRemoteRepositoryURLKey" : "github.com:ofTheo\/ofxKinectV2.git",
+      "DVTSourceControlWorkspaceBlueprintRemoteRepositoryURLKey" : "github.com:aroman\/ofxKinectV2.git",
       "DVTSourceControlWorkspaceBlueprintRemoteRepositorySystemKey" : "com.apple.dt.Xcode.sourcecontrol.Git",
       "DVTSourceControlWorkspaceBlueprintRemoteRepositoryIdentifierKey" : "EF914D2D8B3604490B174A39EDD558835BBD372E"
     }

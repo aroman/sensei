@@ -30,7 +30,7 @@ public:
     vector<LandmarkDetector::CLNF> models;
     vector<LandmarkDetector::FaceModelParameters> model_parameters;
     vector<bool> active_models;
-    FaceAnalysis::FaceAnalyser face_analyser;
+//    FaceAnalysis::FaceAnalyser face_analyser;
 
 //    ofxFaceTracker2 tracker;
     FaceDetector faceDetector;

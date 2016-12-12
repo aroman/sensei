@@ -125,7 +125,7 @@ void ofApp::setup() {
     faceDetector.startThread();
 
 //    // Creating a face analyser that will be used for AU extraction
-    /* face_analyser = FaceAnalysis::FaceAnalyser(vector<cv::Vec3d>(), 0.7, 112, 112, au_loc, tri_loc); */
+//     face_analyser = FaceAnalysis::FaceAnalyser(vector<cv::Vec3d>(), 0.7, 112, 112, au_loc, tri_loc); 
 }
 
 
