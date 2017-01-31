@@ -67,16 +67,16 @@ void ofApp::setup() {
     // see: https://github.com/ofTheo/ofxKinectV2/blob/a536824/src/ofxKinectV2.h#L20
     int kinectId = 0;
 
-    textFont.load("../Resources/Hack-Regular.ttf", 28, true);
+    textFont.load(OF_TTF_MONO, 28, true);
 
-    kinect = new ofxKinectV2();
+    // kinect = new ofxKinectV2();
 
     // connect to the kinect. updates occur on a separate thread
-    bool didOpenSuccessfully = kinect->open(kinectId);
+    // bool didOpenSuccessfully = kinect->open(kinectId);
 
-    if (!didOpenSuccessfully) {
-        std::exit(1);
-    }
+    // if (!didOpenSuccessfully) {
+    //     std::exit(1);
+    // }
 
     LandmarkDetector::FaceModelParameters default_parameters;
 
@@ -125,7 +125,7 @@ void ofApp::setup() {
     faceDetector.startThread();
 
 //    // Creating a face analyser that will be used for AU extraction
-//     face_analyser = FaceAnalysis::FaceAnalyser(vector<cv::Vec3d>(), 0.7, 112, 112, au_loc, tri_loc); 
+//     face_analyser = FaceAnalysis::FaceAnalyser(vector<cv::Vec3d>(), 0.7, 112, 112, au_loc, tri_loc);
 }
 
 
@@ -167,30 +167,30 @@ void visualise_tracking(cv::Mat& captured_image, const LandmarkDetector::CLNF& f
  * General  Requests new depth depth and RGB frames from the kinect, and converts to OpenCV (Mat) format
  */
 void ofApp::updateKinect() {
-    kinect->update();
-
-    if (kinect->isFrameNew()) {
-        // Update Kinect FPS tracking
-        if (++kinectFrameCounter == 15) {
-            double tsNow = (double)ofGetElapsedTimeMillis();
-            kinectFPS = (double)kinectFrameCounter / ((tsNow/1000) - (tsKinectFPS/1000));
-            tsKinectFPS = tsNow;
-            kinectFrameCounter = 0;
-        }
-
-        ofPixels pixelsRGB = kinect->getRgbPixels();
-        ofPixels pixelsDepth = kinect->getDepthPixels();
-        ofFloatPixels pixelsDepthRaw = kinect->getRawDepthPixels();
-
-        texRGB.loadData(pixelsRGB);
-        texDepth.loadData(pixelsDepth);
-
-        // Convert RGB frame grayscale
-        cv::cvtColor(ofxCv::toCv(pixelsRGB), matGrayscale, CV_BGR2GRAY);
-
-        // Convert depth frame to mat
-        matDepth = cv::Mat(pixelsDepthRaw.getHeight(), pixelsDepthRaw.getWidth(), ofxCv::getCvImageType(pixelsDepthRaw), pixelsDepthRaw.getData(), 0);
-    }
+    // kinect->update();
+    //
+    // if (kinect->isFrameNew()) {
+    //     // Update Kinect FPS tracking
+    //     if (++kinectFrameCounter == 15) {
+    //         double tsNow = (double)ofGetElapsedTimeMillis();
+    //         kinectFPS = (double)kinectFrameCounter / ((tsNow/1000) - (tsKinectFPS/1000));
+    //         tsKinectFPS = tsNow;
+    //         kinectFrameCounter = 0;
+    //     }
+    //
+    //     ofPixels pixelsRGB = kinect->getRgbPixels();
+    //     ofPixels pixelsDepth = kinect->getDepthPixels();
+    //     ofFloatPixels pixelsDepthRaw = kinect->getRawDepthPixels();
+    //
+    //     texRGB.loadData(pixelsRGB);
+    //     texDepth.loadData(pixelsDepth);
+    //
+    //     // Convert RGB frame grayscale
+    //     cv::cvtColor(ofxCv::toCv(pixelsRGB), matGrayscale, CV_BGR2GRAY);
+    //
+    //     // Convert depth frame to mat
+    //     matDepth = cv::Mat(pixelsDepthRaw.getHeight(), pixelsDepthRaw.getWidth(), ofxCv::getCvImageType(pixelsDepthRaw), pixelsDepthRaw.getData(), 0);
+    // }
 }
 
 
