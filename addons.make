@@ -1,3 +1,0 @@
-ofxCv
-ofxGui
-ofxKinectV2

@@ -2,7 +2,7 @@
 
 #include "ofMain.h"
 #include "ofxCv.h"
-#include "ofxKinectV2.h"
+// #include "ofxKinectV2.h"
 #include "LandmarkCoreIncludes.h"
 /* #include "ofxFaceTracker2.h" */
 #include <FaceAnalyser.h>
@@ -14,7 +14,7 @@ class ofApp : public ofBaseApp{
 
 public:
 
-    ofxKinectV2 *kinect;
+    // ofxKinectV2 *kinect;
     double tsKinectFPS;
     uint32_t kinectFrameCounter;
     double kinectFPS;
