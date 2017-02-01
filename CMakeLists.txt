@@ -39,12 +39,13 @@ find_package(PkgConfig)
 find_package(LibUSB REQUIRED)
 find_package(TBB REQUIRED)
 find_package(OpenFace REQUIRED)
-find_package(Freenect2 REQUIRED)
+find_package(freenect2 REQUIRED)
 find_package(OpenCL REQUIRED)
 include_directories(${TurboJPEG_INCLUDE_DIRS})
 include_directories(${Boost_INCLUDE_DIR}/boost)
 include_directories(${OpenFace_INCLUDE_DIRS})
 include_directories(${freenect2_INCLUDE_DIRS})
+include_directories(${TBB_INCLUDE_DIRS})
 
 ### addons
 ofxaddon(ofxGui)
@@ -83,7 +84,8 @@ target_link_libraries(${APP} PUBLIC
   ${OpenFace_LIBRARIES}
   ${OpenCL_LIBRARIES}
   ${freenect2_LIBRARIES}
-  TBB
+  ${TBB_LIBRARIES}
+  ${DLIB_LIBRARIES}
 )
 
 if (COTIRE)
