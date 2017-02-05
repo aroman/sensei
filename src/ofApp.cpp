@@ -62,6 +62,8 @@ void NonOverlapingDetections(const vector<LandmarkDetector::CLNF>& models, vecto
 void ofApp::setup() {
     kinectFrameCounter = 0;
 
+    string CWD = ofFilePath::getCurrentWorkingDirectory();
+
     // ofxKinect2 guarantees that device ID 0 will always refer to the same kinect
     // if there's only ever one plugged in
     // see: https://github.com/ofTheo/ofxKinectV2/blob/a536824/src/ofxKinectV2.h#L20
@@ -69,14 +71,15 @@ void ofApp::setup() {
 
     textFont.load(OF_TTF_MONO, 28, true);
 
-    // kinect = new ofxKinectV2();
+    kinect = new ofxKinectV2();
 
     // connect to the kinect. updates occur on a separate thread
-    // bool didOpenSuccessfully = kinect->open(kinectId);
+    bool didOpenSuccessfully = kinect->open(kinectId);
 
-    // if (!didOpenSuccessfully) {
-    //     std::exit(1);
-    // }
+    if (!didOpenSuccessfully) {
+        detectMxnet();
+        std::exit(1);
+    }
 
     LandmarkDetector::FaceModelParameters default_parameters;
 
@@ -84,7 +87,7 @@ void ofApp::setup() {
     // Model should not try to re-initialising itself
     // TODO @avi more accurate comment
     default_parameters.reinit_video_every = -1;
-    default_parameters.model_location = "/opt/sensei/model/main_clnf_general.txt";
+    default_parameters.model_location = CWD + "/models/model/main_clnf_general.txt";
     default_parameters.track_gaze = true;
 
     LandmarkDetector::CLNF default_model(default_parameters.model_location);
@@ -97,16 +100,16 @@ void ofApp::setup() {
     }
 
     // Used for image masking
-    const string tri_loc = "/opt/sensei/model/tris_68_full.txt";
+    const string tri_loc = CWD + "/models/model/tris_68_full.txt";
 
     string au_loc;
 
     bool dynamic = true;
     // Indicates if a dynamic AU model should be used (dynamic is useful if the video is long enough to include neutral expressions)
     if (dynamic) {
-        au_loc = "/opt/sensei/AU_predictors/AU_all_best.txt";
+        au_loc = CWD + "/models/model/AU_all_best.txt";
     } else {
-        au_loc = "/opt/sensei/AU_predictors/AU_all_static.txt";
+        au_loc = CWD + "/models/model/AU_all_static.txt";
     }
 
     // If optical centers are not defined just use center of image
@@ -167,32 +170,46 @@ void visualise_tracking(cv::Mat& captured_image, const LandmarkDetector::CLNF& f
  * General  Requests new depth depth and RGB frames from the kinect, and converts to OpenCV (Mat) format
  */
 void ofApp::updateKinect() {
-    // kinect->update();
-    //
-    // if (kinect->isFrameNew()) {
-    //     // Update Kinect FPS tracking
-    //     if (++kinectFrameCounter == 15) {
-    //         double tsNow = (double)ofGetElapsedTimeMillis();
-    //         kinectFPS = (double)kinectFrameCounter / ((tsNow/1000) - (tsKinectFPS/1000));
-    //         tsKinectFPS = tsNow;
-    //         kinectFrameCounter = 0;
-    //     }
-    //
-    //     ofPixels pixelsRGB = kinect->getRgbPixels();
-    //     ofPixels pixelsDepth = kinect->getDepthPixels();
-    //     ofFloatPixels pixelsDepthRaw = kinect->getRawDepthPixels();
-    //
-    //     texRGB.loadData(pixelsRGB);
-    //     texDepth.loadData(pixelsDepth);
-    //
-    //     // Convert RGB frame grayscale
-    //     cv::cvtColor(ofxCv::toCv(pixelsRGB), matGrayscale, CV_BGR2GRAY);
-    //
-    //     // Convert depth frame to mat
-    //     matDepth = cv::Mat(pixelsDepthRaw.getHeight(), pixelsDepthRaw.getWidth(), ofxCv::getCvImageType(pixelsDepthRaw), pixelsDepthRaw.getData(), 0);
-    // }
+
+    kinect->update();
+
+    if (kinect->isFrameNew()) {
+        // Update Kinect FPS tracking
+        if (++kinectFrameCounter == 15) {
+            double tsNow = (double)ofGetElapsedTimeMillis();
+            kinectFPS = (double)kinectFrameCounter / ((tsNow/1000) - (tsKinectFPS/1000));
+            tsKinectFPS = tsNow;
+            kinectFrameCounter = 0;
+        }
+
+        ofPixels pixelsRGB = kinect->getRgbPixels();
+        ofPixels pixelsDepth = kinect->getDepthPixels();
+        ofFloatPixels pixelsDepthRaw = kinect->getRawDepthPixels();
+
+        texRGB.loadData(pixelsRGB);
+        texDepth.loadData(pixelsDepth);
+
+        // Convert RGB frame grayscale
+        cv::cvtColor(ofxCv::toCv(pixelsRGB), matGrayscale, CV_RGB2GRAY);
+
+        // Convert depth frame to mat
+        matDepth = cv::Mat(pixelsDepthRaw.getHeight(), pixelsDepthRaw.getWidth(), ofxCv::getCvImageType(pixelsDepthRaw), pixelsDepthRaw.getData(), 0);
+    }
 }
 
+
+
+void ofApp::detectMxnet() {
+  ofImage testImg;
+  testImg.load(ofFilePath::getCurrentWorkingDirectory() + "/test.jpg");
+  cv::Mat imgMat = ofxCv::toCv(testImg);
+  cv::Mat imgConv;
+  cv::cvtColor(imgMat, imgConv, CV_RGB2BGR);
+  // ofLog() << "dims " << imgMat.dims << "flags " << imgMat.flags;
+	// namedWindow("Display window", cv::WINDOW_AUTOSIZE);
+  // imshow("Display window", imgMat);
+  mxnet_detect(imgConv);
+}
 
 /**
  * @brief        Detects landmarks and facial features in the current frame based on detected faces
@@ -200,6 +217,7 @@ void ofApp::updateKinect() {
  * General       TODO @avi
  */
 void ofApp::detectLandmarks() {
+
     bool detection_success = false;
 
     // This is useful for a second pass run (if want AU predictions)
@@ -254,6 +272,7 @@ void ofApp::detectLandmarks() {
  */
 void ofApp::update() {
     updateKinect();
+    detectMxnet();
 
 //    tracker.update(matGrayscale);
     faceDetector.updateImage(matGrayscale);
