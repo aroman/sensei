@@ -5,40 +5,82 @@
 #include "ofxKinectV2.h"
 #include "LandmarkCoreIncludes.h"
 #include "mtcnn.h"
-/* #include "ofxFaceTracker2.h" */
 #include <FaceAnalyser.h>
-
 #include "FaceDetector.hpp"
 
+typedef long long frameTime;
 
-class ofApp : public ofBaseApp{
+//typedef cv::Rect_<double> rect;
 
+struct rect{
+    double x;
+    double y;
+    double width;
+    double height;
+};
+
+struct faceData{
+    rect r;
+};
+
+class bufferFrame{
 public:
 
-    ofxKinectV2 *kinect;
-    double tsKinectFPS;
-    uint32_t kinectFrameCounter;
-    double kinectFPS;
+    const libfreenect2::Frame *rgbFrame;
+    const libfreenect2::Frame *depthFrame;
+    libfreenect2::Frame *undistorted;
+    libfreenect2::Frame *registered;
+    libfreenect2::Frame *bigdepth;
+    int* color_depth_map;
 
-    ofTrueTypeFont textFont;
+    ofPixels pRGB;
+    ofPixels pDepth;
 
-    ofTexture texRGB;
-    ofTexture texDepth;
-    cv::Mat_<uchar> matGrayscale;
-    cv::Mat_<float> matDepth;
+    bool hasData = false;
 
-    float fx, fy, cx, cy;
-    vector<LandmarkDetector::CLNF> models;
-    vector<LandmarkDetector::FaceModelParameters> model_parameters;
-    vector<bool> active_models;
-//    FaceAnalysis::FaceAnalyser face_analyser;
+    vector<faceData> faces;
 
-//    ofxFaceTracker2 tracker;
-    FaceDetector faceDetector;
+    void draw();
 
+    void findFaces();
+
+    void doRGBD(libfreenect2::Registration* registration);
+
+    vector<rect> randNRects(uint nRects);
+};
+
+class figKinect{
+public:
+
+    libfreenect2::Freenect2 freenect2;
+    libfreenect2::Registration* registration;
+
+    //bool isOpen();
+    //bool hasNewFrame();
+    //bufferFrame *getNewFrame();
+
+
+    ~figKinect();
     void setup();
     void update();
     void draw();
+
+private:
+    ofxKinectV2 *kinect = NULL;
+    bufferFrame* frame = NULL;
+};
+
+
+class ofApp : public ofBaseApp{
+private:
+    figKinect *kinect;
+    ofTrueTypeFont font;
+
+public:
+    void setup();
+    void update();
+    void draw();
+    ~ofApp();
 
     void updateKinect();
     void detectLandmarks();
