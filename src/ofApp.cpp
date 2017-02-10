@@ -13,7 +13,7 @@ using namespace std;
         const bool enable_filter = true; //filter out pixels not visible to both
 
         registration->apply(rgbFrame,depthFrame,undistorted,registered,enable_filter,bigdepth);
-    
+
 
 
 
@@ -120,9 +120,23 @@ using namespace std;
         freenect2 = kinect->freenect2;
         registration = kinect->registration;
 
+        // here's how you use the mtcnn stuff
 
+        // 1. load test image (for you, will be a frame)
+        // ofImage testImg;
+        // testImg.load(ofFilePath::getCurrentWorkingDirectory() + "/test.jpg");
+        // cv::Mat imgMat = ofxCv::toCv(testImg);
+        // cv::Mat imgConv;
 
+        // 2. convert to grayscale
+        // cv::cvtColor(imgMat, imgConv, CV_RGB2BGR);
 
+        // 3. profit !
+        // vector<mtcnn_face_bbox> faces = mxnet_detect(imgConv);
+        // printf("%d faces found\n", faces.size());
+        // for (mtcnn_face_bbox face : faces) {
+        //   printf("\t[(%f,%f), (%f,%f), score = %f\n", face.x1, face.y1, face.x2`, face.y2, face.score);
+        // }
     }
 
     void figKinect::update() {
@@ -130,7 +144,7 @@ using namespace std;
 
         if(kinect->isFrameNew()){
             frame->hasData = false;
-            
+
             frame->pRGB = kinect->getRgbPixels();
             frame->pDepth = kinect->getDepthPixels();
 
@@ -153,7 +167,7 @@ using namespace std;
         if(frame != NULL){
             frame->draw();
         }
-        
+
     }
 
     figKinect::~figKinect() {
@@ -184,7 +198,7 @@ using namespace std;
 
     void ofApp::draw() {
         //cout << "ofApp::draw()" << endl;
-        kinect->draw(); 
+        kinect->draw();
     }
 
     ofApp::~ofApp() {
