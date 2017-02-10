@@ -1,3 +1,11 @@
 #include "ofxCv.h"
 
-void mxnet_detect(const cv::Mat& mat);
+struct mtcnn_face_bbox {
+  double x1;
+  double y1;
+  double x2;
+  double y2;
+  double score;
+};
+
+vector<mtcnn_face_bbox> mxnet_detect(const cv::Mat& mat);
