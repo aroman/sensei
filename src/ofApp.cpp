@@ -208,7 +208,11 @@ void ofApp::detectMxnet() {
   // ofLog() << "dims " << imgMat.dims << "flags " << imgMat.flags;
 	// namedWindow("Display window", cv::WINDOW_AUTOSIZE);
   // imshow("Display window", imgMat);
-  mxnet_detect(imgConv);
+  vector<mtcnn_face_bbox> faces = mxnet_detect(imgConv);
+  printf("%d faces found\n", faces.size());
+  for (mtcnn_face_bbox face : faces) {
+    printf("\t[(%f,%f), (%f,%f), score = %f\n", face.x1, face.y1, face.x2`, face.y2, face.score);
+  }
 }
 
 /**
