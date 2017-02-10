@@ -12,10 +12,11 @@ using namespace std;
     void bufferFrame::doRGBD(libfreenect2::Registration* registration){
         const bool enable_filter = true; //filter out pixels not visible to both
 
-        registration->apply(rgbFrame,depthFrame,undistorted,registered,enable_filter,bigdepth);
+        //registration->apply(rgbFrame,depthFrame,undistorted,registered,enable_filter,bigdepth);
 
-
-
+        //test1.setFromPixels(undistorted->data, undistorted->width, undistorted->height, 3);
+        //test2.setFromPixels(registered->data, registered->width, registered->height, 3);
+        //test3.setFromPixels(bigdepth->data, bigdepth->width, bigdepth->height, 3);
 
     }
 
@@ -43,6 +44,11 @@ using namespace std;
                             r.y,
                             r.width,
                             r.height);
+
+                p.rectangle(r.x + (r.width*0.1),
+                            r.y + (r.height*0.1),
+                            (r.width*0.8),
+                            (r.height*0.8));
 
                 p.draw();
 
@@ -74,11 +80,64 @@ using namespace std;
 
         //>>>>>>>> INSERT FACE DETECTOR >>>>>>>>>>>>>>>
 
-        uint numRandFaces = 10;
+        //uint numRandFaces = 10;
 
-        vector<rect> randR = randNRects(numRandFaces);
+        //vector<rect> randR = randNRects(numRandFaces);
 
-        int numFacesFound = numRandFaces;
+        
+
+
+
+
+        cout << "test 1" << endl;
+
+        cv::Mat matAdjust = ofxCv::toCv(pRGB);
+
+        cout << "test 2" << endl;
+
+        vector<mtcnn_face_bbox> mxFaces = mxnet_detect(matAdjust);
+
+        cout << "test 3" << endl;
+
+        int numFacesFound = mxFaces.size();
+
+        cout << "test 4" << endl;
+
+
+        //cv::cvtColor(ofxCv::toCv(pRGB), matAdjust, CV_RGB2GRAY);
+        //cv::cvtColor(ofxCv::toCv(pRGB), matAdjust, CV_RGB2BGR);
+               
+
+
+
+
+
+        //matDepth = cv::Mat(pixelsDepthRaw.getHeight(), pixelsDepthRaw.getWidth(), ofxCv::getCvImageType(pixelsDepthRaw), pixelsDepthRaw.getData(), 0);
+
+        // here's how you use the mtcnn stuff
+
+        // 1. load test image (for you, will be a frame)
+        // ofImage testImg;
+        // testImg.load(ofFilePath::getCurrentWorkingDirectory() + "/test.jpg");
+        // cv::Mat imgMat = ofxCv::toCv(testImg);
+        // cv::Mat imgConv;
+
+        // 2. convert to grayscale
+        // cv::cvtColor(imgMat, imgConv, CV_RGB2BGR);
+
+        // 3. profit !
+        // vector<mtcnn_face_bbox> faces = mxnet_detect(imgConv);
+        // printf("%d faces found\n", faces.size());
+        // for (mtcnn_face_bbox face : faces) {
+        //   printf("\t[(%f,%f), (%f,%f), score = %f\n", face.x1, face.y1, face.x2`, face.y2, face.score);
+        // }
+
+
+
+
+
+
+
 
         //>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>
 
@@ -87,7 +146,14 @@ using namespace std;
         for(uint i = 0; i < numFacesFound; i++){
             faceData face;
 
-            face.r = randR[i];
+            cout << "test 5" << endl;
+
+            face.r.x = mxFaces[i].x1;
+            face.r.y = mxFaces[i].y1;
+            face.r.width = abs(mxFaces[i].x2-mxFaces[i].x1);
+            face.r.height = abs(mxFaces[i].y2-mxFaces[i].y1);
+
+            cout << "test 6" << endl;
 
             faces.push_back(face);
         }
@@ -119,24 +185,6 @@ using namespace std;
 
         freenect2 = kinect->freenect2;
         registration = kinect->registration;
-
-        // here's how you use the mtcnn stuff
-
-        // 1. load test image (for you, will be a frame)
-        // ofImage testImg;
-        // testImg.load(ofFilePath::getCurrentWorkingDirectory() + "/test.jpg");
-        // cv::Mat imgMat = ofxCv::toCv(testImg);
-        // cv::Mat imgConv;
-
-        // 2. convert to grayscale
-        // cv::cvtColor(imgMat, imgConv, CV_RGB2BGR);
-
-        // 3. profit !
-        // vector<mtcnn_face_bbox> faces = mxnet_detect(imgConv);
-        // printf("%d faces found\n", faces.size());
-        // for (mtcnn_face_bbox face : faces) {
-        //   printf("\t[(%f,%f), (%f,%f), score = %f\n", face.x1, face.y1, face.x2`, face.y2, face.score);
-        // }
     }
 
     void figKinect::update() {
@@ -151,9 +199,11 @@ using namespace std;
             frame->rgbFrame = (libfreenect2::Frame *)kinect->getRgbFrame();
             frame->depthFrame = (libfreenect2::Frame *)kinect->getDepthFrame();
 
+	        //cout << "1: " << ofGetElapsedTimeMillis() << endl;
             frame->findFaces();
+	        //cout << "2: " << ofGetElapsedTimeMillis() << endl;
 
-            frame->doRGBD(registration);
+            //frame->doRGBD(registration);
 
             //frame->getPoses();
 

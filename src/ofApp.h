@@ -28,13 +28,19 @@ public:
 
     const libfreenect2::Frame *rgbFrame;
     const libfreenect2::Frame *depthFrame;
+
     libfreenect2::Frame *undistorted;
     libfreenect2::Frame *registered;
     libfreenect2::Frame *bigdepth;
+    
     int* color_depth_map;
 
     ofPixels pRGB;
     ofPixels pDepth;
+
+    ofPixels test1;
+    ofPixels test2;
+    ofPixels test3;
 
     bool hasData = false;
 
