@@ -31,7 +31,7 @@ We use (CMake)[https://en.wikipedia.org/wiki/CMake]. Basically it's a build scri
 ```sh
 cd sensei
 mkdir build && cd build
-cmake .. -D CMAKE_INSTALL_PREFIX=../install
+cmake .. -DCMAKE_INSTALL_PREFIX=../install
 make
 make install
 ```

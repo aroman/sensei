@@ -75,7 +75,7 @@ using namespace std;
         return rectVec;
     }
 
-    void bufferFrame::findFaces() {
+    void bufferFrame::findFaces(MtcnnDetector *mtcnnDetector) {
         faces.clear();
 
         //>>>>>>>> INSERT FACE DETECTOR >>>>>>>>>>>>>>>
@@ -84,32 +84,14 @@ using namespace std;
 
         //vector<rect> randR = randNRects(numRandFaces);
 
-        
-
-
-
-
-        cout << "test 1" << endl;
 
         cv::Mat matAdjust = ofxCv::toCv(pRGB);
-
-        cout << "test 2" << endl;
-
-        vector<mtcnn_face_bbox> mxFaces = mxnet_detect(matAdjust);
-
-        cout << "test 3" << endl;
+        vector<mtcnn_face_bbox> mxFaces = mtcnnDetector->detectFaces(matAdjust);
 
         int numFacesFound = mxFaces.size();
 
-        cout << "test 4" << endl;
-
-
         //cv::cvtColor(ofxCv::toCv(pRGB), matAdjust, CV_RGB2GRAY);
         //cv::cvtColor(ofxCv::toCv(pRGB), matAdjust, CV_RGB2BGR);
-               
-
-
-
 
 
         //matDepth = cv::Mat(pixelsDepthRaw.getHeight(), pixelsDepthRaw.getWidth(), ofxCv::getCvImageType(pixelsDepthRaw), pixelsDepthRaw.getData(), 0);
@@ -178,6 +160,8 @@ using namespace std;
             std::exit(1);
         }
 
+        mtcnnDetector = new MtcnnDetector();
+
         if(frame != NULL) frame = new bufferFrame();
         frame->hasData = false;
 
@@ -200,7 +184,7 @@ using namespace std;
             frame->depthFrame = (libfreenect2::Frame *)kinect->getDepthFrame();
 
 	        //cout << "1: " << ofGetElapsedTimeMillis() << endl;
-            frame->findFaces();
+            frame->findFaces(mtcnnDetector);
 	        //cout << "2: " << ofGetElapsedTimeMillis() << endl;
 
             //frame->doRGBD(registration);

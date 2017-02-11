@@ -19,10 +19,8 @@ option(COTIRE "Use cotire" ON)
 set(sources
   src/main.cpp
   src/FaceDetector.cpp
-  src/FaceDetector.hpp
   src/ofApp.cpp
-  src/ofApp.h
-  src/mtcnn.cpp
+  src/MtcnnDetector.cpp
 )
 
 file(GLOB_RECURSE models models)
