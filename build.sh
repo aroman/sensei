@@ -9,8 +9,8 @@ mkdir -p build \
 && make -j4 install
 
 if [ $? -eq 0 ]; then
-    echo -e "\nBuild complete! Launch with ${bold}./run.sh${normal} or debug with ${bold}./run${normal} --debug"
+    echo -e "\nBuild complete! Launch with ${bold}./run.sh${normal} or debug with ${bold}./run --debug${normal}"
 else
-  echo -e "\nBuild failed! Try ./run.sh --debug."
+  echo -e "\nBuild failed! Tip: you can debug successful builds with ${bold}./run --debug${normal}."
     echo FAIL
 fi
