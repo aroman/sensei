@@ -8,9 +8,13 @@ from mtcnn_detector import MtcnnDetector
 SHOW_VIZ = False
 BENCHMARK = True
 
-detector = MtcnnDetector(model_folder='models/mxnet-mtcnn', ctx=mx.cpu(0), num_worker = 4 , accurate_landmark = False)
+detector = MtcnnDetector(model_folder='models/mxnet-mtcnn', ctx=mx.cpu(0), num_worker=4, accurate_landmark = False)
 
 def detect(img):
+
+    if SHOW_VIZ:
+        cv2.imshow("img", img)
+        cv2.waitKey(0)
 
     if BENCHMARK:
         start = time.time()

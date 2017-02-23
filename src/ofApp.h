@@ -2,68 +2,44 @@
 
 #include "ofMain.h"
 #include "ofxCv.h"
-#include "ofxKinectV2.h"
+#include "KinectHelper.h"
 #include "LandmarkCoreIncludes.h"
 #include <FaceAnalyser.h>
 #include "FaceDetector.hpp"
 
 typedef long long frameTime;
 
-//typedef cv::Rect_<double> rect;
-
-struct rect{
+struct rect {
     double x;
     double y;
     double width;
     double height;
 };
 
-struct faceData{
+struct faceData {
     rect r;
 };
 
-class bufferFrame{
+class bufferFrame {
 public:
-
-    const libfreenect2::Frame *rgbFrame;
-    const libfreenect2::Frame *depthFrame;
-
-    libfreenect2::Frame *undistorted;
-    libfreenect2::Frame *registered;
-    libfreenect2::Frame *bigdepth;
-
-    int* color_depth_map;
-
     ofPixels pRGB;
-    ofPixels pDepth;
-
-    ofPixels test1;
-    ofPixels test2;
-    ofPixels test3;
+    ofFloatPixels pDepth;
+    ofFloatPixels pBigDepth;
 
     bool hasData = false;
 
     vector<faceData> faces;
 
     void draw();
-
     void findFaces(FaceDetector *faceDetector);
-
-    void doRGBD(libfreenect2::Registration* registration);
-
-    vector<rect> randNRects(uint nRects);
 };
 
-class figKinect{
+class figKinect {
 public:
-
-    libfreenect2::Freenect2 freenect2;
-    libfreenect2::Registration* registration;
 
     //bool isOpen();
     //bool hasNewFrame();
     //bufferFrame *getNewFrame();
-
 
     ~figKinect();
     void setup();
@@ -71,13 +47,12 @@ public:
     void draw();
 
 private:
-    ofxKinectV2 *kinect = NULL;
+    KinectHelper *kinect = NULL;
     bufferFrame *frame = NULL;
     FaceDetector *faceDetector = NULL;
 };
 
-
-class ofApp : public ofBaseApp{
+class ofApp : public ofBaseApp {
 private:
     figKinect *kinect;
     ofTrueTypeFont font;

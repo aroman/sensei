@@ -14,7 +14,6 @@ FaceDetector::FaceDetector() {
 }
 
 void FaceDetector::updateImage(cv::Mat newImage) {
-    ofLog() << "updateImage";
     newImage.copyTo(image);
     isImageDirty = true;
 }

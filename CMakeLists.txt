@@ -9,6 +9,8 @@ set(APP sensei)
 
 project(${APP} CXX)
 
+set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -Wno-deprecated-declarations")
+
 set(CMAKE_MODULE_PATH ${CMAKE_MODULE_PATH} "${CMAKE_CURRENT_SOURCE_DIR}/cmake/modules/")
 set(OF_ROOT "${CMAKE_CURRENT_SOURCE_DIR}/3rdParty/of/" CACHE PATH "The root directory of ofnode/of project.")
 include(${OF_ROOT}/openFrameworks.cmake)
@@ -18,10 +20,12 @@ option(COTIRE "Use cotire" ON)
 ### source files for out project
 set(sources
   src/main.cpp
-  src/FaceDetector.cpp
   src/ofApp.cpp
+  src/KinectHelper.cpp
+  src/FaceDetector.cpp
   src/MtcnnDetector.cpp
 )
+# set_source_files_properties(3rdParty/of/src/poco/Foundation/include/Poco/AtomicCounter.h PROPERTIES COMPILE_FLAGS -Wno-deprecated-declarations)
 
 file(GLOB_RECURSE models models)
 
@@ -52,15 +56,14 @@ include_directories(${PYTHON_INCLUDE_DIRS})
 ### addons
 ofxaddon(ofxGui)
 ofxaddon(3rdParty/addons/ofxCv)
-ofxaddon(3rdParty/addons/ofxKinectV2)
 
-file(GLOB_RECURSE ofx_addon_includes LIST_DIRECTORIES true 3rdParty/addons/ofxCv/libs/*.h 3rdParty/addons/ofxKinectV2/libs/*.h)
+file(GLOB_RECURSE ofx_addon_includes LIST_DIRECTORIES true 3rdParty/addons/ofxCv/libs/*.h)
 include_directories(${ofx_addon_includes})
 
-file(GLOB_RECURSE ofx_kinect_v2_sources 3rdParty/addons/ofxKinectV2/src/*.cpp)
+# file(GLOB_RECURSE ofx_kinect_v2_sources 3rdParty/addons/ofxKinectV2/src/*.cpp)
 
 ### target definitions
-add_executable(${APP} ${sources} ${OFXADDONS_SOURCES} ${ofx_kinect_v2_sources})
+add_executable(${APP} ${sources} ${OFXADDONS_SOURCES})
 target_compile_options(${APP} PUBLIC -std=c++1y)
 # this lets me include files relative to the root src dir with a <> pair
 target_include_directories(${APP} PUBLIC src/main)

@@ -1,6 +1,7 @@
 install/
 bin/
 build/
+*.pch
 
 ## Build generated
 build/

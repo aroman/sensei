@@ -5,130 +5,64 @@
 
 using namespace std;
 
-
-
 // bufferFrame
 
-    void bufferFrame::doRGBD(libfreenect2::Registration* registration){
-        const bool enable_filter = true; //filter out pixels not visible to both
-
-        //registration->apply(rgbFrame,depthFrame,undistorted,registered,enable_filter,bigdepth);
-
-        //test1.setFromPixels(undistorted->data, undistorted->width, undistorted->height, 3);
-        //test2.setFromPixels(registered->data, registered->width, registered->height, 3);
-        //test3.setFromPixels(bigdepth->data, bigdepth->width, bigdepth->height, 3);
-
-    }
-
-
-
     void bufferFrame::draw() {
+        if (!hasData) return;
 
-        //int width = (frame->rgb).getWidth();
-        //int height = (frame->rgb).getHeight();
-        if(hasData){
-            ofTexture tRGB;
-            tRGB.loadData(pRGB);
-            tRGB.draw(0,0);
+        ofTexture tRGB;
+        tRGB.loadData(pRGB);
+        tRGB.draw(0,0);
 
-            ofTexture tDepth;
-            tDepth.loadData(pDepth);
-            //tDepth.draw(0,0);
 
-            for(int i = 0; i < faces.size(); i++){
-                rect r = faces[i].r;
+        // for(int i = 0; i < pDepth.size(); i++){
+        //     // pixels[i] = ofMap(rawDepthPixels[i], minDistance, maxDistance, 255, 0, true);
+        //     pDepth[i] /= 4500;
+        // }
+        ofTexture tDepth;
+        tDepth.loadData(pDepth);
+        tDepth.draw(0, 360, 640, 360);
 
-                ofPath p;
-                p.setFillColor(ofColor::blue);
-                p.rectangle(r.x,
-                            r.y,
-                            r.width,
-                            r.height);
+        ofTexture tBigDepth;
+        // tBigDepth.setTextureMinMagFilter(GL_NEAREST, GL_NEAREST);
+        tBigDepth.loadData(pBigDepth);
+        tBigDepth.draw(640, 0, 640, 360);
 
-                p.rectangle(r.x + (r.width*0.1),
-                            r.y + (r.height*0.1),
-                            (r.width*0.8),
-                            (r.height*0.8));
+        for (int i = 0; i < faces.size(); i++) {
+            rect r = faces[i].r;
 
-                p.draw();
+            ofPath p;
+            p.setFillColor(ofColor::blue);
+            p.rectangle(r.x,
+                        r.y,
+                        r.width,
+                        r.height);
 
-            }
+            p.rectangle(r.x + (r.width*0.1),
+                        r.y + (r.height*0.1),
+                        (r.width*0.8),
+                        (r.height*0.8));
 
+            p.draw();
+
+          // float *pixels = pBigDepth.getData();
+          // int closePixel = static_cast<int>(r.x * r.y);
+          // int closePixel = 1920*50 + 600;
+          // ofDrawBitmapStringHighlight(std::to_string(pixels[closePixel]), r.x, r.y);
         }
-    }
-
-
-    vector<rect> bufferFrame::randNRects(uint nRects){
-        vector<rect> rectVec;
-        rectVec.reserve(nRects);
-
-        for(int i = 0; i < nRects; i++){
-            rect r;
-
-            r.x      = rand() % 500;
-            r.y      = rand() % 500;
-            r.width  = rand() % 100;
-            r.height = rand() % 100;
-
-            rectVec.push_back(r);
-        }
-        return rectVec;
     }
 
     void bufferFrame::findFaces(FaceDetector *faceDetector) {
+        if (!hasData) return;
         faces.clear();
-
-        //>>>>>>>> INSERT FACE DETECTOR >>>>>>>>>>>>>>>
-
-        //uint numRandFaces = 10;
-
-        //vector<rect> randR = randNRects(numRandFaces);
 
         pRGB.resize(640, 360, OF_INTERPOLATE_NEAREST_NEIGHBOR);
         cv::Mat matAdjust = ofxCv::toCv(pRGB);
-        // faceDetector->lock();
-        // if (foobar) {
-          faceDetector->updateImage(matAdjust);
-          // foobar = false;
-        // }
-        // mtcnn_detect_results detectResults = faceDetector->detectedFaces;
-        // // faceDetector->unlock();
-        //
+        // XXX: When I rewrote the kinect integration, this conversion became necessary...
+        cv::cvtColor(ofxCv::toCv(pRGB), matAdjust, CV_BGRA2BGR);
+        faceDetector->updateImage(matAdjust);
         vector<mtcnn_face_bbox> mxFaces = faceDetector->detectedFaces.bboxes;
         int numFacesFound = mxFaces.size();
-        //
-        // //cv::cvtColor(ofxCv::toCv(pRGB), matAdjust, CV_RGB2GRAY);
-        // //cv::cvtColor(ofxCv::toCv(pRGB), matAdjust, CV_RGB2BGR);
-        //
-        //
-        // //matDepth = cv::Mat(pixelsDepthRaw.getHeight(), pixelsDepthRaw.getWidth(), ofxCv::getCvImageType(pixelsDepthRaw), pixelsDepthRaw.getData(), 0);
-        //
-        // // here's how you use the mtcnn stuff
-        //
-        // // 1. load test image (for you, will be a frame)
-        // // ofImage testImg;
-        // // testImg.load(ofFilePath::getCurrentWorkingDirectory() + "/test.jpg");
-        // // cv::Mat imgMat = ofxCv::toCv(testImg);
-        // // cv::Mat imgConv;
-        //
-        // // 2. convert to grayscale
-        // // cv::cvtColor(imgMat, imgConv, CV_RGB2BGR);
-        //faceDetector->detectedFaces
-        // // 3. profit !
-        // // vector<mtcnn_face_bbox> faces = mxnet_detect(imgConv);
-        // // printf("%d faces found\n", faces.size());
-        // // for (mtcnn_face_bbox face : faces) {
-        // //   printf("\t[(%f,%f), (%f,%f), score = %f\n", face.x1, face.y1, face.x2`, face.y2, face.score);
-        // // }
-        //
-        //
-        //
-        //
-
-
-
-
-        //>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>
 
         faces.reserve(numFacesFound); //increases the capacity
 
@@ -145,56 +79,54 @@ using namespace std;
 
     }
 
-
-
-
 // figKinect
 
     void figKinect::setup() {
         cout << "figKinect::setup()" << endl;
 
-        if(kinect != NULL) delete kinect;
-        kinect = new ofxKinectV2();
+        if (kinect != NULL) delete kinect;
+        kinect = new KinectHelper();
 
-        uint port = 0;
-        bool connected = kinect->open(port);
-        if(!connected){
-            cerr << "ERROR: could not kinect on port " << port << endl;
+        bool didConnectSuccessfully = kinect->connect();
+        if (!didConnectSuccessfully) {
             std::exit(1);
         }
 
-        if(frame == NULL) frame = new bufferFrame();
+        if (frame == NULL) frame = new bufferFrame();
         frame->hasData = false;
-
-        cout << "connected to kinect on port " << port << endl;
-
-        freenect2 = kinect->freenect2;
-        registration = kinect->registration;
 
         faceDetector = new FaceDetector();
         faceDetector->startThread(true);
     }
 
     void figKinect::update() {
-        kinect->update();
-
-        if(kinect->isFrameNew()){
-            frame->hasData = false;
-
-            frame->pRGB = kinect->getRgbPixels();
-            frame->pDepth = kinect->getDepthPixels();
-
-            frame->rgbFrame = (libfreenect2::Frame *)kinect->getRgbFrame();
-            frame->depthFrame = (libfreenect2::Frame *)kinect->getDepthFrame();
-
-            frame->findFaces(faceDetector);
-
-            //frame->doRGBD(registration);
-
-            //frame->getPoses();
-
-            frame->hasData = true;
+        if (!kinect->isConnected) {
+          return;
         }
+        frame->pRGB = kinect->getRgbPixels();
+        frame->pDepth = kinect->getDepthPixels();
+        frame->pBigDepth = kinect->getBigDepthPixels();
+        frame->hasData = (frame->pRGB.size() > 0);
+        frame->findFaces(faceDetector);
+
+        // kinect->update();
+        //
+        // if(kinect->isFrameNew()){
+        //     // frame->hasData = false;
+        //     //
+        //     // frame->pRGB = kinect->getRgbPixels();
+        //     // frame->pDepth = kinect->getDepthPixels();
+        //     //
+        //     // frame->rgbFrame = (libfreenect2::Frame *)kinect->getRgbFrame();
+        //     // frame->depthFrame = (libfreenect2::Frame *)kinect->getDepthFrame();
+        //
+        //     // frame->findFaces(faceDetector);
+        //
+        //
+        //     //frame->getPoses();
+        //
+        //     frame->hasData = true;
+        // }
     }
 
     void figKinect::draw() {
@@ -211,7 +143,7 @@ using namespace std;
 
         frame->faces.clear();
         delete frame;
-        kinect->close();
+        kinect->disconnect();
         delete kinect;
     }
 
@@ -234,6 +166,7 @@ using namespace std;
 
     void ofApp::draw() {
         //cout << "ofApp::draw()" << endl;
+        // ofClear(0);
         kinect->draw();
     }
 
@@ -242,7 +175,7 @@ using namespace std;
         if(kinect != NULL) delete kinect;
     }
 
-// ofApp I/O
+    // ofApp I/O
     void ofApp::keyPressed(int key){}
     void ofApp::keyReleased(int key){}
     void ofApp::mouseMoved(int x, int y){}
