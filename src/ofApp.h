@@ -18,6 +18,7 @@ struct rect {
 
 struct faceData {
     rect r;
+    vector<double> points;
 };
 
 class bufferFrame {

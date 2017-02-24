@@ -14,7 +14,6 @@ using namespace std;
         tRGB.loadData(pRGB);
         tRGB.draw(0,0);
 
-
         // for(int i = 0; i < pDepth.size(); i++){
         //     // pixels[i] = ofMap(rawDepthPixels[i], minDistance, maxDistance, 255, 0, true);
         //     pDepth[i] /= 4500;
@@ -45,6 +44,34 @@ using namespace std;
 
             p.draw();
 
+            ofPath p1;
+            p1.setFillColor(ofColor(0, 255, 255, 200));
+            p1.circle(faces[i].points[0], faces[i].points[5], r.width*0.05);
+            p1.close();
+            p1.circle(faces[i].points[1], faces[i].points[6], r.width*0.05);
+            p1.close();
+            p1.circle(faces[i].points[2], faces[i].points[7], r.width*0.05);
+            p1.close();
+            p1.circle(faces[i].points[3], faces[i].points[8], r.width*0.05);
+            p1.close();
+            p1.circle(faces[i].points[4], faces[i].points[9], r.width*0.05);
+            p1.close();
+            p1.draw();
+
+            int eye_size = 14;
+
+            tRGB.drawSubsection(r.x, r.y, 50, 50, faces[i].points[0] - (eye_size / 2), faces[i].points[5] - (eye_size / 2), eye_size, eye_size);
+            tRGB.drawSubsection(r.x + (r.width/2) + (r.width/2), r.y, 50, 50, faces[i].points[1] - (eye_size / 2), faces[i].points[6] - (eye_size / 2), eye_size, eye_size);
+            tRGB.drawSubsection(
+              r.x + (r.width/4),
+              r.y + (r.height/2),
+              100,
+              50,
+              faces[i].points[3], // x
+              faces[i].points[8] - (r.height *0.1), // y
+              faces[i].points[4] - faces[i].points[3],
+              r.height * 0.20);
+
           // float *pixels = pBigDepth.getData();
           // int closePixel = static_cast<int>(r.x * r.y);
           // int closePixel = 1920*50 + 600;
@@ -64,7 +91,7 @@ using namespace std;
         vector<mtcnn_face_bbox> mxFaces = faceDetector->detectedFaces.bboxes;
         int numFacesFound = mxFaces.size();
 
-        faces.reserve(numFacesFound); //increases the capacity
+        faces.reserve(numFacesFound); // increases the capacity
 
         for(uint i = 0; i < numFacesFound; i++){
             faceData face;
@@ -73,6 +100,8 @@ using namespace std;
             face.r.y = mxFaces[i].y1;
             face.r.width = abs(mxFaces[i].x2-mxFaces[i].x1);
             face.r.height = abs(mxFaces[i].y2-mxFaces[i].y1);
+
+            face.points = faceDetector->detectedFaces.pointGroups[i];
 
             faces.push_back(face);
         }
@@ -166,7 +195,7 @@ using namespace std;
 
     void ofApp::draw() {
         //cout << "ofApp::draw()" << endl;
-        // ofClear(0);
+        ofClear(0);
         kinect->draw();
     }
 
