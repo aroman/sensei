@@ -14,6 +14,14 @@ void drawBoundBox(ofRectangle r, ofColor color) {
   p.draw();
 }
 
+void scaleDepthPixelsForDrawing(ofFloatPixels *depthPixels) {
+  // Scale from meters to 0-1 (float)
+  float *pixelData = depthPixels->getData();
+  for (int i = 0; i < depthPixels->size(); i++) {
+      pixelData[i] = ofMap(pixelData[i], 500, 4500, 1, 0, true);
+  }
+}
+
 void Space::doDepthAverage(ofRectangle b) {
   if (depthMap == NULL) return;
   float tempAvgDepth = 0.0;
@@ -68,9 +76,12 @@ void Space::doDepthMinMax(ofRectangle b) {
   maxDepth = tempMaxDepth;
 }
 
-void Space::updateDepth(const ofFloatPixels &pDepth) {
+void Space::updateDepthPixels(const ofFloatPixels &newDepthPixels) {
   if (r.x < 0 || r.y < 0) return;
-  pDepth.cropTo(depthPixels, r.x, r.y, r.width, r.height);
+  // TODO since we now store depthPixels as meters, we need to update
+  // the code to deal work in meters. For now, we just transform them as before.
+  newDepthPixels.cropTo(depthPixels, r.x, r.y, r.width, r.height);
+  scaleDepthPixelsForDrawing(&depthPixels);
   if (r.y > 0) {
     ofxCv::blur(depthPixels, 20);
   } else {
@@ -79,7 +90,7 @@ void Space::updateDepth(const ofFloatPixels &pDepth) {
   depthMap = depthPixels.getData();
 }
 
-void Space::updateColor(const ofPixels &newColorPixels) {
+void Space::updateColorPixels(const ofPixels &newColorPixels) {
   if (r.x < 0 || r.y < 0) return;
   newColorPixels.cropTo(colorPixels, r.x, r.y, r.width, r.height);
 }
@@ -100,8 +111,6 @@ void Person::drawFrontalView() const {
   }
 
   ofDrawBitmapStringHighlight("avg: " + ofToString(f.avgDepth), f.r.x, f.r.y + f.r.height - 40);
-  //ofDrawBitmapString("min: " + ofToString(f.minDepth), r.x, r.y + r.height - 30);
-  //ofDrawBitmapString("max: " + ofToString(f.maxDepth), r.x, r.y + r.height - 45);
 }
 
 void Person::drawBirdseyeView() const {
@@ -117,8 +126,6 @@ void Person::drawBirdseyeView() const {
   }
 
   ofDrawBitmapStringHighlight("avg: " + ofToString(f.avgDepth), r.x, r.y - 15);
-  // ofDrawBitmapStringHighlight("min: " + ofToString(f.minDepth), f.r.x, f.r.y - 30);
-  //ofDrawBitmapStringHighlight("max: " + ofToString(maxDepth), f.r.x, f.r.y - 45);
 }
 
 void Person::update(const ofPixels &newColorPixels, const ofFloatPixels &newDepthPixels) {
@@ -131,8 +138,8 @@ void Person::update(const ofPixels &newColorPixels, const ofFloatPixels &newDept
     h_w,
     h_h
   );
-  f.updateColor(newColorPixels);
-  f.updateDepth(newDepthPixels);
+  f.updateColorPixels(newColorPixels);
+  f.updateDepthPixels(newDepthPixels);
 
   ofRectangle r1;
   r1.width = 50;
@@ -155,8 +162,8 @@ void Person::update(const ofPixels &newColorPixels, const ofFloatPixels &newDept
   r2.width = h.r.width;
   r2.height = h.r.height;
 
-  h.updateColor(newColorPixels);
-  h.updateDepth(newDepthPixels);
+  h.updateColorPixels(newColorPixels);
+  h.updateDepthPixels(newDepthPixels);
   h.doDepthAverage(r2);
   h.doDepthMinMax(r2);
 

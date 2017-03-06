@@ -7,7 +7,7 @@ struct Space {
   ofRectangle r;
 
   ofPixels colorPixels;
-  ofFloatPixels depthPixels; // scaled for drawing to screen
+  ofFloatPixels depthPixels;
   float *depthMap; // raw meters
 
   float minDepth;
@@ -18,8 +18,8 @@ struct Space {
   void doDepthAverage(ofRectangle r);
   void doDepthMinMax(ofRectangle r);
 
-  void updateDepth(const ofFloatPixels &newDepthPixels);
-  void updateColor(const ofPixels &newColorPixels);
+  void updateDepthPixels(const ofFloatPixels &newDepthPixels);
+  void updateColorPixels(const ofPixels &newColorPixels);
 };
 
 struct Person {

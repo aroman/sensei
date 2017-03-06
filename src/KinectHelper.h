@@ -17,21 +17,21 @@ public:
     bool isConnected;
 
     ofPixels getColorPixels();
-    ofFloatPixels getDepthPixels();
-    ofFloatPixels getBigDepthPixels();
+    ofFloatPixels getUnalignedDepthPixels();
+    ofFloatPixels getAlignedDepthPixels();
 
     // Color camera parameters. Used for OpenFace.
     float fx, fy, cx, cy;
 
 private:
     // Double-buffer to avoid tearing and artifacts
-    ofFloatPixels depthPixelsBack;
     ofPixels colorPixelsBack;
-    ofFloatPixels bigDepthPixelsBack;
+    ofFloatPixels unalignedDepthPixelsBack;
+    ofFloatPixels alignedDepthPixelsBack;
 
-    ofFloatPixels bigDepthPixelsFront;
     ofPixels colorPixelsFront;
-    ofFloatPixels depthPixelsFront;
+    ofFloatPixels unalignedDepthPixelsFront;
+    ofFloatPixels alignedDepthPixelsFront;
 
     libfreenect2::FrameMap frames;
     libfreenect2::Freenect2 freenect2;

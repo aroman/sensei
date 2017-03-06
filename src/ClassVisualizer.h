@@ -23,7 +23,7 @@ public:
 
 private:
   ofPixels colorPixels;
-  ofFloatPixels depthPixels;
+  ofFloatPixels depthPixels; // depth pixels in meters50
   ofTexture colorTexture;
 
   bool hasData = false;

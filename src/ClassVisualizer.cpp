@@ -45,7 +45,7 @@ void ClassVisualizer::update() {
 
   TS_START("[Kinect] update frames");
   colorPixels = kinect->getColorPixels();
-  depthPixels = kinect->getBigDepthPixels();
+  depthPixels = kinect->getAlignedDepthPixels();
   TS_STOP("[Kinect] update frames");
   hasData = (colorPixels.size() > 0);
 

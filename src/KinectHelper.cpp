@@ -76,12 +76,12 @@ ofPixels KinectHelper::getColorPixels() {
   return colorPixelsFront;
 }
 
-ofFloatPixels KinectHelper::getDepthPixels() {
-  return depthPixelsFront;
+ofFloatPixels KinectHelper::getUnalignedDepthPixels() {
+  return unalignedDepthPixelsFront;
 }
 
-ofFloatPixels KinectHelper::getBigDepthPixels() {
-  return bigDepthPixelsFront;
+ofFloatPixels KinectHelper::getAlignedDepthPixels() {
+  return alignedDepthPixelsFront;
 }
 
 void KinectHelper::threadedFunction() {
@@ -99,17 +99,12 @@ void KinectHelper::threadedFunction() {
       mutex.lock();
 
       colorPixelsBack.setFromPixels(color->data, color->width, color->height, OF_PIXELS_BGRA);
-      depthPixelsBack.setFromPixels(reinterpret_cast<float *>(depth->data), ir->width, ir->height, OF_PIXELS_GRAY);
-      bigDepthPixelsBack.setFromPixels(reinterpret_cast<float *>(bigDepth->data), bigDepth->width, bigDepth->height, OF_PIXELS_GRAY);
-
-      float *pixels = bigDepthPixelsBack.getData();
-      for (int i = 0; i < bigDepthPixelsBack.size(); i++) {
-          pixels[i] = ofMap(bigDepthPixelsBack[i], 500, 4500, 1, 0, true);
-      }
+      unalignedDepthPixelsBack.setFromPixels(reinterpret_cast<float *>(depth->data), ir->width, ir->height, OF_PIXELS_GRAY);
+      alignedDepthPixelsBack.setFromPixels(reinterpret_cast<float *>(bigDepth->data), bigDepth->width, bigDepth->height, OF_PIXELS_GRAY);
 
       colorPixelsFront.swap(colorPixelsBack);
-      depthPixelsFront.swap(depthPixelsBack);
-      bigDepthPixelsFront.swap(bigDepthPixelsBack);
+      unalignedDepthPixelsFront.swap(unalignedDepthPixelsBack);
+      alignedDepthPixelsFront.swap(alignedDepthPixelsBack);
 
       mutex.unlock();
 
