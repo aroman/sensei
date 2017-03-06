@@ -6,7 +6,11 @@
 #define KINECT_FRAME_TIMEOUT 10*1000
 
 KinectHelper::KinectHelper() {
-  libfreenect2::setGlobalLogger(libfreenect2::createConsoleLogger(libfreenect2::Logger::Info));
+  #ifdef __linux
+    libfreenect2::setGlobalLogger(libfreenect2::createConsoleLogger(libfreenect2::Logger::Nada));
+  #else
+    libfreenect2::setGlobalLogger(libfreenect2::createConsoleLogger(libfreenect2::Logger::None));
+  #endif
   isConnected = false;
 }
 
@@ -17,7 +21,7 @@ bool KinectHelper::connect() {
     return false;
   }
 
-  libfreenect2::PacketPipeline *pipeline = new libfreenect2::OpenGLPacketPipeline();
+  libfreenect2::PacketPipeline *pipeline = new libfreenect2::OpenCLPacketPipeline();
   device = freenect2.openDevice(freenect2.getDefaultDeviceSerialNumber(), pipeline);
   if (device == NULL) {
     std::cerr << "Failure opening Kinect device" << std::endl;
@@ -42,6 +46,13 @@ bool KinectHelper::connect() {
     device->getIrCameraParams(),
     device->getColorCameraParams()
   );
+
+  auto colorParams = device->getColorCameraParams();
+  fx = colorParams.fx;
+  fy = colorParams.fy;
+  cx = colorParams.cx;
+  cy = colorParams.cy;
+
   undistorted = new libfreenect2::Frame(512, 424, 4);
   registered = new libfreenect2::Frame(512, 424, 4);
   bigDepth = new libfreenect2::Frame(1920, 1080 + 2, 4);
@@ -61,8 +72,8 @@ void KinectHelper::disconnect() {
   isConnected = false;
 }
 
-ofPixels KinectHelper::getRgbPixels() {
-  return rgbPixelsFront;
+ofPixels KinectHelper::getColorPixels() {
+  return colorPixelsFront;
 }
 
 ofFloatPixels KinectHelper::getDepthPixels() {
@@ -74,30 +85,29 @@ ofFloatPixels KinectHelper::getBigDepthPixels() {
 }
 
 void KinectHelper::threadedFunction() {
-
-    while(isThreadRunning()) {
+    while (isThreadRunning()) {
       if (!listener->waitForNewFrame(frames, KINECT_FRAME_TIMEOUT)) {
         std::cerr << "Timed out waiting for new Kinect frame" << std::endl;
         break;
       }
-      libfreenect2::Frame *rgb = frames[libfreenect2::Frame::Color];
+      libfreenect2::Frame *color = frames[libfreenect2::Frame::Color];
       libfreenect2::Frame *ir = frames[libfreenect2::Frame::Ir];
       libfreenect2::Frame *depth = frames[libfreenect2::Frame::Depth];
 
-      registration->apply(rgb, depth, undistorted, registered, true, bigDepth);
+      registration->apply(color, depth, undistorted, registered, true, bigDepth);
 
       mutex.lock();
 
-      rgbPixelsBack.setFromPixels(rgb->data, rgb->width, rgb->height, OF_PIXELS_BGRA);
-      depthPixelsBack.setFromPixels((float *)depth->data, ir->width, ir->height, OF_PIXELS_GRAY);
-      bigDepthPixelsBack.setFromPixels((float *)bigDepth->data, bigDepth->width, bigDepth->height, OF_PIXELS_GRAY);
+      colorPixelsBack.setFromPixels(color->data, color->width, color->height, OF_PIXELS_BGRA);
+      depthPixelsBack.setFromPixels(reinterpret_cast<float *>(depth->data), ir->width, ir->height, OF_PIXELS_GRAY);
+      bigDepthPixelsBack.setFromPixels(reinterpret_cast<float *>(bigDepth->data), bigDepth->width, bigDepth->height, OF_PIXELS_GRAY);
 
       float *pixels = bigDepthPixelsBack.getData();
       for (int i = 0; i < bigDepthPixelsBack.size(); i++) {
           pixels[i] = ofMap(bigDepthPixelsBack[i], 500, 4500, 1, 0, true);
       }
 
-      rgbPixelsFront.swap(rgbPixelsBack);
+      colorPixelsFront.swap(colorPixelsBack);
       depthPixelsFront.swap(depthPixelsBack);
       bigDepthPixelsFront.swap(bigDepthPixelsBack);
 

@@ -21,9 +21,12 @@ option(COTIRE "Use cotire" ON)
 set(sources
   src/main.cpp
   src/ofApp.cpp
+  src/ClassVisualizer.cpp
   src/KinectHelper.cpp
   src/FaceDetector.cpp
   src/MtcnnDetector.cpp
+  src/OpenFace.cpp
+  src/Person.cpp
 )
 # set_source_files_properties(3rdParty/of/src/poco/Foundation/include/Poco/AtomicCounter.h PROPERTIES COMPILE_FLAGS -Wno-deprecated-declarations)
 
@@ -56,11 +59,10 @@ include_directories(${PYTHON_INCLUDE_DIRS})
 ### addons
 ofxaddon(ofxGui)
 ofxaddon(3rdParty/addons/ofxCv)
+ofxaddon(3rdParty/addons/ofxTimeMeasurements)
 
-file(GLOB_RECURSE ofx_addon_includes LIST_DIRECTORIES true 3rdParty/addons/ofxCv/libs/*.h)
+set(ofx_addon_includes 3rdParty/addons/ofxCv/libs/CLD/include/CLD 3rdParty/addons/ofxCv/libs/ofxCv/include/ofxCv)
 include_directories(${ofx_addon_includes})
-
-# file(GLOB_RECURSE ofx_kinect_v2_sources 3rdParty/addons/ofxKinectV2/src/*.cpp)
 
 ### target definitions
 add_executable(${APP} ${sources} ${OFXADDONS_SOURCES})
