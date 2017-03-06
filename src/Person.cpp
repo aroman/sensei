@@ -21,8 +21,8 @@ void Space::doDepthAverage(ofRectangle b) {
 
   for (int x = b.x; x < (b.x + b.width); x++) {
     for (int y = b.y; y < (b.y + b.height); y++) {
-      uint index = (y * imDepth.getWidth()) + x;
-      if (index < imDepth.getWidth() * imDepth.getHeight()) {
+      uint index = (y * depthPixels.getWidth()) + x;
+      if (index < depthPixels.getWidth() * depthPixels.getHeight()) {
         float val = depthMap[index];
         if (val < 0.0) val = 0.0;
         if (val > 1.0) val = 1.0;
@@ -47,8 +47,8 @@ void Space::doDepthMinMax(ofRectangle b) {
 
   for (int x = b.x; x < (b.x + b.width); x++) {
     for (int y = b.y; y < (b.y + b.height); y++) {
-      uint index = (y * imDepth.getWidth()) + x;
-      if (index < imDepth.getWidth() * imDepth.getHeight()) {
+      uint index = (y * depthPixels.getWidth()) + x;
+      if (index < depthPixels.getWidth() * depthPixels.getHeight()) {
         float val = depthMap[index];
         if (val < 0.0) val = 0.0;
         if (val > 1.0) val = 1.0;
@@ -70,20 +70,18 @@ void Space::doDepthMinMax(ofRectangle b) {
 
 void Space::updateDepth(const ofFloatPixels &pDepth) {
   if (r.x < 0 || r.y < 0) return;
-  pDepth.cropTo(imDepth.getPixels(), r.x, r.y, r.width, r.height);
+  pDepth.cropTo(depthPixels, r.x, r.y, r.width, r.height);
   if (r.y > 0) {
-    ofxCv::blur(imDepth, 20);
+    ofxCv::blur(depthPixels, 20);
   } else {
     ofLogNotice("Space::updateDepth r.y out of screen: ") << r.y;
   }
-  imDepth.update();
-  depthMap = imDepth.getPixels().getData();
+  depthMap = depthPixels.getData();
 }
 
-void Space::updateColor(const ofPixels &colorPixels) {
+void Space::updateColor(const ofPixels &newColorPixels) {
   if (r.x < 0 || r.y < 0) return;
-  colorPixels.cropTo(imColor.getPixels(), r.x, r.y, r.width, r.height);
-  imColor.update();
+  newColorPixels.cropTo(colorPixels, r.x, r.y, r.width, r.height);
 }
 
 // Construct a person from a bounding box
@@ -93,7 +91,6 @@ Person::Person(ofRectangle bbox) {
 }
 
 void Person::drawFrontalView() const {
-
   drawBoundBox(h.r, ofColor::purple);
 
   if (raisedHand) {
@@ -109,9 +106,9 @@ void Person::drawFrontalView() const {
 
 void Person::drawBirdseyeView() const {
   ofRectangle r(f.r);
-  r.y = (f.avgDepth * f.imColor.getHeight()) - (r.height / 2);
+  r.y = (f.avgDepth * f.colorPixels.getHeight()) - (r.height / 2);
 
-  f.imColor.draw(r.x, r.y);
+  // f.colorPixels.draw(r.x, r.y);
 
   if (raisedHand) {
     drawBoundBox(r, ofColor::red);
@@ -124,7 +121,7 @@ void Person::drawBirdseyeView() const {
   //ofDrawBitmapStringHighlight("max: " + ofToString(maxDepth), f.r.x, f.r.y - 45);
 }
 
-void Person::update(const ofPixels &colorPixels, const ofFloatPixels &depthPixels) {
+void Person::update(const ofPixels &newColorPixels, const ofFloatPixels &newDepthPixels) {
   // Create handbox
   auto h_w = HANDBOX_X_RATIO * f.r.width;
   auto h_h = (HANDBOX_Y_RATIO * f.r.height);
@@ -134,8 +131,8 @@ void Person::update(const ofPixels &colorPixels, const ofFloatPixels &depthPixel
     h_w,
     h_h
   );
-  f.updateColor(colorPixels);
-  f.updateDepth(depthPixels);
+  f.updateColor(newColorPixels);
+  f.updateDepth(newDepthPixels);
 
   ofRectangle r1;
   r1.width = 50;
@@ -158,8 +155,8 @@ void Person::update(const ofPixels &colorPixels, const ofFloatPixels &depthPixel
   r2.width = h.r.width;
   r2.height = h.r.height;
 
-  h.updateColor(colorPixels);
-  h.updateDepth(depthPixels);
+  h.updateColor(newColorPixels);
+  h.updateDepth(newDepthPixels);
   h.doDepthAverage(r2);
   h.doDepthMinMax(r2);
 

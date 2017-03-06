@@ -43,15 +43,17 @@ ClassVisualizer::~ClassVisualizer() {
 void ClassVisualizer::update() {
   if (!kinect->isConnected) return;
 
+  TS_START("[Kinect] update frames");
   colorPixels = kinect->getColorPixels();
   depthPixels = kinect->getBigDepthPixels();
+  TS_STOP("[Kinect] update frames");
   hasData = (colorPixels.size() > 0);
 
   if (!hasData) return;
 
-  TS_START("update color texture");
+  // TS_START("update color texture");
   // colorTexture.loadData(colorPixels);
-  TS_STOP("update color texture");
+  // TS_STOP("update color texture");
 
   faceDetector->updateImage(&colorPixels);
 

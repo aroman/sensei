@@ -6,9 +6,9 @@
 struct Space {
   ofRectangle r;
 
-  ofImage imColor;
-  ofFloatImage imDepth;
-  float *depthMap;
+  ofPixels colorPixels;
+  ofFloatPixels depthPixels; // scaled for drawing to screen
+  float *depthMap; // raw meters
 
   float minDepth;
   float maxDepth;
@@ -18,19 +18,19 @@ struct Space {
   void doDepthAverage(ofRectangle r);
   void doDepthMinMax(ofRectangle r);
 
-  void updateDepth(const ofFloatPixels &depthPixels);
-  void updateColor(const ofPixels &colorPixels);
+  void updateDepth(const ofFloatPixels &newDepthPixels);
+  void updateColor(const ofPixels &newColorPixels);
 };
 
 struct Person {
   explicit Person(ofRectangle bbox);
 
-  Space f;  // face
-  Space h;  // hand-raise area
+  Space f; // face
+  Space h; // hand-raise area
 
   bool raisedHand = false;
 
   void drawFrontalView() const;
   void drawBirdseyeView() const;
-  void update(const ofPixels &colorPixels, const ofFloatPixels &depthPixels);
+  void update(const ofPixels &newColorPixels, const ofFloatPixels &newDepthPixels);
 };
