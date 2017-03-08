@@ -11,9 +11,11 @@ ClassVisualizer::ClassVisualizer() {
     fullLogo.load("images/logo_wide.png");
 
   //load font
+
     demoFont.load("fonts/OpenSans-Regular.ttf", 20, true);
     helpFont.load("fonts/OpenSans-Regular.ttf", 16, true);
     peopleFont.load("fonts/OpenSans-Regular.ttf", 12, true);
+
     lineSpace = ((int)(demoFont.getLineHeight()*1.25));
 
   //load texts
@@ -155,8 +157,10 @@ void ClassVisualizer::drawFrontalView() {
       person.drawFrontHandbox(ofColor::red);
       person.drawFrontPose(ofColor::yellow);
       person.drawFrontBBox(ofColor::orange);
+
       person.drawFrontLandmarks(ofColor::red);
-      person.drawFrontDepthPoints(ofColor::green);
+      person.drawFrontDepthPoints(ofColor::white);
+
 
       person.drawFrontPersonInfo(peopleFont);
 
@@ -184,6 +188,7 @@ void ClassVisualizer::drawFrontalView() {
 }
 
 void ClassVisualizer::drawBirdseyeView() {
+  depthTexture.draw(0, 0);
   for (auto const &person : people) {
     if(showDebug){
       person.drawTopColor();
@@ -242,9 +247,10 @@ void ClassVisualizer::drawLoadScreen(){
     x = 1100;
     y = 400;
 
-    ofSetColor(150, 150, 150);
-    ofDrawRectangle(x-15, y - 20, 1, 330);
-    helpFont.drawString(helpText, x, y);
+    //ofSetColor(150, 150, 150);
+    //ofDrawRectangle(x-15, y - 20, 1, 330);
+    //helpFont.drawString(helpText, x, y);
+    drawStringCentered(helpFont,helpText,1100,400,ofColor(0,0,0,0),ofColor(150,150,150));
   }
 
 void ClassVisualizer::drawInfoPanel() {
@@ -309,6 +315,7 @@ void ClassVisualizer::onFaceDetectionResults(const vector<ofRectangle> &bboxes) 
   peopleAccessMutex.unlock();
 
 }
+
 
 void ClassVisualizer::drawStringCentered(ofTrueTypeFont font, string s, int xc, int yc, ofColor boxColor, ofColor textColor){
   //do some voodoo
