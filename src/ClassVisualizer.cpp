@@ -11,9 +11,9 @@ ClassVisualizer::ClassVisualizer() {
     fullLogo.load("images/logo_wide.png");
 
   //load font
-    demoFont.load("/opt/sensei/Hack-Regular.ttf", 20, true);
-    helpFont.load("/opt/sensei/Hack-Regular.ttf", 16, true);
-    peopleFont.load("/opt/sensei/Hack-Regular.ttf", 12, true);
+    demoFont.load("fonts/OpenSans-Regular.ttf", 20, true);
+    helpFont.load("fonts/OpenSans-Regular.ttf", 16, true);
+    peopleFont.load("fonts/OpenSans-Regular.ttf", 12, true);
     lineSpace = ((int)(demoFont.getLineHeight()*1.25));
 
   //load texts

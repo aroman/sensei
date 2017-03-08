@@ -43,7 +43,7 @@ public:
   bool showDebug = false;
 
 private:
-  static const size_t openFaceModelPoolSize = 10;
+  static const size_t openFaceModelPoolSize = 1;
   ofPixels colorPixels;
   ofFloatPixels depthPixels; // depth pixels in meters
   ofTexture colorTexture;
@@ -71,12 +71,11 @@ private:
     //colors
       ofColor lightBlue;
 
-
-
-
-
-
-
+    void drawStringCentered(ofTrueTypeFont font, string s, int x, int y, ofColor boxColor, ofColor textColor);
+    void drawStringTopLeft(ofTrueTypeFont font, string s, int x, int y, ofColor boxColor, ofColor textColor);
+    void drawStringTopRight(ofTrueTypeFont font, string s, int x, int y, ofColor boxColor, ofColor textColor);
+    void drawStringBottomLeft(ofTrueTypeFont font, string s, int x, int y, ofColor boxColor, ofColor textColor);
+    void drawStringBottomRight(ofTrueTypeFont font, string s, int x, int y, ofColor boxColor, ofColor textColor);
 
   bool hasData = false;
 
