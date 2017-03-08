@@ -3,9 +3,9 @@
 #include "ofMain.h"
 #include "ofxCv.h"
 #include "KinectHelper.h"
-#include "OpenFace.h"
 #include <GazeEstimation.h>
 #include "FaceDetector.h"
+#include "OpenFaceModelPool.h"
 #include "Person.h"
 
 
@@ -28,6 +28,7 @@ public:
   void update();
   void draw();
   void onFaceDetectionResults(const vector<ofRectangle> &bboxes);
+
   void onOpenFaceResults();
 
   ViewAngle mode = ViewAngle::FRONTAL;
@@ -40,8 +41,9 @@ public:
   bool showLoadScreen = true;
 
 private:
+  static const size_t openFaceModelPoolSize = 3;
   ofPixels colorPixels;
-  ofFloatPixels depthPixels; // depth pixels in meters50
+  ofFloatPixels depthPixels; // depth pixels in meters
   ofTexture colorTexture;
 
 
@@ -88,8 +90,8 @@ private:
   void drawLoadScreen();
   void drawInfoPanel();
 
-  KinectHelper *kinect = NULL;
-  FaceDetector *faceDetector = NULL;
-  OpenFace *openFace = NULL;
+  KinectHelper *kinect = nullptr;
+  FaceDetector *faceDetector = nullptr;
+  OpenFaceModelPool *openFaceModelPool = nullptr;
 
 };
