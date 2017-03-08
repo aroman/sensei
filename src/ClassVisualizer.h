@@ -42,7 +42,7 @@ public:
   bool showDebug = false;
 
 private:
-  static const size_t openFaceModelPoolSize = 0;
+  size_t openFaceModelPoolSize = 10;
   ofPixels colorPixels;
   ofFloatPixels depthPixels; // depth pixels in meters
   ofTexture colorTexture;

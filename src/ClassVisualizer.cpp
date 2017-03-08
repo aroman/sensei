@@ -1,3 +1,4 @@
+#include <cstdlib>
 #include "ClassVisualizer.h"
 #include "ofxTimeMeasurements.h"
 #include "drawUtils.h"
@@ -46,6 +47,15 @@ ClassVisualizer::ClassVisualizer() {
   bool didConnectSuccessfully = kinect->connect();
   if (!didConnectSuccessfully) {
       std::exit(1);
+  }
+
+  const char *numModelsEnv = std::getenv("NUM_MODELS");
+  if (numModelsEnv != NULL) {
+    int numModels = atoi(numModelsEnv);
+    if (numModels >= 0) {
+      ofLogNotice("ClassVisualizer") << "Using " << numModels << " models (env)";
+      openFaceModelPoolSize = numModels;
+    }
   }
 
   openFaceModelPool = new OpenFaceModelPool(openFaceModelPoolSize, CameraIntrinsics{
