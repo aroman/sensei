@@ -14,7 +14,7 @@
 //but we'll control what we show!
 
 //We want to minimize the amount of work it takes when
-//drawing, not because it affects performance 
+//drawing, not because it affects performance
 //(because it's single threaded)
 //but because conceptually we shouldn't have to
 
@@ -43,7 +43,7 @@ public:
   bool showDebug = false;
 
 private:
-  static const size_t openFaceModelPoolSize = 2;
+  static const size_t openFaceModelPoolSize = 10;
   ofPixels colorPixels;
   ofFloatPixels depthPixels; // depth pixels in meters
   ofTexture colorTexture;

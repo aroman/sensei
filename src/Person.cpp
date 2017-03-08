@@ -294,11 +294,11 @@ DepthStat Space::doDepthMath(ofRectangle b){
 
   d.min = minVal; //0.0 is the farthest
   d.max = maxVal; //1.0 is the closest
-  d.mode = (1.0 * bestIndex) / (1.0 * numBuckets); 
+  d.mode = (1.0 * bestIndex) / (1.0 * numBuckets);
 
   assert(pixelCounter > 0);
   if(pixelCounter != 0){
-     d.avg = sum / pixelCounter;  
+     d.avg = sum / pixelCounter;
   }
   else{
     d.avg = sum;
@@ -425,17 +425,17 @@ void Person::drawFrontLandmarks(ofColor c) const{
 void Person::drawTopColor() const{
   if(hasGoodDepth){
     ofRectangle r(f.r);
-    r.y = y_depth;    
+    r.y = y_depth;
   }
-  
+
   //DEBUG
-  //f.colorPixels.draw(r.x, r.y);    
+  //f.colorPixels.draw(r.x, r.y);
 }
 void Person::drawTopHandbox(ofColor c) const{
-  
+
 }
 void Person::drawTopLandmarks(ofColor c) const{
-  
+
 }
 
 void Person::drawFrontPersonInfo(ofTrueTypeFont font) const{
@@ -490,7 +490,7 @@ void Person::update(const ofPixels &newColorPixels, const ofFloatPixels &newDept
 
     //retrieve depths from those locations
     vector<float> depths;
-  
+
     //try to use openface's locations
       if (openFaceModel != nullptr) {
 
@@ -524,18 +524,18 @@ void Person::update(const ofPixels &newColorPixels, const ofFloatPixels &newDept
           depths.push_back(d.mode);
         }
       }
-    
+
     //it's possible none of our queries were valid
     if(depths.size() > 0){
-      hasGoodDepth = true;  
-      
+      hasGoodDepth = true;
+
       //find max depth from any of the locations
         float maxDepth = 0.0;
         for(uint i = 0; i < depths.size(); i++){
           if(depths[i] > maxDepth){
             maxDepth = depths[i];
           }
-        } 
+        }
         depth = maxDepth;
     }
 
@@ -552,5 +552,3 @@ void Person::update(const ofPixels &newColorPixels, const ofFloatPixels &newDept
       }
     }
 }
-
-

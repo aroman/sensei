@@ -1,6 +1,8 @@
 #include "ClassVisualizer.h"
 #include "ofxTimeMeasurements.h"
 
+static const int DIST_THRESH = 150;
+
 ClassVisualizer::ClassVisualizer() {
   hasData = false;
 
@@ -29,7 +31,7 @@ ClassVisualizer::ClassVisualizer() {
     aboutText.push_back("v0.1");
     aboutText.push_back("Carnegie Mellon University");
     aboutText.push_back("Global Education & Skills Forum 2017");
-  
+
   //set colors
     lightBlue = ofColor(28,154,255);
 
@@ -208,9 +210,6 @@ void ClassVisualizer::drawBirdseyeView() {
   //drawStringTopLeft(demoFont,"back",540,1065,ofColor(0,0,0,0),ofColor::white);
 }
 
-
-static const int DIST_THRESH = 150;
-
 void ClassVisualizer::drawLoadScreen(){
   int x, y;
 
@@ -223,7 +222,7 @@ void ClassVisualizer::drawLoadScreen(){
     ofSetColor(255,255,255); //white
     ofFill();
     ofDrawRectangle(0,trim,screenWidth, screenHeight-(2*trim));
-  
+
   //draw main logo
     int logoWidth = 800;
     int logoHeight = 277;
@@ -238,7 +237,7 @@ void ClassVisualizer::drawLoadScreen(){
     y = 30;
 
     drawStringTopLeft(demoFont, aboutText[0], x, y,ofColor(0,0,0,0),ofColor(255,255,255,100));
-  
+
   //draw help text
     x = 1100;
     y = 400;
@@ -253,7 +252,7 @@ void ClassVisualizer::drawInfoPanel() {
   int y = screenHeight - 50;
 
   if(mode == ViewAngle::FRONTAL){
-    drawStringBottomLeft(demoFont,"Mode: Front View", x, y, ofColor(255,255,255,100), ofColor::white);   
+    drawStringBottomLeft(demoFont,"Mode: Front View", x, y, ofColor(255,255,255,100), ofColor::white);
   }
   else{
     drawStringBottomLeft(demoFont,"Mode: Top View", x, y, ofColor(255,255,255,100), ofColor::white);
@@ -262,16 +261,13 @@ void ClassVisualizer::drawInfoPanel() {
   y += 40;
 
   string numStudents = "Number of Students: " + ofToString(people.size());
-  drawStringBottomLeft(demoFont, numStudents, x, y, ofColor(255,255,255,100), ofColor::white); 
+  drawStringBottomLeft(demoFont, numStudents, x, y, ofColor(255,255,255,100), ofColor::white);
 
   }
-
 
 void ClassVisualizer::onFaceDetectionResults(const vector<ofRectangle> &bboxes) {
   ofLogNotice("ClassVisualizer") << "onFaceDetectionResults " << bboxes.size();
 
-
-  // TODO(avi) remove up people that mtcnn can't find anymore
   peopleAccessMutex.lock();
 
   for (int i = 0; i < people.size(); i++) {
@@ -290,13 +286,11 @@ void ClassVisualizer::onFaceDetectionResults(const vector<ofRectangle> &bboxes) 
       }
     }
 
-    printf("closest distance: %f\n", closestDistance);
+    ofLogNotice("ClassVisualizer") << "closest distance: " << closestDistance;
     if (closestDistance < DIST_THRESH) {
       assert (closestPersonIndex != -1);
-      // printf("updating existing person at index: %d\n", closestPersonIndex);
       people.at(closestPersonIndex).updateMtcnnBoundingBox(bbox);
     } else {
-      // printf("creating new person\n");
       people.push_back(Person(bbox));
     }
   }
@@ -309,9 +303,151 @@ void ClassVisualizer::onFaceDetectionResults(const vector<ofRectangle> &bboxes) 
   }
 
   for (auto &person : people) {
-    ofLogNotice("ClassVisualizer") << "Person: " << person;
+    ofLogNotice("ClassVisualizer") << person;
   }
 
   peopleAccessMutex.unlock();
 
 }
+
+void ClassVisualizer::drawStringCentered(ofTrueTypeFont font, string s, int xc, int yc, ofColor boxColor, ofColor textColor){
+  //do some voodoo
+  int sw = (font.stringWidth(s));
+  int sh = (font.stringHeight(s));
+
+  int sw1 = sw * 1.05;
+  int sh1 = sh * 1.8;
+
+  int x1 = xc - (sw1/2);
+  int y1 = yc - (sh1/2);
+
+  ofSetColor(boxColor);
+  ofFill();
+  ofDrawRectangle(x1,y1,sw1,sh1);
+
+  int sw2 = sw;
+  int sh2 = sh;
+
+  int x2 = xc - (sw2/2);
+  int y2 = yc - ((sh2*1.3)/2);
+
+  ofSetColor(textColor);
+  font.drawString(s, x2, y2 + (sh2));}
+
+void ClassVisualizer::drawStringTopLeft(ofTrueTypeFont font, string s, int xl, int yl, ofColor boxColor, ofColor textColor){
+  //do some voodoo
+  int sw = (font.stringWidth(s));
+  int sh = (font.stringHeight(s));
+
+  int sw1 = sw * 1.05;
+  int sh1 = sh * 1.8;
+
+  int x1 = xl;
+  int y1 = yl;
+
+  ofSetColor(boxColor);
+  ofFill();
+  ofDrawRectangle(x1,y1,sw1,sh1);
+
+  int sw2 = sw;
+  int sh2 = sh;
+
+  int xc = x1 + (sw1/2);
+  int yc = y1 + (sh1/2);
+
+  int x2 = xc - (sw2/2);
+  int y2 = yc - ((sh2*1.3)/2);
+
+  ofSetColor(textColor);
+  font.drawString(s, x2, y2 + (sh2));}
+
+void ClassVisualizer::drawStringTopRight(ofTrueTypeFont font, string s, int xr, int yr, ofColor boxColor, ofColor textColor){
+
+  //do some voodoo
+  int sw = (font.stringWidth(s));
+  int sh = (font.stringHeight(s));
+
+  int sw1 = sw * 1.05;
+  int sh1 = sh * 1.8;
+
+  xr -= sw1;
+
+  int x1 = xr;
+  int y1 = yr;
+
+  ofSetColor(boxColor);
+  ofFill();
+  ofDrawRectangle(x1,y1,sw1,sh1);
+
+  int sw2 = sw;
+  int sh2 = sh;
+
+  int xc = x1 + (sw1/2);
+  int yc = y1 + (sh1/2);
+
+  int x2 = xc - (sw2/2);
+  int y2 = yc - ((sh2*1.3)/2);
+
+  ofSetColor(textColor);
+  font.drawString(s, x2, y2 + (sh2));}
+
+void ClassVisualizer::drawStringBottomLeft(ofTrueTypeFont font, string s, int xl, int yl, ofColor boxColor, ofColor textColor){
+
+  //do some voodoo
+  int sw = (font.stringWidth(s));
+  int sh = (font.stringHeight(s));
+
+  int sw1 = sw * 1.05;
+  int sh1 = sh * 1.8;
+
+  yl -= sh1;
+
+  int x1 = xl;
+  int y1 = yl;
+
+  ofSetColor(boxColor);
+  ofFill();
+  ofDrawRectangle(x1,y1,sw1,sh1);
+
+  int sw2 = sw;
+  int sh2 = sh;
+
+  int xc = x1 + (sw1/2);
+  int yc = y1 + (sh1/2);
+
+  int x2 = xc - (sw2/2);
+  int y2 = yc - ((sh2*1.3)/2);
+
+  ofSetColor(textColor);
+  font.drawString(s, x2, y2 + (sh2));}
+
+void ClassVisualizer::drawStringBottomRight(ofTrueTypeFont font, string s, int xr, int yr, ofColor boxColor, ofColor textColor){
+
+  //do some voodoo
+  int sw = (font.stringWidth(s));
+  int sh = (font.stringHeight(s));
+
+  int sw1 = sw * 1.05;
+  int sh1 = sh * 1.8;
+
+  xr -= sw1;
+  yr -= sh1;
+
+  int x1 = xr;
+  int y1 = yr;
+
+  ofSetColor(boxColor);
+  ofFill();
+  ofDrawRectangle(x1,y1,sw1,sh1);
+
+  int sw2 = sw;
+  int sh2 = sh;
+
+  int xc = x1 + (sw1/2);
+  int yc = y1 + (sh1/2);
+
+  int x2 = xc - (sw2/2);
+  int y2 = yc - ((sh2*1.3)/2);
+
+  ofSetColor(textColor);
+  font.drawString(s, x2, y2 + (sh2));}
