@@ -88,7 +88,7 @@ void ClassVisualizer::update() {
   colorTexture.loadData(colorPixels);
   TS_STOP("update color texture");
 
-  faceDetector->updateImage(&colorPixels);
+  faceDetector->updateImage(colorPixels);
 
   peopleAccessMutex.lock();
   for (auto &person : people) {
