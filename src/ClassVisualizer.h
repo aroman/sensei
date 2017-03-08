@@ -42,7 +42,7 @@ public:
   bool showDebug = false;
 
 private:
-  static const size_t openFaceModelPoolSize = 1;
+  static const size_t openFaceModelPoolSize = 0;
   ofPixels colorPixels;
   ofFloatPixels depthPixels; // depth pixels in meters
   ofTexture colorTexture;
@@ -57,10 +57,13 @@ private:
 
     //imagery
       ofImage singleHand;
+      ofImage cmuWordmark;
+      ofImage cmuWordmarkBlue;
       ofImage fullLogo;
 
     //for drawing text
       ofTrueTypeFont demoFont;
+      ofTrueTypeFont demoBoldFont;
       ofTrueTypeFont peopleFont;
       ofTrueTypeFont helpFont;
       int lineSpace;

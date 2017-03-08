@@ -10,26 +10,28 @@ ClassVisualizer::ClassVisualizer() {
   //load imagery
     //singleHand.load("images/logo_hand.png");
     fullLogo.load("images/logo_wide.png");
+    cmuWordmark.load("images/cmu_wordmark.png");
+    cmuWordmarkBlue.load("images/cmu_wordmark_blue.png");
 
   //load font
-
-    demoFont.load("fonts/OpenSans-Regular.ttf", 20, true);
-    helpFont.load("fonts/OpenSans-Regular.ttf", 16, true);
+    demoFont.load("fonts/OpenSans-Regular.ttf", 24, true);
+    helpFont.load("fonts/OpenSans-Regular.ttf", 20, true);
+    demoBoldFont.load("fonts/OpenSans-Bold.ttf", 30, true);
     peopleFont.load("fonts/OpenSans-Regular.ttf", 12, true);
 
     lineSpace = ((int)(demoFont.getLineHeight()*1.25));
 
   //load texts
-    helpText = "spacebar   - toggles between top and front\n"
-    "I or i     - enables/disables person info boxes\n"
-    "H or h     - enables/disables hand view\n"
-    "C or c     - enables/disables cube view\n"
-    "L or l     - enables/disable landmarks\n"
-    "V or v     - toggles between top and front view\n"
-    "X or x     - toggles between depth and rgb view\n"
-    "D or d     - toggles debug view\n"
-    "0          - show load/help screen, resets view\n"
-    "PG DWN     - toggles timer screen\n";
+    helpText = R"([spacebar] birdseye/frontal view toggle
+[I or i] toggle person info boxes
+[H or h] hand view
+[C or c] cube view
+[L or l] landmarks
+[V or v] between top and front view
+[X or x] between depth and rgb view
+[D or d] all debug features on
+[0] show load/help screen, resets view
+[PG DWN] toggles timer screen)";
 
     aboutText.push_back("v0.1");
     aboutText.push_back("Carnegie Mellon University");
@@ -175,7 +177,7 @@ void ClassVisualizer::drawFrontalView() {
         scaleDepthPixelsForDrawing(&scaledDepth);
         scaledDepthTexture.loadData(scaledDepth);
         scaledDepthTexture.draw(0,0);
-        */ 
+        */
       }
 
 
@@ -248,43 +250,47 @@ void ClassVisualizer::drawLoadScreen(){
   //draw main logo
     int logoWidth = 800;
     int logoHeight = 277;
+    int wordMarkHeight = 40 * 1.25;
+    int wordMarkWidth = 450 * 1.25;
 
     x = 100;
-    y = (screenHeight/2) - (logoHeight/2);
+    y = (screenHeight/2) - ((logoHeight + wordMarkHeight) /2) - 50 ;
 
-    fullLogo.draw(x,y,logoWidth,logoHeight);
+    fullLogo.draw(x, y, logoWidth, logoHeight);
+    cmuWordmarkBlue.draw(x + ((logoWidth - wordMarkWidth)/2), y + logoHeight + (wordMarkHeight / 2), wordMarkWidth, wordMarkHeight);
 
   //draw text about program version
     x = 20;
     y = 30;
 
-    drawStringTopLeft(demoFont, aboutText[0], x, y,ofColor(0,0,0,0),ofColor(255,255,255,100));
+    // drawStringTopRight(demoBoldFont, aboutText[0], 50, 120, ofColor(0,0,0,0), ofColor::white);
 
   //draw help text
     x = 1100;
     y = 400;
 
-    //ofSetColor(150, 150, 150);
-    //ofDrawRectangle(x-15, y - 20, 1, 330);
-    //helpFont.drawString(helpText, x, y);
-    drawStringCentered(helpFont,helpText,1100,400,ofColor(0,0,0,0),ofColor(150,150,150));
+    ofSetColor(150, 150, 150);
+    ofDrawRectangle(x-30, y - 20, 1, 350);
+    helpFont.drawString(helpText, x, y);
   }
 
 void ClassVisualizer::drawInfoPanel() {
   int x = 50;
   int y = screenHeight - 50;
 
+  ofColor backgroundColor = ofColor(255, 255, 255, 100);
+
   if(mode == ViewAngle::FRONTAL){
-    drawStringBottomLeft(demoFont,"Mode: Front View", x, y, ofColor(255,255,255,100), ofColor::white);
+    drawStringBottomLeft(demoFont,"Mode: Front View", x, y, backgroundColor, ofColor::white);
   }
   else{
-    drawStringBottomLeft(demoFont,"Mode: Top View", x, y, ofColor(255,255,255,100), ofColor::white);
+    drawStringBottomLeft(demoFont,"Mode: Top View", x, y, backgroundColor, ofColor::white);
   }
 
   y += 40;
 
   string numStudents = "Number of Students: " + ofToString(people.size());
-  drawStringBottomLeft(demoFont, numStudents, x, y, ofColor(255,255,255,100), ofColor::white);
+  drawStringBottomLeft(demoFont, numStudents, x, y, backgroundColor, ofColor::white);
 
   }
 
@@ -332,5 +338,3 @@ void ClassVisualizer::onFaceDetectionResults(const vector<ofRectangle> &bboxes) 
   peopleAccessMutex.unlock();
 
 }
-
-
