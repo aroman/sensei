@@ -15,7 +15,7 @@ ClassVisualizer::ClassVisualizer() {
 
     demoFont.load("fonts/OpenSans-Regular.ttf", 20, true);
     helpFont.load("fonts/OpenSans-Regular.ttf", 16, true);
-    peopleFont.load("fonts/OpenSans-Regular.ttf", 12, true);
+    peopleFont.load("fonts/OpenSans-Bold.ttf", 20, true);
 
     lineSpace = ((int)(demoFont.getLineHeight()*1.25));
 
@@ -159,7 +159,7 @@ void ClassVisualizer::drawFrontalView() {
       person.drawFrontPose(ofColor::yellow);
       person.drawFrontBBox(ofColor::orange);
 
-      person.drawFrontLandmarks(ofColor::red);
+      person.drawFrontLandmarks(ofColor(255,255,255,160));
       person.drawFrontDepthPoints(ofColor::white);
 
       person.drawFrontPersonInfo(peopleFont);
@@ -196,7 +196,7 @@ void ClassVisualizer::drawFrontalView() {
         person.drawFrontBBox(ofColor::orange);
       }
       if(showLandmarks){
-        person.drawFrontLandmarks(ofColor::red);
+        person.drawFrontLandmarks(ofColor(255,255,255,160));
       }
       if(showPersonInfo){
         person.drawFrontPersonInfo(peopleFont);

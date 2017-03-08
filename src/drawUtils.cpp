@@ -1,13 +1,21 @@
 #include "drawUtils.h"
 
+
 void drawBoundBox(ofRectangle r, ofColor color) {
+  ofNoFill();
+  ofSetLineWidth(6.0);
+  ofSetColor(color);
+  ofDrawRectRounded(r,30.0);
+  /*
   ofPath p;
   p.setFillColor(color);
   p.rectangle(r);
+
   ofRectangle outer(r);
   outer.scaleFromCenter(1.1);
   p.rectangle(outer);
   p.draw();
+  */
 }
 
 
@@ -160,6 +168,7 @@ void scaleDepthPixelsForDrawing(ofFloatPixels *depthPixels) {
   // Scale from meters to 0-1 (float)
   float *pixelData = depthPixels->getData();
   for (int i = 0; i < depthPixels->size(); i++) {
-      pixelData[i] = ofMap(pixelData[i], MIN_MILLIMETERS, MAX_MILLIMETERS, 1, 0, true);
+      pixelData[i] = ofMap(pixelData[i], 500.0, 4500.0, 1, 0, true);
   }
 }
+
