@@ -4,13 +4,6 @@
 #include "OpenFaceModel.h"
 
 
-void drawStringCentered(ofTrueTypeFont font, string s, int x, int y, ofColor boxColor, ofColor textColor);
-void drawStringTopLeft(ofTrueTypeFont font, string s, int x, int y, ofColor boxColor, ofColor textColor);
-void drawStringTopRight(ofTrueTypeFont font, string s, int x, int y, ofColor boxColor, ofColor textColor);
-void drawStringBottomLeft(ofTrueTypeFont font, string s, int x, int y, ofColor boxColor, ofColor textColor);
-void drawStringBottomRight(ofTrueTypeFont font, string s, int x, int y, ofColor boxColor, ofColor textColor);
-
-
 
 struct DepthStat {
   float min;
