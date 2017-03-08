@@ -233,7 +233,7 @@ void ClassVisualizer::onFaceDetectionResults(const vector<ofRectangle> &bboxes) 
   peopleAccessMutex.lock();
 
   for (int i = 0; i < people.size(); i++) {
-    people[i].isConfirmed = false;
+    people.at(i).isConfirmed = false;
   }
 
   for (auto bbox : bboxes) {
@@ -241,7 +241,7 @@ void ClassVisualizer::onFaceDetectionResults(const vector<ofRectangle> &bboxes) 
 
     float closestDistance = DIST_THRESH;
     for (int i = 0; i < people.size(); i++) {
-      float dist = people[i].currentBoundingBox().getCenter().distance(bbox.getCenter());
+      float dist = people.at(i).currentBoundingBox().getCenter().distance(bbox.getCenter());
       if (dist < closestDistance) {
         closestPersonIndex = i;
         closestDistance = dist;
@@ -252,7 +252,7 @@ void ClassVisualizer::onFaceDetectionResults(const vector<ofRectangle> &bboxes) 
     if (closestDistance < DIST_THRESH) {
       assert (closestPersonIndex != -1);
       // printf("updating existing person at index: %d\n", closestPersonIndex);
-      people[closestPersonIndex].updateMtcnnBoundingBox(bbox);
+      people.at(closestPersonIndex).updateMtcnnBoundingBox(bbox);
     } else {
       // printf("creating new person\n");
       people.push_back(Person(bbox));
@@ -260,8 +260,8 @@ void ClassVisualizer::onFaceDetectionResults(const vector<ofRectangle> &bboxes) 
   }
 
   for (int i = 0; i < people.size(); i++) {
-    if (!people[i].isConfirmed) {
-      openFaceModelPool->returnModel(people[i].openFaceModel);
+    if (!people.at(i).isConfirmed) {
+      openFaceModelPool->returnModel(people.at(i).openFaceModel);
       people.erase(people.begin() + i);
     }
   }

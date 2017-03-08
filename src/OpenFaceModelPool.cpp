@@ -55,7 +55,7 @@ void OpenFaceModelPool::returnModel(shared_ptr<OpenFaceModel> model) {
   if (model == nullptr) return;
   auto copyToPush = model;
   for (int i = 0; i < usedModels.size(); i++) {
-    auto otherModel = usedModels[i];
+    auto otherModel = usedModels.at(i);
     if (*otherModel == *model) {
       usedModels.erase(usedModels.begin() + i);
       ofLogNotice("OpenFaceModelPool") << "removed returned model from used models";

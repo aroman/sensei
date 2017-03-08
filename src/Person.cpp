@@ -129,13 +129,30 @@ ofRectangle Person::currentBoundingBox() const {
 }
 
 void Person::drawFrontalView() const {
-  drawBoundBox(h.r, ofColor::purple);
 
+  ofColor bboxColor;
   if (isRaisingHand) {
-    drawBoundBox(f.r, ofColor::red);
+    bboxColor = ofColor::blue;
   } else {
-    drawBoundBox(f.r, ofColor::blue);
+    bboxColor = ofColor::white;
   }
+
+  drawBoundBox(h.r, ofColor::black);
+
+  if (openFaceModel == nullptr) {
+    drawBoundBox(f.r, bboxColor);
+  } else {
+    openFaceModel->getLandmarksPolyline().draw();
+    for (auto pointPair : openFaceModel->get3DBoundingBox()) {
+      ofPath path;
+      path.setStrokeColor(bboxColor);
+      path.setStrokeWidth(5);
+      path.lineTo(std::get<0>(pointPair));
+      path.lineTo(std::get<1>(pointPair));
+      path.draw();
+    }
+  }
+
 
   ofDrawBitmapStringHighlight("avg: " + ofToString(f.avgDepth), f.r.x, f.r.y + f.r.height - 40);
 }

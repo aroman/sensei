@@ -22,8 +22,12 @@ public:
   bool updateTracking(ofPixels colorPixels);
   void reset();
 
+  // Methods to access OpenFace model data with OpenFrameworks types
   ofRectangle get2DBoundingBox() const;
-  ofRectangle get3() const;
+  std::vector<std::pair<ofVec2f, ofVec2f>> get3DBoundingBox() const;
+  std::vector<ofVec2f> getLandmarks() const;
+  ofPolyline getLandmarksPolyline() const;
+  std::vector<double> getPoseCamera() const; // [Tx, Ty, Tz, Eul_x, Eul_y, Eul_z]
   double getX() const;
   double getY() const;
   bool isActive() const;

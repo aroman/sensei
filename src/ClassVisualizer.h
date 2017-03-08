@@ -41,7 +41,7 @@ public:
   bool showLoadScreen = true;
 
 private:
-  static const size_t openFaceModelPoolSize = 3;
+  static const size_t openFaceModelPoolSize = 2;
   ofPixels colorPixels;
   ofFloatPixels depthPixels; // depth pixels in meters
   ofTexture colorTexture;
