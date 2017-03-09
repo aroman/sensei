@@ -471,12 +471,27 @@ void Person::drawTopColor() const{
     ofTexture temp;
     temp.loadData(f.colorPixels);
 
-    temp.draw(r.x,r.y);
+    int width = topBoxWidth;
+    int height = ((width * r.height)/r.width);
 
+    temp.draw(r.x,r.y,width,height);
   }
 }
 void Person::drawTopHandbox(ofColor c) const{
+  if(hasGoodDepth){
+    if(isRaisingHand){
+      ofRectangle r(f.r);
 
+      r.y = y_depth;
+
+      int width = topBoxWidth;
+      int height = ((width * r.height)/r.width);
+
+      ofNoFill();
+      ofSetColor(ofColor::red);
+      ofDrawRectangle(r.x,r.y,width,height);
+    }
+  }
 }
 void Person::drawTopLandmarks(ofColor c) const{
 
@@ -490,7 +505,7 @@ void Person::drawFrontPersonInfo(ofTrueTypeFont font) const{
 }
 
 void Person::drawTopPersonInfo(ofTrueTypeFont font) const{
-  int x = f.r.x + f.r.width;
+  int x = f.r.x + topBoxWidth;
   int y = y_depth;
   drawPersonInfo(font, x, y);
 }
@@ -598,7 +613,7 @@ void Person::update(const ofPixels &newColorPixels, const ofFloatPixels &newDept
 
         depth = maxDepth;
         //y_depth = (int)((SCREEN_HEIGHT * (depth - MIN_MILLIMETERS))/(MAX_MILLIMETERS - MIN_MILLIMETERS));
-        y_depth = (int)((SCREEN_HEIGHT) * (0.1 + (0.8*depth)));
+        y_depth = (int)((SCREEN_HEIGHT) * (0.1 + (0.6*(depth))));
 
         //cout << "face Depth: " << depth << endl;
         //cout << "y_depth: " << y_depth << endl;

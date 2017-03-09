@@ -58,6 +58,7 @@ private:
       ofImage cmuWordmark;
       ofImage cmuWordmarkBlue;
       ofImage fullLogo;
+      ofImage classroom;
 
     //for drawing text
       ofTrueTypeFont demoFont;

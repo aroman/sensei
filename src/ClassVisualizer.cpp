@@ -16,6 +16,7 @@ ClassVisualizer::ClassVisualizer() {
     fullLogo.load("images/logo_wide.png");
     cmuWordmark.load("images/cmu_wordmark.png");
     cmuWordmarkBlue.load("images/cmu_wordmark_blue.png");
+    classroom.load("images/classroom.png");
 
   //load font
 
@@ -222,6 +223,8 @@ void ClassVisualizer::drawBirdseyeView() {
   ofSetColor(255,255,255);
   ofDrawRectangle(0,0,1920,1080);
 
+  classroom.draw(0,0,SCREEN_WIDTH,SCREEN_HEIGHT);
+
   for (auto const &person : people) {
     if(showDebug){
       person.drawTopColor();
@@ -229,17 +232,21 @@ void ClassVisualizer::drawBirdseyeView() {
       //person.drawTopLandmarks(ofColor::red);
       person.drawTopPersonInfo(peopleFont);
     } else{
-      person.drawTopColor();
-      /*
-      if(showHands){
-        person.drawTopHandbox(ofColor::black);
-      }
-      if(showLandmarks){
-        person.drawTopLandmarks(ofColor::red);
-      }
-      */
-      if(showPersonInfo){
-        person.drawTopPersonInfo(peopleFont);
+      if(person.openFaceModel != nullptr){
+        person.drawTopColor();
+        
+        if(showHands){
+          person.drawTopHandbox(ofColor::black);
+        }
+        /*
+        if(showLandmarks){
+          person.drawTopLandmarks(ofColor::red);
+        }
+        */
+        
+        if(showPersonInfo){
+          person.drawTopPersonInfo(peopleFont);
+        }
       }
     }
   }
@@ -289,7 +296,7 @@ void ClassVisualizer::drawLoadScreen(){
   }
 
 void ClassVisualizer::drawInfoPanel() {
-  int height = 120;
+  int height = 180;
   int radius = 15;
   int x = -(radius);
   int y = SCREEN_HEIGHT - height + (radius);
@@ -316,6 +323,19 @@ void ClassVisualizer::drawInfoPanel() {
 
   string numStudents = "Number of Students: " + ofToString(people.size());
   drawStringTopLeft(demoFont, numStudents, x, y, ofColor(0,0,0,0), ofColor::black);
+
+  int numHandsRaised = 0;
+  for (auto const &person : people) {
+    if(person.isRaisingHand){
+      numHandsRaised++;
+    }
+  }
+
+  y += 40;
+
+  string handsRaised  = "Number of questions: " + ofToString(numHandsRaised);
+  drawStringTopLeft(demoFont, handsRaised , x, y, ofColor(0,0,0,0), ofColor::black);
+
 }
 
 void ClassVisualizer::onFaceDetectionResults(const vector<ofRectangle> &bboxes) {

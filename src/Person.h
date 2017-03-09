@@ -55,6 +55,8 @@ struct Person {
   //void drawBirdseyeView() const;
 
   void drawFrontDepth() const;
+
+  int topBoxWidth = 150;
   void drawTopColor() const;
 
   void drawFrontDepthPoints(ofColor c) const;
@@ -101,8 +103,8 @@ struct Person {
   int y_depth;
 
   float offsetFront = 0.1;
-  float offsetBack = 0.01;
-  float threshold = 0.125;
+  float offsetBack = 0.02;
+  float threshold = 0.11;
 
 
   bool isConfirmed = false;
