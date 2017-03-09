@@ -38,11 +38,11 @@ public:
   bool showDepth = false; //press X or x
   bool showPersonInfo = false; //press I or i
   bool showInfoPanel = true;
-  bool showLoadScreen = false;
+  bool showLoadScreen = true;
   bool showDebug = false;
 
 private:
-  static const size_t openFaceModelPoolSize = 0;
+  static const size_t openFaceModelPoolSize = 1;
   ofPixels colorPixels;
   ofFloatPixels depthPixels; // depth pixels in meters
   ofTexture colorTexture;

@@ -11,6 +11,49 @@ static const double HANDBOX_Y_RATIO = 2.0;
 
 
 
+//updates both the hand and face boxes
+void Person::recalculateBoundingBox() {
+  f.r = currentBoundingBox();
+  f.r.scaleFromCenter(FACE_SCALE_RATIO);
+
+
+
+  auto h_w = HANDBOX_X_RATIO * f.r.width;
+  auto h_h = HANDBOX_Y_RATIO * f.r.height;
+  h.r = ofRectangle(
+    f.r.x + (f.r.width/2.0) - (h_w/2.0),
+    f.r.y - h_h - (f.r.height/2.0),
+    h_w,
+    h_h
+  );
+
+  //cout << "ORIGINAL: " << h.r << endl;
+
+  ofRectangle screen = ofRectangle(0,0,1920,1080);
+
+  // 
+  if (!screen.inside(h.r)) {
+    // crop or it may not be here
+    if (!screen.intersects(h.r)) {
+      h.r = ofRectangle(0,0,0,0);
+    } else {
+
+      auto x1 = h.r.x + h.r.width;
+      auto y1 = h.r.y + h.r.height;
+
+      x1 = (float)MIN(1920.0,(double)x1);
+      y1 = (float)MIN(1080.0,(double)y1);
+
+      h.r.x = (float)MAX(0.0,(double)h.r.x);
+      h.r.y = (float)MAX(0.0,(double)h.r.y);
+
+      h.r.width = x1 - h.r.x;
+      h.r.height = y1 - h.r.y;
+
+    }
+   }
+   //cout << "EDITED: " << h.r << endl;
+}
 
 
 
@@ -39,7 +82,7 @@ void Space::updateDepthPixels(const ofFloatPixels &newDepthPixels) {
   newDepthPixels.cropTo(depthPixels, r.x, r.y, r.width, r.height);
 
   //converts 500,4500 -> 1,0
-
+  cout << " SIZE 1: " << (depthPixels.getWidth() * depthPixels.getHeight()) << endl;
   scaleDepthPixelsForDrawing(&depthPixels);
 
   if (r.y > 0) {
@@ -59,15 +102,16 @@ void Space::updateColorPixels(const ofPixels &newColorPixels) {
 
 DepthStat Space::doDepthMath(ofRectangle b){
 
+  
   /*
-
   cout << "doDepthMath" << endl;
   cout << "  r.x: " << b.x << endl;
   cout << "  r.y: " << b.y << endl;
   cout << "  r.w: " << b.width << endl;
   cout << "  r.h: " << b.height << endl;
-
+  
   */
+  
 
   DepthStat d;
   d.min = 0.0; //0.0 is the farthest
@@ -78,15 +122,41 @@ DepthStat Space::doDepthMath(ofRectangle b){
   d.valid = false;
 
   //return invalid stat if request is bad
-    if(depthMap == NULL) return d; //no data
-    if(depthPixels.size() <= 0) return d; //no data
-    if(((int)b.width) <= 0) return d; //not asking for anything
-    if(((int)b.height) <= 0) return d; //not asking for anything
+    if(depthMap == NULL){
+      cout << "BAD: depthMap is NULL" << endl;
+      return d; //no data
+    }
+    if(depthPixels.size() <= 0){
+      cout << "BAD: depthPixels is SIZE 0" << endl;
+      return d; //no data
+    }
+    if(((int)b.width) <= 0){
+      cout << "BAD: depthMap width <= 0" << endl;
+      return d; //not asking for anything
+    }
+    if(((int)b.height) <= 0){
+      cout << "BAD: depthMap height <= 0" << endl;
+      return d; //not asking for anything
+    }
 
-    if(((int)b.x) >= ((int)depthPixels.getWidth())) return d; //out of bounds, no overlap
-    if(((int)b.y) >= ((int)depthPixels.getHeight())) return d; //out of bounds, no overlap
-    if(((int)(b.x + b.width)) <= 0) return d; //out of bounds, no overlap
-    if(((int)(b.y + b.height)) <= 0) return d; //out of bounds, no overlap
+    if(((int)b.x) >= ((int)depthPixels.getWidth())){
+      cout << "BAD: x >= width" << endl;
+      return d; //out of bounds, no overlap
+    }
+    if(((int)b.y) >= ((int)depthPixels.getHeight())){
+      cout << "BAD: y >= height" << endl;
+      return d; //out of bounds, no overlap
+    }
+    if(((int)(b.x + b.width)) <= 0){
+      cout << "BAD: x + width <= 0" << endl;
+      return d; //out of bounds, no overlap
+    }
+    if(((int)(b.y + b.height)) <= 0){
+      cout << "BAD: y + height <= 0" << endl;
+      return d; //out of bounds, no overlap
+    }
+
+  //cout << "initially VALID request" << endl;
 
   //now we know that:
   //  there's data in the depth maps
@@ -212,10 +282,10 @@ DepthStat Space::doDepthMath(ofRectangle b){
   }
 
   
-  cout << "avg: " << d.avg << ", sum: " << sum << endl;
+  //cout << "avg: " << d.avg << ", sum: " << sum << endl;
   //cout << "counter:"  << pixelCounter << endl;
-  cout << "min: " << d.min << endl;
-  cout << "max:"  << d.max << endl;
+  //cout << "min: " << d.min << endl;
+  //cout << "max:"  << d.max << endl;
 
   //cout << "mode:"  << d.mode << endl;
 
@@ -259,21 +329,6 @@ void Person::updateMtcnnBoundingBox(ofRectangle bboxFromMtcnn) {
   mtcnnBoundingBox = bboxFromMtcnn;
   recalculateBoundingBox();
   isConfirmed = true;
-}
-
-//updates both the hand and face boxes
-void Person::recalculateBoundingBox() {
-  f.r = currentBoundingBox();
-  f.r.scaleFromCenter(FACE_SCALE_RATIO);
-
-  auto h_w = HANDBOX_X_RATIO * f.r.width;
-  auto h_h = HANDBOX_Y_RATIO * f.r.height;
-  h.r = ofRectangle(
-    f.r.x + (f.r.width/2.0) - (h_w/2.0),
-    f.r.y - h_h - (f.r.height/2.0),
-    h_w,
-    h_h
-  );
 }
 
 ofRectangle Person::currentBoundingBox() const {
@@ -380,20 +435,19 @@ void Person::drawTopPersonInfo(ofTrueTypeFont font) const{
 
 }
 
-
-
-
-
 void Person::drawPersonInfo(ofTrueTypeFont font, int x,int y) const{
   
-  x += 5;
+  x += 15;
 
   ofColor text = ofColor(0,0,0,255);
 
   ofSetColor(ofColor(255,255,255,140));
   ofFill();
 
-  ofDrawRectangle(x, y, 200, f.r.height);
+  ofDrawRectRounded(x, y, 250, f.r.height, 30.0);
+
+  x += 10;
+  y += 10;
 
   string s;
   s = "ID: " + name;
@@ -428,7 +482,7 @@ void Person::update(const ofPixels &newColorPixels, const ofFloatPixels &newDept
 
     //retrieve depths from those locations
     vector<float> depths;
-  
+    
     //try to use openface's locations
       if (openFaceModel != nullptr) {
 
@@ -445,6 +499,7 @@ void Person::update(const ofPixels &newColorPixels, const ofFloatPixels &newDept
           }
         }
       }
+    
 
     //add our backup locations
       ofPoint center = ofPoint(f.r.x + (f.r.width/2),f.r.y + (f.r.height/2));
@@ -454,8 +509,10 @@ void Person::update(const ofPixels &newColorPixels, const ofFloatPixels &newDept
 
     //accumulate depths at each of those locations
       for(uint i = 0; i < depthLandmarks.size(); i++){
+        //cout << "===========> FACE >=============== " << endl;
         DepthStat d = f.doDepthMathAt(depthLandmarks[i].x-f.r.x,
           depthLandmarks[i].y-f.r.y,1+(dotRadius*2));
+        //cout << "===========< FACE <=============== " << endl;
         if(d.valid){
           depths.push_back(d.max);
           depths.push_back(d.avg);
@@ -465,7 +522,7 @@ void Person::update(const ofPixels &newColorPixels, const ofFloatPixels &newDept
     
     //it's possible none of our queries were valid
     if(depths.size() > 0){
-      hasGoodDepth = true;  
+      
       
       //find max depth from any of the locations
         //float minDepth = MAX_MILLIMETERS;
@@ -480,23 +537,33 @@ void Person::update(const ofPixels &newColorPixels, const ofFloatPixels &newDept
         //y_depth = (int)((1920 * (depth - MIN_MILLIMETERS))/(MAX_MILLIMETERS - MIN_MILLIMETERS));
         y_depth = (int)(1920 * depth);
 
-        cout << "face Depth: " << depth << endl;
-        cout << "y_depth: " << y_depth << endl;
+        //cout << "face Depth: " << depth << endl;
+        //cout << "y_depth: " << y_depth << endl;
+
+        if(depth > 0.05){
+          hasGoodDepth = true;  
+        }
     }
 
   //if there's data worth checking
     if(hasGoodDepth){
       //check depth for hands!
+      //cout << "================> HAND >============ " << endl;
       DepthStat d = h.doDepthMath(ofRectangle(0,0,h.r.width,h.r.height));
+      //cout << "================< HAND <============ " << endl;
       if(d.valid){
 
         
-        cout << "hand Depth: " << d.max << endl;
+        //cout << "hand Depth: " << d.max << endl;
         if(d.max > (depth - 0.1)){
           //if((d.min < (depth + 400))||(d.min > (depth - 400))){
 
-          isRaisingHand = true;
+          if (openFaceModel != nullptr) {
+            isRaisingHand = true;
+          }
         }
+      }else{
+        //cout << "hand depth NOT VALID" << endl;
       }
     }
 }

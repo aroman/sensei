@@ -168,7 +168,7 @@ void scaleDepthPixelsForDrawing(ofFloatPixels *depthPixels) {
   // Scale from meters to 0-1 (float)
   float *pixelData = depthPixels->getData();
   for (int i = 0; i < depthPixels->size(); i++) {
-      pixelData[i] = ofMap(pixelData[i], 500.0, 4500.0, 1, 0, true);
+      pixelData[i] = ofMap(pixelData[i], 500, 4500, 1, 0, true);
   }
 }
 

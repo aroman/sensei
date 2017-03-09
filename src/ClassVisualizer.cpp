@@ -153,13 +153,26 @@ void ClassVisualizer::draw() {
 }
 
 void ClassVisualizer::drawFrontalView() {
-  colorTexture.draw(0, 0);
+  if(showDepth){
+    ofFloatPixels copy = depthPixels;
+
+    ofTexture scaledDepthTexture;
+    ofFloatPixels scaledDepth;
+    scaledDepth.setFromPixels(reinterpret_cast<float *>(copy.getData()),copy.getWidth(),copy.getHeight(), OF_PIXELS_GRAY);
+
+    scaleDepthPixelsForDrawing(&scaledDepth);
+    scaledDepthTexture.loadData(scaledDepth);
+    scaledDepthTexture.draw(0,0);
+  }else{
+    colorTexture.draw(0, 0);
+  }
+
   // Draw people
   for (auto const &person : people) {
     if(showDebug){
       person.drawFrontDepth();
       person.drawFrontHandbox(ofColor::red);
-      person.drawFrontPose(ofColor::yellow);
+      person.drawFrontPose(ofColor(28,154,255));
       person.drawFrontBBox(ofColor::orange);
 
       person.drawFrontLandmarks(ofColor(255,255,255,160));
@@ -167,33 +180,12 @@ void ClassVisualizer::drawFrontalView() {
 
       person.drawFrontPersonInfo(peopleFont);
 
-      if(showDepth){
-        /*
-        ofFloatPixels copy = depthPixels;
-
-        ofTexture scaledDepthTexture;
-        ofFloatPixels scaledDepth;
-        scaledDepth.setFromPixels(reinterpret_cast<float *>(copy.getData()),1920,1080, OF_PIXELS_GRAY);
-
-        scaleDepthPixelsForDrawing(&scaledDepth);
-        scaledDepthTexture.loadData(scaledDepth);
-        scaledDepthTexture.draw(0,0);
-        */
-      }
-
-
-
-
-
     } else{
-      if(showDepth){
-        //person.drawFrontDepth();
-      }
       if(showHands){
         person.drawFrontHandbox(ofColor::red);
       }
       if(showPose){
-        person.drawFrontPose(ofColor::yellow);
+        person.drawFrontPose(ofColor(28,154,255));
       }
       else{
         person.drawFrontBBox(ofColor::orange);
