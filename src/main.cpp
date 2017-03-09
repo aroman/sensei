@@ -12,7 +12,7 @@ int main() {
   ofSetVerticalSync(false);
   ofSetDataPathRoot("data");
   ofSetWindowTitle("sensei");
-  //ofSetFullscreen(true);
+  ofSetFullscreen(true);
 
   TIME_SAMPLE_SET_FRAMERATE(30.0f);
   TIME_SAMPLE_GET_INSTANCE()->setUIActivationKey('T');
