@@ -29,6 +29,7 @@ struct Space {
 
   ofPixels colorPixels;
   ofFloatPixels depthPixels;
+
   float *depthMap; // raw meters
 
   DepthStat doDepthMathAt(float x, float y, float radius);
@@ -57,6 +58,19 @@ struct Person {
   void drawTopColor() const;
 
   void drawFrontDepthPoints(ofColor c) const;
+  
+
+
+
+
+  ofFloatPixels thresholdDepthPixels;
+  void drawFrontHandThresholded() const;
+  int callThresholdPixels(float low, float high);
+  int thresholdPixels(ofFloatPixels* depthPixels, float low, float high);
+
+
+
+
 
 
   void drawFrontHandbox(ofColor c) const;
@@ -85,6 +99,11 @@ struct Person {
 
   float depth;
   int y_depth;
+
+  float offsetFront = 0.08;
+  float offsetBack = -0.01;
+  int threshold = 10000;
+
 
   bool isConfirmed = false;
 

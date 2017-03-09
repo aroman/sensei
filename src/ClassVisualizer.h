@@ -43,7 +43,7 @@ public:
 
 private:
 
-  size_t openFaceModelPoolSize = 8;
+  size_t openFaceModelPoolSize = 1;
 
   ofPixels colorPixels;
   ofFloatPixels depthPixels; // depth pixels in meters

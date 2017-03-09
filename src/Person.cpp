@@ -24,38 +24,91 @@ void Person::recalculateBoundingBox() {
   auto h_h = HANDBOX_Y_RATIO * f.r.height;
   h.r = ofRectangle(
     f.r.x + (f.r.width/2.0) - (h_w/2.0),
-    f.r.y - h_h - ((1.25*f.r.height)/2.0),
+    f.r.y - h_h - ((1.5*f.r.height)/2.0),
     h_w,
     h_h
   );
 
-  //cout << "ORIGINAL: " << h.r << endl;
+  
 
   ofRectangle screen = ofRectangle(0,0,SCREEN_WIDTH,SCREEN_HEIGHT);
 
-  //
+  //cout << endl << ">>>>>>>>>>>>>>>>>>>>>>>>"<< endl;
+  //cout << "ORIGINAL: " << h.r << endl;
   if (!screen.inside(h.r)) {
+    //cout << "screen is not inside" << endl;
     // crop or it may not be here
     if (!screen.intersects(h.r)) {
+      //cout << "screen does not intersect" << endl;
       h.r = ofRectangle(0,0,0,0);
     } else {
+      //cout << "screen DOES intersect" << endl;
+
+      auto x0 = h.r.x;
+      auto y0 = h.r.y;
 
       auto x1 = h.r.x + h.r.width;
       auto y1 = h.r.y + h.r.height;
 
-      x1 = (float)MIN(SCREEN_HEIGHT,(double)x1);
-      y1 = (float)MIN(SCREEN_WIDTH,(double)y1);
+      x0 = MAX(0.0, x0);
+      y0 = MAX(0.0, y0);
 
-      h.r.x = (float)MAX(0.0,(double)h.r.x);
-      h.r.y = (float)MAX(0.0,(double)h.r.y);
+      x1 = MIN(x1, SCREEN_WIDTH);
+      y1 = MIN(y1, SCREEN_HEIGHT);
 
-      h.r.width = x1 - h.r.x;
-      h.r.height = y1 - h.r.y;
+      h.r.x = x0;
+      h.r.y = y0;
+      h.r.width = x1 - x0;
+      h.r.height = y1 - y0;
 
     }
+   } else{
+      //cout << "screen is COMPLETELY inside" << endl;
    }
    //cout << "EDITED: " << h.r << endl;
+   //cout << "<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<"<< endl << endl;
 }
+
+
+
+
+int Person::thresholdPixels(ofFloatPixels* depthPixels, float low, float high){
+  // Scale from meters to 0-1 (float)  
+  float *pixelData = depthPixels->getData();
+
+  int counter = 0;
+
+  for (int i = 0; i < depthPixels->size(); i++) {
+    if((pixelData[i] > low) && ( pixelData[i] < high)){
+      pixelData[i] = 1.0;
+      counter++;
+    } else{
+      pixelData[i] = 0.0;
+    }
+  }
+  return counter;
+}
+
+int Person::callThresholdPixels(float low, float high){
+  ofFloatPixels copy = h.depthPixels;
+
+  ofFloatPixels scaledDepth;
+  scaledDepth.setFromPixels(reinterpret_cast<float *>(copy.getData()),copy.getWidth(),copy.getHeight(), OF_PIXELS_GRAY);
+
+  return thresholdPixels(&scaledDepth, low, high);
+}
+
+
+void Person::drawFrontHandThresholded() const{
+  if((thresholdDepthPixels.getWidth()*thresholdDepthPixels.getHeight())>0){
+    ofTexture scaledDepthTexture;
+    scaledDepthTexture.loadData(thresholdDepthPixels);
+    scaledDepthTexture.draw(h.r.x,h.r.y);
+  }
+}
+
+
+
 
 
 
@@ -361,6 +414,7 @@ void Person::drawFrontDepthPoints(ofColor c) const{
 
 
 void Person::drawFrontHandbox(ofColor c) const{
+  drawFrontHandThresholded();
   if(isRaisingHand){
     drawBoundBox(h.r, c);
   }
@@ -550,6 +604,17 @@ void Person::update(const ofPixels &newColorPixels, const ofFloatPixels &newDept
 
   //if there's data worth checking
     if(hasGoodDepth){
+
+      int count = callThresholdPixels(depth - offsetBack, depth + offsetFront);
+      cout << "c: " << count << endl;
+      if(count > threshold){
+        isRaisingHand = true;
+      }
+      /*
+      //cout << "+++++++++++ count threshold ++++++++++++++" << endl;
+      //cout << "     " << count << endl;
+      //cout << "++++++++++++++++++++++++++++++++++" << endl;
+
       //check depth for hands!
       //cout << "================> HAND >============ " << endl;
       DepthStat d = h.doDepthMath(ofRectangle(0,0,h.r.width,h.r.height));
@@ -557,8 +622,8 @@ void Person::update(const ofPixels &newColorPixels, const ofFloatPixels &newDept
       if(d.valid){
 
         //cout << "hand Depth: " << d.max << endl;
-        if(d.max > (depth - 0.05)){
-          if(d.max < (depth + 0.05)){
+        if(d.max > (depth - offsetBack)){
+          if(d.max < (depth + offsetFront)){
             //if((d.min < (depth + 400))||(d.min > (depth - 400))){
 
             if (openFaceModel != nullptr) {
@@ -566,8 +631,10 @@ void Person::update(const ofPixels &newColorPixels, const ofFloatPixels &newDept
             }
           }
         }
+
       }else{
         //cout << "hand depth NOT VALID" << endl;
       }
+      */
     }
 }

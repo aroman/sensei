@@ -6,19 +6,7 @@ void drawBoundBox(ofRectangle r, ofColor color) {
   ofSetLineWidth(6.0);
   ofSetColor(color);
   ofDrawRectRounded(r,30.0);
-  /*
-  ofPath p;
-  p.setFillColor(color);
-  p.rectangle(r);
-
-  ofRectangle outer(r);
-  outer.scaleFromCenter(1.1);
-  p.rectangle(outer);
-  p.draw();
-  */
 }
-
-
 
 void drawStringCentered(ofTrueTypeFont font, string s, int xc, int yc, ofColor boxColor, ofColor textColor){
   //do some voodoo
@@ -42,8 +30,9 @@ void drawStringCentered(ofTrueTypeFont font, string s, int xc, int yc, ofColor b
   int y2 = yc - ((sh2*1.3)/2);
 
   ofSetColor(textColor);
-  font.drawString(s, x2, y2 + (sh2));}
-
+  font.drawString(s, x2, y2 + (sh2));
+  ofSetColor(ofColor::white);
+}
 
 void drawStringTopLeft(ofTrueTypeFont font, string s, int xl, int yl, ofColor boxColor, ofColor textColor){
   //do some voodoo
@@ -70,7 +59,9 @@ void drawStringTopLeft(ofTrueTypeFont font, string s, int xl, int yl, ofColor bo
   int y2 = yc - ((sh2*1.3)/2);
 
   ofSetColor(textColor);
-  font.drawString(s, x2, y2 + (sh2));}
+  font.drawString(s, x2, y2 + (sh2));
+  ofSetColor(ofColor::white);
+}
 
 void drawStringTopRight(ofTrueTypeFont font, string s, int xr, int yr, ofColor boxColor, ofColor textColor){
 
@@ -100,7 +91,9 @@ void drawStringTopRight(ofTrueTypeFont font, string s, int xr, int yr, ofColor b
   int y2 = yc - ((sh2*1.3)/2);
 
   ofSetColor(textColor);
-  font.drawString(s, x2, y2 + (sh2));}
+  font.drawString(s, x2, y2 + (sh2));
+  ofSetColor(ofColor::white);
+}
 
 void drawStringBottomLeft(ofTrueTypeFont font, string s, int xl, int yl, ofColor boxColor, ofColor textColor){
 
@@ -130,7 +123,9 @@ void drawStringBottomLeft(ofTrueTypeFont font, string s, int xl, int yl, ofColor
   int y2 = yc - ((sh2*1.3)/2);
 
   ofSetColor(textColor);
-  font.drawString(s, x2, y2 + (sh2));}
+  font.drawString(s, x2, y2 + (sh2));
+  ofSetColor(ofColor::white);
+}
 
 void drawStringBottomRight(ofTrueTypeFont font, string s, int xr, int yr, ofColor boxColor, ofColor textColor){
 
@@ -161,8 +156,9 @@ void drawStringBottomRight(ofTrueTypeFont font, string s, int xr, int yr, ofColo
   int y2 = yc - ((sh2*1.3)/2);
 
   ofSetColor(textColor);
-  font.drawString(s, x2, y2 + (sh2));}
-
+  font.drawString(s, x2, y2 + (sh2));
+  ofSetColor(ofColor::white);
+}
 
 void scaleDepthPixelsForDrawing(ofFloatPixels *depthPixels) {
   // Scale from meters to 0-1 (float)
@@ -171,4 +167,3 @@ void scaleDepthPixelsForDrawing(ofFloatPixels *depthPixels) {
       pixelData[i] = ofMap(pixelData[i], 500, 4500, 1, 0, true);
   }
 }
-
