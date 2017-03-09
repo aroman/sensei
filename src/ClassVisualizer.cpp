@@ -30,13 +30,15 @@ ClassVisualizer::ClassVisualizer() {
   //load texts
     helpText = R"([spacebar] birdseye/frontal view toggle
 [I or i] toggle person info boxes
-[H or h] hand view
-[C or c] cube view
-[L or l] landmarks
+[H or h] hand detection
+[C or c] cube / box view
+[L or l] face landmarks
 [V or v] between top and front view
 [X or x] between depth and rgb view
 [D or d] all debug features on
+[Z or z] toggle full screen view
 [0] show load/help screen, resets view
+[1-7] presentation modes
 [PG DWN] toggles timer screen)";
 
     aboutText.push_back("v0.1");

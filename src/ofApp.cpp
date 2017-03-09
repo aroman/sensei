@@ -87,7 +87,7 @@ void ofApp::keyReleased(int key) {
       visualizer->showInfoPanel = !visualizer->showLoadScreen;
       visualizer->showDebug = false;
       break;
-    case 49: //1
+    case 49: //1, bounding box
       visualizer->showLoadScreen = false;
       visualizer->showInfoPanel = true;
       visualizer->showDebug = false;
@@ -98,7 +98,7 @@ void ofApp::keyReleased(int key) {
       visualizer->showDepth = false;
       visualizer->mode = ViewAngle::FRONTAL;
       break;
-    case 50: //2
+    case 50: //2, cube
       visualizer->showLoadScreen = false;
       visualizer->showInfoPanel = true;
       visualizer->showDebug = false;
@@ -109,7 +109,7 @@ void ofApp::keyReleased(int key) {
       visualizer->showDepth = false;
       visualizer->mode = ViewAngle::FRONTAL;
       break;
-    case 51: //3
+    case 51: //3, info per person
       visualizer->showLoadScreen = false;
       visualizer->showInfoPanel = true;
       visualizer->showDebug = false;
@@ -120,7 +120,7 @@ void ofApp::keyReleased(int key) {
       visualizer->showDepth = false;
       visualizer->mode = ViewAngle::FRONTAL;
       break;
-    case 52: //4
+    case 52: //4, landmarks
       visualizer->showLoadScreen = false;
       visualizer->showInfoPanel = true;
       visualizer->showDebug = false;
@@ -131,7 +131,7 @@ void ofApp::keyReleased(int key) {
       visualizer->showDepth = false;
       visualizer->mode = ViewAngle::FRONTAL;
       break;
-    case 53: //5
+    case 53: //5, hand detector
       visualizer->showLoadScreen = false;
       visualizer->showInfoPanel = true;
       visualizer->showDebug = false;
@@ -142,7 +142,7 @@ void ofApp::keyReleased(int key) {
       visualizer->showDepth = false;
       visualizer->mode = ViewAngle::FRONTAL;
       break;
-    case 54: //6
+    case 54: //6, depth
       visualizer->showLoadScreen = false;
       visualizer->showInfoPanel = true;
       visualizer->showDebug = false;
@@ -153,16 +153,21 @@ void ofApp::keyReleased(int key) {
       visualizer->showDepth = true;
       visualizer->mode = ViewAngle::FRONTAL;
       break;
-    case 55: //7
+    case 55: //7, top view
       visualizer->showLoadScreen = false;
       visualizer->showInfoPanel = true;
       visualizer->showDebug = false;
       visualizer->showPose = false;
       visualizer->showPersonInfo = true;
       visualizer->showLandmarks = false;
-      visualizer->showHands = false;
+      visualizer->showHands = true;
       visualizer->showDepth = false;
       visualizer->mode = ViewAngle::BIRDSEYE;
+      break;
+    case 90: //Z - same as z
+    case 122: //z - toggles full screen mode
+      isFullScreen = !isFullScreen;
+      ofSetFullscreen(isFullScreen);
       break;
 
   }
