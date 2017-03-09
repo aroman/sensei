@@ -18,6 +18,7 @@ int main() {
   TIME_SAMPLE_SET_FRAMERATE(30.0f);
   TIME_SAMPLE_GET_INSTANCE()->setUIActivationKey('T');
   TIME_SAMPLE_GET_INSTANCE()->setUiScale(2.0);
+  TIME_SAMPLE_DISABLE();
 
   // this kicks off the running of my app
   // can be OF_WINDOW or OF_FULLSCREEN
