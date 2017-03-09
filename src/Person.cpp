@@ -410,8 +410,8 @@ void Person::drawTopColor() const{
 
     ofTexture temp;
     temp.loadData(f.colorPixels);
-    temp.draw(r.x,r.y);  
-
+    temp.draw(r.x,r.y); 
+    cout << "  X X X X X X X X X X X  X X X " << endl;
   }
 }
 void Person::drawTopHandbox(ofColor c) const{
@@ -432,7 +432,6 @@ void Person::drawTopPersonInfo(ofTrueTypeFont font) const{
   int x = f.r.x + f.r.width;
   int y = y_depth;
   drawPersonInfo(font, x, y);
-
 }
 
 void Person::drawPersonInfo(ofTrueTypeFont font, int x,int y) const{

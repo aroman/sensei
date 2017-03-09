@@ -208,15 +208,15 @@ void ClassVisualizer::drawBirdseyeView() {
       person.drawTopLandmarks(ofColor::red);
       person.drawTopPersonInfo(peopleFont);
     } else{
-      if(showDepth){
-        person.drawTopColor();
-      }
+      person.drawTopColor();
+      /*
       if(showHands){
         person.drawTopHandbox(ofColor::black);
       }
       if(showLandmarks){
         person.drawTopLandmarks(ofColor::red);
       }
+      */
       if(showPersonInfo){
         person.drawTopPersonInfo(peopleFont);
       }
@@ -271,7 +271,7 @@ void ClassVisualizer::drawInfoPanel() {
   int x = 50;
   int y = screenHeight - 50;
 
-  ofColor backgroundColor = ofColor(255, 255, 255, 100);
+  ofColor backgroundColor = ofColor(255, 255, 255, 255);
 
   if(mode == ViewAngle::FRONTAL){
     drawStringBottomLeft(demoFont,"Mode: Front View", x, y, backgroundColor, ofColor::white);
