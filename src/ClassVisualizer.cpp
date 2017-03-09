@@ -285,24 +285,34 @@ void ClassVisualizer::drawLoadScreen(){
   }
 
 void ClassVisualizer::drawInfoPanel() {
-  int x = 50;
-  int y = SCREEN_HEIGHT - 50;
+  int height = 120;
+  int radius = 15;
+  int x = -(radius);
+  int y = SCREEN_HEIGHT - height + (radius);
 
   ofColor backgroundColor = ofColor(255, 255, 255, 255);
 
-  if(mode == ViewAngle::FRONTAL){
-    drawStringBottomLeft(demoFont,"Mode: Front View", x, y, backgroundColor, ofColor::white);
+  ofFill();
+  ofSetColor(ofColor(255, 255, 255, 140));
+  ofDrawRectRounded(x, y, 400, height, radius);
+  ofNoFill();
+
+  x += radius*1.5;
+
+  y = SCREEN_HEIGHT - height + radius + 12;
+
+  if (mode == ViewAngle::FRONTAL){
+    drawStringTopLeft(demoFont,"Mode: Front View", x, y, ofColor(0,0,0,0), ofColor::black);
   }
   else{
-    drawStringBottomLeft(demoFont,"Mode: Top View", x, y, backgroundColor, ofColor::white);
+    drawStringTopLeft(demoFont,"Mode: Top View", x, y, ofColor(0,0,0,0), ofColor::black);
   }
 
-  y += 40;
+  y += 45;
 
   string numStudents = "Number of Students: " + ofToString(people.size());
-  drawStringBottomLeft(demoFont, numStudents, x, y, backgroundColor, ofColor::white);
-
-  }
+  drawStringTopLeft(demoFont, numStudents, x, y, ofColor(0,0,0,0), ofColor::black);
+}
 
 void ClassVisualizer::onFaceDetectionResults(const vector<ofRectangle> &bboxes) {
   ofLogNotice("ClassVisualizer") << "onFaceDetectionResults " << bboxes.size();

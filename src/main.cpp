@@ -10,10 +10,9 @@ int main() {
   // and eat your CPU alive.
   ofSetFrameRate(30);
   ofSetVerticalSync(false);
-
   ofSetDataPathRoot("data");
-
   ofSetWindowTitle("sensei");
+  ofSetFullscreen(true);
 
   TIME_SAMPLE_SET_FRAMERATE(30.0f);
   TIME_SAMPLE_GET_INSTANCE()->setUIActivationKey('T');
