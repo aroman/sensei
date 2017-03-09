@@ -91,4 +91,5 @@ struct Person {
   //don't do depth work if we have bad depth
   bool hasGoodDepth = false;
   bool isRaisingHand = false;
+  unsigned int timestampHandRaised = 0;
 };
