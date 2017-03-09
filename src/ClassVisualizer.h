@@ -53,10 +53,6 @@ private:
 
 
   //visuals
-    //screen
-      int screenWidth = 1920;
-      int screenHeight = 1080;
-
     //imagery
       ofImage singleHand;
       ofImage cmuWordmark;

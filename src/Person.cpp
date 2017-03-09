@@ -7,6 +7,8 @@ static const double FACE_SCALE_RATIO = 1.5;
 static const double HANDBOX_X_RATIO = 1.75;
 static const double HANDBOX_Y_RATIO = 2.0;
 
+#define SCREEN_HEIGHT (1080)
+#define SCREEN_WIDTH (1920)
 
 
 
@@ -29,7 +31,7 @@ void Person::recalculateBoundingBox() {
 
   //cout << "ORIGINAL: " << h.r << endl;
 
-  ofRectangle screen = ofRectangle(0,0,1920,1080);
+  ofRectangle screen = ofRectangle(0,0,SCREEN_WIDTH,SCREEN_HEIGHT);
 
   // 
   if (!screen.inside(h.r)) {
@@ -41,8 +43,8 @@ void Person::recalculateBoundingBox() {
       auto x1 = h.r.x + h.r.width;
       auto y1 = h.r.y + h.r.height;
 
-      x1 = (float)MIN(1920.0,(double)x1);
-      y1 = (float)MIN(1080.0,(double)y1);
+      x1 = (float)MIN(SCREEN_HEIGHT,(double)x1);
+      y1 = (float)MIN(SCREEN_WIDTH,(double)y1);
 
       h.r.x = (float)MAX(0.0,(double)h.r.x);
       h.r.y = (float)MAX(0.0,(double)h.r.y);
@@ -84,12 +86,13 @@ void Space::updateDepthPixels(const ofFloatPixels &newDepthPixels) {
   //converts 500,4500 -> 1,0
   cout << " SIZE 1: " << (depthPixels.getWidth() * depthPixels.getHeight()) << endl;
   scaleDepthPixelsForDrawing(&depthPixels);
-
+  /*
   if (r.y > 0) {
     ofxCv::blur(depthPixels, 20);
   } else {
-    ofLogNotice("Space::updateDepth r.y out of screen: ") << r.y;
+    ofLogNotice("Space:") << ":updateDepth r.y out of screen: ") << r.y;
   }
+  */
   depthMap = depthPixels.getData();
 }
 
@@ -411,7 +414,6 @@ void Person::drawTopColor() const{
     ofTexture temp;
     temp.loadData(f.colorPixels);
     temp.draw(r.x,r.y); 
-    cout << "  X X X X X X X X X X X  X X X " << endl;
   }
 }
 void Person::drawTopHandbox(ofColor c) const{
@@ -533,8 +535,8 @@ void Person::update(const ofPixels &newColorPixels, const ofFloatPixels &newDept
         } 
 
         depth = maxDepth;
-        //y_depth = (int)((1920 * (depth - MIN_MILLIMETERS))/(MAX_MILLIMETERS - MIN_MILLIMETERS));
-        y_depth = (int)(1920 * depth);
+        //y_depth = (int)((SCREEN_HEIGHT * (depth - MIN_MILLIMETERS))/(MAX_MILLIMETERS - MIN_MILLIMETERS));
+        y_depth = (int)((SCREEN_HEIGHT) * (0.1 + (0.8*depth)));
 
         //cout << "face Depth: " << depth << endl;
         //cout << "y_depth: " << y_depth << endl;

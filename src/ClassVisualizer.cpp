@@ -5,6 +5,9 @@
 
 static const int DIST_THRESH = 150;
 
+#define SCREEN_HEIGHT (1080)
+#define SCREEN_WIDTH (1920)
+
 ClassVisualizer::ClassVisualizer() {
   hasData = false;
 
@@ -211,6 +214,10 @@ void ClassVisualizer::drawFrontalView() {
 }
 
 void ClassVisualizer::drawBirdseyeView() {
+
+  ofSetColor(255,255,255);
+  ofDrawRectangle(0,0,1920,1080);
+
   for (auto const &person : people) {
     if(showDebug){
       person.drawTopColor();
@@ -244,11 +251,11 @@ void ClassVisualizer::drawLoadScreen(){
     int trim = 100;
     ofSetColor(28,154,255); //sensei light blue
     ofFill();
-    ofDrawRectangle(0,0,screenWidth, screenHeight);
+    ofDrawRectangle(0,0,SCREEN_WIDTH,SCREEN_HEIGHT);
 
     ofSetColor(255,255,255); //white
     ofFill();
-    ofDrawRectangle(0,trim,screenWidth, screenHeight-(2*trim));
+    ofDrawRectangle(0,trim,SCREEN_WIDTH, SCREEN_HEIGHT-(2*trim));
 
   //draw main logo
     int logoWidth = 800;
@@ -257,7 +264,7 @@ void ClassVisualizer::drawLoadScreen(){
     int wordMarkWidth = 450 * 1.25;
 
     x = 100;
-    y = (screenHeight/2) - ((logoHeight + wordMarkHeight) /2) - 50 ;
+    y = (SCREEN_HEIGHT/2) - ((logoHeight + wordMarkHeight) /2) - 50 ;
 
     fullLogo.draw(x, y, logoWidth, logoHeight);
     cmuWordmarkBlue.draw(x + ((logoWidth - wordMarkWidth)/2), y + logoHeight + (wordMarkHeight / 2), wordMarkWidth, wordMarkHeight);
@@ -279,7 +286,7 @@ void ClassVisualizer::drawLoadScreen(){
 
 void ClassVisualizer::drawInfoPanel() {
   int x = 50;
-  int y = screenHeight - 50;
+  int y = SCREEN_HEIGHT - 50;
 
   ofColor backgroundColor = ofColor(255, 255, 255, 255);
 
