@@ -4,6 +4,17 @@
 #include "OpenFaceModel.h"
 
 
+static const char * const possibleNames[] = {
+  "cat",
+  "rabbit",
+  "fox",
+  "dolphin",
+  "zebra",
+  "penguin",
+  "lion",
+  "eagle",
+  "tiger"
+};
 
 struct DepthStat {
   float min;
@@ -22,7 +33,6 @@ struct Space {
 
   DepthStat doDepthMathAt(float x, float y, float radius);
   DepthStat doDepthMath(ofRectangle r);
-  
 
   void updateDepthPixels(const ofFloatPixels &newDepthPixels);
   void updateColorPixels(const ofPixels &newColorPixels);
@@ -52,7 +62,7 @@ struct Person {
   void drawFrontHandbox(ofColor c) const;
   void drawFrontPose(ofColor c) const;
   void drawFrontBBox(ofColor c) const;
-  void drawFrontLandmarks(ofColor c) const; 
+  void drawFrontLandmarks(ofColor c) const;
   void drawTopHandbox(ofColor c) const;
   void drawTopLandmarks(ofColor c) const;
 
@@ -61,7 +71,7 @@ struct Person {
   void drawPersonInfo(ofTrueTypeFont font, int x, int y) const;
 
 
-
+  string getName() const;
   void recalculateBoundingBox();
   void updateMtcnnBoundingBox(ofRectangle bboxFromMtcnn);
   void update(const ofPixels &newColorPixels, const ofFloatPixels &newDepthPixels);
@@ -75,8 +85,7 @@ struct Person {
 
   float depth;
   int y_depth;
-  string name;
-  
+
   bool isConfirmed = false;
 
   //don't do depth work if we have bad depth

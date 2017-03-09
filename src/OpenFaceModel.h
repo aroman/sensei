@@ -34,6 +34,8 @@ public:
   double getY() const;
   bool isActive() const;
 
+  int getId() const;
+
   LandmarkDetector::CLNF *model = nullptr;
   LandmarkDetector::FaceModelParameters *parameters = nullptr;
 

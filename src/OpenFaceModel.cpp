@@ -51,22 +51,32 @@ bool OpenFaceModel::initializeTracking(ofPixels colorPixels, ofRectangle boundin
   assert(model != nullptr);
   assert(parameters != nullptr);
   ofLogNotice("OpenFaceModel::initializeTracking") << boundingBox;
-  return LandmarkDetector::DetectLandmarksInVideo(
-    colorPixelsToGrayscaleMat(colorPixels),
-    ofxCv::toCv(boundingBox),
-    *model,
-    *parameters
-  );
+  try {
+    return LandmarkDetector::DetectLandmarksInVideo(
+      colorPixelsToGrayscaleMat(colorPixels),
+      ofxCv::toCv(boundingBox),
+      *model,
+      *parameters
+    );
+  } catch (...) {
+    ofLogError("!!!!!!!! OpenFaceModel::initializeTracking FAILED");
+    return false;
+  }
 }
 
 bool OpenFaceModel::updateTracking(ofPixels colorPixels) {
   assert(model != nullptr);
   assert(parameters != nullptr);
-  return LandmarkDetector::DetectLandmarksInVideo(
-    colorPixelsToGrayscaleMat(colorPixels),
-    *model,
-    *parameters
-  );
+  try {
+    return LandmarkDetector::DetectLandmarksInVideo(
+      colorPixelsToGrayscaleMat(colorPixels),
+      *model,
+      *parameters
+    );
+  } catch (...) {
+    ofLogError("!!!!!!!! OpenFaceModel::updateTracking FAILED");
+    return false;
+  }
 }
 
 ofRectangle OpenFaceModel::get2DBoundingBox() const {
@@ -158,6 +168,10 @@ std::vector<double> OpenFaceModel::getPoseCamera() const {
     toReturn.at(i) = vec6d[i];
   }
   return toReturn;
+}
+
+int OpenFaceModel::getId() const {
+  return id;
 }
 
 double OpenFaceModel::getX() const {

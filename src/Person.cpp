@@ -31,7 +31,7 @@ void Person::recalculateBoundingBox() {
 
   ofRectangle screen = ofRectangle(0,0,1920,1080);
 
-  // 
+  //
   if (!screen.inside(h.r)) {
     // crop or it may not be here
     if (!screen.intersects(h.r)) {
@@ -102,16 +102,16 @@ void Space::updateColorPixels(const ofPixels &newColorPixels) {
 
 DepthStat Space::doDepthMath(ofRectangle b){
 
-  
+
   /*
   cout << "doDepthMath" << endl;
   cout << "  r.x: " << b.x << endl;
   cout << "  r.y: " << b.y << endl;
   cout << "  r.w: " << b.width << endl;
   cout << "  r.h: " << b.height << endl;
-  
+
   */
-  
+
 
   DepthStat d;
   d.min = 0.0; //0.0 is the farthest
@@ -196,10 +196,10 @@ DepthStat Space::doDepthMath(ofRectangle b){
       assert(index > 0);
       assert(index < (((uint)depthPixels.getWidth())*((uint)depthPixels.getHeight())));
 
-      
+
       //returns val from 0 to 1
       float val = (float)max(min((double)depthMap[index],0.999),0.001);
-      
+
       /*
       float temp = depthMap[index];
       if(temp < 0.0){
@@ -270,18 +270,17 @@ DepthStat Space::doDepthMath(ofRectangle b){
 
   d.min = minVal; //0.0 is the farthest
   d.max = maxVal; //1.0 is the closest
-  //d.mode = (1.0 * bestIndex) / (1.0 * numBuckets); 
+  //d.mode = (1.0 * bestIndex) / (1.0 * numBuckets);
 
   assert(pixelCounter > 0);
   if(pixelCounter != 0){
-     d.avg = sum / pixelCounter;  
+     d.avg = sum / pixelCounter;
 
   }
   else{
     d.avg = sum;
   }
 
-  
   //cout << "avg: " << d.avg << ", sum: " << sum << endl;
   //cout << "counter:"  << pixelCounter << endl;
   //cout << "min: " << d.min << endl;
@@ -289,7 +288,7 @@ DepthStat Space::doDepthMath(ofRectangle b){
 
   //cout << "mode:"  << d.mode << endl;
 
-  d.valid = true; 
+  d.valid = true;
 
   return d;
 }
@@ -302,8 +301,6 @@ DepthStat Space::doDepthMathAt(float x, float y, float radius){
   r.height = 2 * radius;
   return doDepthMath(r);
 }
-
-
 
 
 
@@ -338,6 +335,15 @@ ofRectangle Person::currentBoundingBox() const {
     return mtcnnBoundingBox;
 }
 
+
+string Person::getName() const {
+  if (openFaceModel == nullptr) {
+    return "unknown";
+  } else {
+    int numPossibleNames = sizeof(possibleNames) / sizeof(char*);
+    return possibleNames[openFaceModel->getId() % numPossibleNames];
+  }
+}
 
 
 void Person::drawFrontDepthPoints(ofColor c) const{
@@ -380,7 +386,7 @@ void Person::drawFrontBBox(ofColor c) const {
 void Person::drawFrontLandmarks(ofColor c) const{
   if (openFaceModel != nullptr) {
 
-    
+
     ofFill();
     ofSetColor(c);
     //draw polyline version
@@ -391,7 +397,7 @@ void Person::drawFrontLandmarks(ofColor c) const{
       for(uint i = 0; i < openFaceModel->getLandmarks().size(); i++){
         ofPoint p = openFaceModel->getLandmarks()[i];
         ofDrawCircle(p.x,p.y,(f.r.width/50.0f));
-      }      
+      }
 
     ofSetColor(ofColor::white);
 
@@ -400,25 +406,22 @@ void Person::drawFrontLandmarks(ofColor c) const{
 
 
 
-
-
 void Person::drawTopColor() const{
   if(hasGoodDepth){
     ofRectangle r(f.r);
 
-    r.y = y_depth;    
+    r.y = y_depth;
 
     ofTexture temp;
     temp.loadData(f.colorPixels);
-    temp.draw(r.x,r.y); 
-    cout << "  X X X X X X X X X X X  X X X " << endl;
+    temp.draw(r.x,r.y);
   }
 }
 void Person::drawTopHandbox(ofColor c) const{
-  
+
 }
 void Person::drawTopLandmarks(ofColor c) const{
-  
+
 }
 
 void Person::drawFrontPersonInfo(ofTrueTypeFont font) const{
@@ -435,7 +438,6 @@ void Person::drawTopPersonInfo(ofTrueTypeFont font) const{
 }
 
 void Person::drawPersonInfo(ofTrueTypeFont font, int x,int y) const{
-  
   x += 15;
 
   ofColor text = ofColor(0,0,0,255);
@@ -449,7 +451,7 @@ void Person::drawPersonInfo(ofTrueTypeFont font, int x,int y) const{
   y += 10;
 
   string s;
-  s = "ID: " + name;
+  s = "ID: " + getName();
   drawStringTopLeft(font, s, x, y, ofColor(0,0,0,0), text);
 
   s = "Distance: " + ofToString((int)((400*(1.0-depth))+50))  + "cm";
@@ -481,7 +483,7 @@ void Person::update(const ofPixels &newColorPixels, const ofFloatPixels &newDept
 
     //retrieve depths from those locations
     vector<float> depths;
-    
+
     //try to use openface's locations
       if (openFaceModel != nullptr) {
 
@@ -498,7 +500,7 @@ void Person::update(const ofPixels &newColorPixels, const ofFloatPixels &newDept
           }
         }
       }
-    
+
 
     //add our backup locations
       ofPoint center = ofPoint(f.r.x + (f.r.width/2),f.r.y + (f.r.height/2));
@@ -518,11 +520,9 @@ void Person::update(const ofPixels &newColorPixels, const ofFloatPixels &newDept
           //depths.push_back(d.mode);
         }
       }
-    
+
     //it's possible none of our queries were valid
     if(depths.size() > 0){
-      
-      
       //find max depth from any of the locations
         //float minDepth = MAX_MILLIMETERS;
         float maxDepth = 0.0;
@@ -530,7 +530,7 @@ void Person::update(const ofPixels &newColorPixels, const ofFloatPixels &newDept
           if(depths[i] > maxDepth){
             maxDepth = depths[i];
           }
-        } 
+        }
 
         depth = maxDepth;
         //y_depth = (int)((1920 * (depth - MIN_MILLIMETERS))/(MAX_MILLIMETERS - MIN_MILLIMETERS));
@@ -540,7 +540,7 @@ void Person::update(const ofPixels &newColorPixels, const ofFloatPixels &newDept
         //cout << "y_depth: " << y_depth << endl;
 
         if(depth > 0.05){
-          hasGoodDepth = true;  
+          hasGoodDepth = true;
         }
     }
 
@@ -552,7 +552,6 @@ void Person::update(const ofPixels &newColorPixels, const ofFloatPixels &newDept
       //cout << "================< HAND <============ " << endl;
       if(d.valid){
 
-        
         //cout << "hand Depth: " << d.max << endl;
         if(d.max > (depth - 0.1)){
           //if((d.min < (depth + 400))||(d.min > (depth - 400))){
@@ -566,5 +565,3 @@ void Person::update(const ofPixels &newColorPixels, const ofFloatPixels &newDept
       }
     }
 }
-
-
