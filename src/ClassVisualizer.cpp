@@ -301,10 +301,10 @@ void ClassVisualizer::drawInfoPanel() {
 
   y = SCREEN_HEIGHT - height + radius + 12;
 
-  if (mode == ViewAngle::FRONTAL){
+  if (mode == ViewAngle::FRONTAL) {
     drawStringTopLeft(demoFont,"Mode: Front View", x, y, ofColor(0,0,0,0), ofColor::black);
   }
-  else{
+  else {
     drawStringTopLeft(demoFont,"Mode: Top View", x, y, ofColor(0,0,0,0), ofColor::black);
   }
 

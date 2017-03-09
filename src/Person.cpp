@@ -471,7 +471,7 @@ void Person::drawTopColor() const{
     ofTexture temp;
     temp.loadData(f.colorPixels);
 
-    temp.draw(r.x,r.y); 
+    temp.draw(r.x,r.y);
 
   }
 }
@@ -495,7 +495,7 @@ void Person::drawTopPersonInfo(ofTrueTypeFont font) const{
   drawPersonInfo(font, x, y);
 }
 
-void Person::drawPersonInfo(ofTrueTypeFont font, int x,int y) const{
+void Person::drawPersonInfo(ofTrueTypeFont font, int x, int y) const{
   x += 15;
 
   ofColor text = ofColor(0,0,0,255);
@@ -515,6 +515,12 @@ void Person::drawPersonInfo(ofTrueTypeFont font, int x,int y) const{
   s = "Distance: " + ofToString((int)((400*(1.0-depth))+50))  + "cm";
   y += font.getLineHeight();
   drawStringTopLeft(font, s, x, y, ofColor(0,0,0,0), text);
+
+  if (timestampHandRaised != 0) {
+    s = "Hand airtime: " + ofToString(ofGetUnixTime() - timestampHandRaised) + "s";
+    y += font.getLineHeight();
+    drawStringTopLeft(font, s, x, y, ofColor(0,0,0,0), text);
+  }
 }
 
 void Person::update(const ofPixels &newColorPixels, const ofFloatPixels &newDepthPixels) {
@@ -632,9 +638,16 @@ void Person::update(const ofPixels &newColorPixels, const ofFloatPixels &newDept
           }
         }
 
-      }else{
+      } else {
         //cout << "hand depth NOT VALID" << endl;
       }
       */
+    }
+
+    if (timestampHandRaised == 0 && isRaisingHand) {
+      timestampHandRaised = ofGetUnixTime();
+    }
+    if (!isRaisingHand) {
+      timestampHandRaised = 0;
     }
 }
