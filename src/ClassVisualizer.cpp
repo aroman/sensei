@@ -290,10 +290,10 @@ void ClassVisualizer::drawLoadScreen(){
 
   //draw help text
     x = 1100;
-    y = 400;
+    y = 380;
 
     ofSetColor(150, 150, 150);
-    ofDrawRectangle(x-30, y - 20, 1, 350);
+    ofDrawRectangle(x-30, y , 1, 350);
     helpFont.drawString(helpText, x, y);
   }
 
