@@ -100,9 +100,9 @@ struct Person {
   float depth;
   int y_depth;
 
-  float offsetFront = 0.08;
-  float offsetBack = -0.01;
-  int threshold = 10000;
+  float offsetFront = 0.1;
+  float offsetBack = 0.01;
+  float threshold = 0.125;
 
 
   bool isConfirmed = false;

@@ -4,7 +4,7 @@
 #include "drawUtils.h"
 
 static const double FACE_SCALE_RATIO = 1.5;
-static const double HANDBOX_X_RATIO = 2.25;
+static const double HANDBOX_X_RATIO = 2.5;
 static const double HANDBOX_Y_RATIO = 2.0;
 
 #define SCREEN_HEIGHT (1080)
@@ -419,7 +419,7 @@ void Person::drawFrontHandbox(ofColor c) const{
     drawBoundBox(h.r, c);
   }
   else{
-    drawBoundBox(h.r, ofColor::black);
+    drawBoundBox(h.r, ofColor(30,30,30,200));
   }
 }
 void Person::drawFrontPose(ofColor c) const{
@@ -500,7 +500,7 @@ void Person::drawPersonInfo(ofTrueTypeFont font, int x, int y) const{
 
   ofColor text = ofColor(0,0,0,255);
 
-  ofSetColor(ofColor(255,255,255,140));
+  ofSetColor(ofColor(205,205,205,140));
   ofFill();
 
   ofDrawRectRounded(x, y, 250, f.r.height, 30.0);
@@ -612,9 +612,14 @@ void Person::update(const ofPixels &newColorPixels, const ofFloatPixels &newDept
     if(hasGoodDepth){
 
       int count = callThresholdPixels(depth - offsetBack, depth + offsetFront);
-      cout << "c: " << count << endl;
-      if(count > threshold){
-        isRaisingHand = true;
+
+      if((h.r.width * h.r.height) > 0){
+        float ratio = ((float)count)/((float)(h.r.width * h.r.height));
+        //cout << "ratio: " << ratio << " / " << threshold << endl;
+
+        if(ratio > threshold){
+          isRaisingHand = true;
+        }
       }
       /*
       //cout << "+++++++++++ count threshold ++++++++++++++" << endl;

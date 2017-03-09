@@ -166,6 +166,10 @@ void ClassVisualizer::draw() {
 }
 
 void ClassVisualizer::drawFrontalView() {
+
+  ofSetColor(255,255,255);
+  ofDrawRectangle(0,0,1920,1080);
+  
   if(showDepth){
     ofFloatPixels copy = depthPixels;
 

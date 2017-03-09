@@ -84,8 +84,87 @@ void ofApp::keyReleased(int key) {
       visualizer->showLandmarks = false;
       visualizer->showDepth = false;
       visualizer->showPersonInfo = false;
+      visualizer->showInfoPanel = !visualizer->showLoadScreen;
       visualizer->showDebug = false;
       break;
+    case 49: //1
+      visualizer->showLoadScreen = false;
+      visualizer->showInfoPanel = true;
+      visualizer->showDebug = false;
+      visualizer->showPose = false;
+      visualizer->showPersonInfo = false;
+      visualizer->showLandmarks = false;
+      visualizer->showHands = false;
+      visualizer->showDepth = false;
+      visualizer->mode = ViewAngle::FRONTAL;
+      break;
+    case 50: //2
+      visualizer->showLoadScreen = false;
+      visualizer->showInfoPanel = true;
+      visualizer->showDebug = false;
+      visualizer->showPose = true;
+      visualizer->showPersonInfo = false;
+      visualizer->showLandmarks = false;
+      visualizer->showHands = false;
+      visualizer->showDepth = false;
+      visualizer->mode = ViewAngle::FRONTAL;
+      break;
+    case 51: //3
+      visualizer->showLoadScreen = false;
+      visualizer->showInfoPanel = true;
+      visualizer->showDebug = false;
+      visualizer->showPose = true;
+      visualizer->showPersonInfo = true;
+      visualizer->showLandmarks = false;
+      visualizer->showHands = false;
+      visualizer->showDepth = false;
+      visualizer->mode = ViewAngle::FRONTAL;
+      break;
+    case 52: //4
+      visualizer->showLoadScreen = false;
+      visualizer->showInfoPanel = true;
+      visualizer->showDebug = false;
+      visualizer->showPose = true;
+      visualizer->showPersonInfo = true;
+      visualizer->showLandmarks = true;
+      visualizer->showHands = false;
+      visualizer->showDepth = false;
+      visualizer->mode = ViewAngle::FRONTAL;
+      break;
+    case 53: //5
+      visualizer->showLoadScreen = false;
+      visualizer->showInfoPanel = true;
+      visualizer->showDebug = false;
+      visualizer->showPose = true;
+      visualizer->showPersonInfo = true;
+      visualizer->showLandmarks = true;
+      visualizer->showHands = true;
+      visualizer->showDepth = false;
+      visualizer->mode = ViewAngle::FRONTAL;
+      break;
+    case 54: //6
+      visualizer->showLoadScreen = false;
+      visualizer->showInfoPanel = true;
+      visualizer->showDebug = false;
+      visualizer->showPose = true;
+      visualizer->showPersonInfo = true;
+      visualizer->showLandmarks = true;
+      visualizer->showHands = true;
+      visualizer->showDepth = true;
+      visualizer->mode = ViewAngle::FRONTAL;
+      break;
+    case 55: //7
+      visualizer->showLoadScreen = false;
+      visualizer->showInfoPanel = true;
+      visualizer->showDebug = false;
+      visualizer->showPose = false;
+      visualizer->showPersonInfo = true;
+      visualizer->showLandmarks = false;
+      visualizer->showHands = false;
+      visualizer->showDepth = false;
+      visualizer->mode = ViewAngle::BIRDSEYE;
+      break;
+
   }
 }
 
