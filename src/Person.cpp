@@ -4,7 +4,7 @@
 #include "drawUtils.h"
 
 static const double FACE_SCALE_RATIO = 1.5;
-static const double HANDBOX_X_RATIO = 1.75;
+static const double HANDBOX_X_RATIO = 2.25;
 static const double HANDBOX_Y_RATIO = 2.0;
 
 #define SCREEN_HEIGHT (1080)
@@ -24,7 +24,7 @@ void Person::recalculateBoundingBox() {
   auto h_h = HANDBOX_Y_RATIO * f.r.height;
   h.r = ofRectangle(
     f.r.x + (f.r.width/2.0) - (h_w/2.0),
-    f.r.y - h_h - (f.r.height/2.0),
+    f.r.y - h_h - ((1.25*f.r.height)/2.0),
     h_w,
     h_h
   );
@@ -84,7 +84,6 @@ void Space::updateDepthPixels(const ofFloatPixels &newDepthPixels) {
   newDepthPixels.cropTo(depthPixels, r.x, r.y, r.width, r.height);
 
   //converts 500,4500 -> 1,0
-  cout << " SIZE 1: " << (depthPixels.getWidth() * depthPixels.getHeight()) << endl;
   scaleDepthPixelsForDrawing(&depthPixels);
   /*
   if (r.y > 0) {
@@ -544,7 +543,7 @@ void Person::update(const ofPixels &newColorPixels, const ofFloatPixels &newDept
         //cout << "face Depth: " << depth << endl;
         //cout << "y_depth: " << y_depth << endl;
 
-        if(depth > 0.05){
+        if(depth > 0.025){
           hasGoodDepth = true;
         }
     }
@@ -558,11 +557,13 @@ void Person::update(const ofPixels &newColorPixels, const ofFloatPixels &newDept
       if(d.valid){
 
         //cout << "hand Depth: " << d.max << endl;
-        if(d.max > (depth - 0.1)){
-          //if((d.min < (depth + 400))||(d.min > (depth - 400))){
+        if(d.max > (depth - 0.05)){
+          if(d.max < (depth + 0.05)){
+            //if((d.min < (depth + 400))||(d.min > (depth - 400))){
 
-          if (openFaceModel != nullptr) {
-            isRaisingHand = true;
+            if (openFaceModel != nullptr) {
+              isRaisingHand = true;
+            }
           }
         }
       }else{

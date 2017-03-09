@@ -221,8 +221,8 @@ void ClassVisualizer::drawBirdseyeView() {
   for (auto const &person : people) {
     if(showDebug){
       person.drawTopColor();
-      person.drawTopHandbox(ofColor::black);
-      person.drawTopLandmarks(ofColor::red);
+      //person.drawTopHandbox(ofColor::black);
+      //person.drawTopLandmarks(ofColor::red);
       person.drawTopPersonInfo(peopleFont);
     } else{
       person.drawTopColor();
