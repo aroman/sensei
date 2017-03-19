@@ -1,3 +1,5 @@
+#!/bin/bash
+
 OPENCV_VERSION="OPENCV_VERSION"
 
 echo "Downloading OpenCV..."
