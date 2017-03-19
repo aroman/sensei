@@ -12,7 +12,8 @@ RUN apt-get -q update && apt-get install -yq --no-install-recommends \
 COPY . /usr/src/app
 WORKDIR /usr/src/app
 
+RUN ./install_opencv.sh
 RUN ./build.sh
-/*RUN g++ -o hello hello.cpp*/
+# RUN g++ -o hello hello.cpp
 
 CMD ./run.sh
