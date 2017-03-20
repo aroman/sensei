@@ -6,6 +6,8 @@ ENV INITSYSTEM on
 RUN apt-get -q update && apt-get install -yq --no-install-recommends \
   build-essential \
   curl \
+  libtbb-dev \
+  libopenblas-dev \
   cmake \
   && apt-get clean && rm -rf /var/lib/apt/lists/*
 
