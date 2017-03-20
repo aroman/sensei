@@ -1,5 +1,7 @@
 #!/bin/bash
 
+set -x # commands
+
 OPENCV_VERSION="3.1.0"
 
 echo "Downloading OpenCV..."
