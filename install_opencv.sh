@@ -7,9 +7,9 @@ if [ -d "opencv-$OPENCV_VERSION" ]; then
   sudo rm -r "opencv-$OPENCV_VERSION"
 fi
 
-wget https://github.com/Itseez/opencv/archive/$OPENCV_VERSION.zip
-unzip $OPENCV_VERSION.zip
-rm $OPENCV_VERSION.zip
+curl -sLO https://github.com/opencv/opencv/archive/$OPENCV_VERSION.tar.gz
+tar xf $OPENCV_VERSION.tar.gz
+rm $OPENCV_VERSION.tar.gz
 cd opencv-$OPENCV_VERSION
 mkdir build
 cd build
