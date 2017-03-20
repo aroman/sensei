@@ -1,6 +1,6 @@
 #!/bin/bash
 
-OPENCV_VERSION="OPENCV_VERSION"
+OPENCV_VERSION="3.1.0"
 
 echo "Downloading OpenCV..."
 if [ -d "opencv-$OPENCV_VERSION" ]; then
