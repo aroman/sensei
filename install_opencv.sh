@@ -10,7 +10,7 @@ fi
 curl -sLO https://github.com/opencv/opencv/archive/$OPENCV_VERSION.tar.gz
 tar xf $OPENCV_VERSION.tar.gz
 rm $OPENCV_VERSION.tar.gz
-cd opencv-$OPENCV_VERSION
+cd $OPENCV_VERSION
 mkdir build
 cd build
 echo "Installing OpenCV..."
