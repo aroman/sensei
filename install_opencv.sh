@@ -9,10 +9,10 @@ if [ -d "opencv-$OPENCV_VERSION" ]; then
   sudo rm -r "opencv-$OPENCV_VERSION"
 fi
 
-curl -sLO https://github.com/opencv/opencv/archive/$OPENCV_VERSION.tar.gz
+curl -SLO https://github.com/opencv/opencv/archive/$OPENCV_VERSION.tar.gz
 tar xf $OPENCV_VERSION.tar.gz
 rm $OPENCV_VERSION.tar.gz
-cd $OPENCV_VERSION
+cd opencv-$OPENCV_VERSION
 mkdir build
 cd build
 echo "Installing OpenCV..."
