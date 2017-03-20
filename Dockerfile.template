@@ -3,6 +3,7 @@ FROM resin/intel-nuc-debian
 # Enable systemd init system in container
 ENV INITSYSTEM on
 
+# Install system-level dependencies
 RUN apt-get -q update && apt-get install -yq --no-install-recommends \
   build-essential \
   curl \
@@ -11,21 +12,21 @@ RUN apt-get -q update && apt-get install -yq --no-install-recommends \
   cmake \
   && apt-get clean && rm -rf /var/lib/apt/lists/*
 
+# Install OpenCV
 WORKDIR /usr/src
 ENV OPENCV_VERSION 3.1.0
-RUN curl -SLO https://github.com/opencv/opencv/archive/${OPENCV_VERSION}.tar.gz &&
-tar xf ${OPENCV_VERSION}.tar.gz &&
-rm ${OPENCV_VERSION}.tar.gz &&
-cd opencv-${OPENCV_VERSION} &&
-mkdir build &&
-cd build &&
-cmake -DCMAKE_BUILD_TYPE=RELEASE -DCMAKE_INSTALL_PREFIX=/usr/local -DWITH_TBB=ON -DBUILD_SHARED_LIBS=OFF -DBUILD_PERF_TESTS=OFF -DBUILD_TESTS=OFF .. &&
-make -j$(grep -c processor /proc/cpuinfo) install &&
+RUN curl -SLO https://github.com/opencv/opencv/archive/${OPENCV_VERSION}.tar.gz && \
+tar xf ${OPENCV_VERSION}.tar.gz && \
+rm ${OPENCV_VERSION}.tar.gz && \
+cd opencv-${OPENCV_VERSION} && \
+mkdir build && \
+cd build && \
+cmake -DCMAKE_BUILD_TYPE=RELEASE -DCMAKE_INSTALL_PREFIX=/usr/local -DWITH_TBB=ON -DBUILD_SHARED_LIBS=OFF -DBUILD_PERF_TESTS=OFF -DBUILD_TESTS=OFF .. && \
+make -j$(grep -c processor /proc/cpuinfo) install && \
 cd && rm -rf opencv-${OPENCV_VERSION}
 
 COPY . /usr/src/app
 WORKDIR /usr/src/app
-
 RUN ./build.sh
 # RUN g++ -o hello hello.cpp
 
