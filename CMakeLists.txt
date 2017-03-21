@@ -33,7 +33,7 @@ set(sources
 # set_source_files_properties(3rdParty/of/src/poco/Foundation/include/Poco/AtomicCounter.h PROPERTIES COMPILE_FLAGS -Wno-deprecated-declarations)
 
 ### dependencies
-find_package(OpenCV 3.2 REQUIRED)
+find_package(OpenCV 3 REQUIRED)
 find_package(Boost 1.36.0 COMPONENTS filesystem system REQUIRED)
 find_package(Dlib REQUIRED)
 find_package(PythonLibs 2.7 REQUIRED)
