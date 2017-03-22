@@ -1,7 +1,7 @@
 #pragma once
 
-#include "ofMain.h"
 #include "ofxCv.h"
+#include "ofMain.h"
 #include "KinectHelper.h"
 #include <GazeEstimation.h>
 #include "FaceDetector.h"

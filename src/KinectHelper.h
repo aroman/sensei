@@ -1,10 +1,10 @@
 #pragma once
 
-#include "ofThread.h"
-#include "ofxCv.h"
 #include <libfreenect2/libfreenect2.hpp>
 #include <libfreenect2/frame_listener_impl.h>
 #include <libfreenect2/registration.h>
+#include "ofThread.h"
+#include "ofxCv.h"
 
 class KinectHelper : public ofThread {
 
