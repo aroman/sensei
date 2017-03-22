@@ -6,8 +6,8 @@
 #include <libfreenect2/frame_listener_impl.h>
 #include <libfreenect2/registration.h>
 
-#include "ofMain.h"
 #include "ClassVisualizer.h"
+#include "ofMain.h"
 
 class ofApp : public ofBaseApp {
 

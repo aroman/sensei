@@ -1,8 +1,8 @@
 #pragma once
 
 #include <vector>
-#include "ofThread.h"
 #include "ofxCv.h"
+#include "ofThread.h"
 #include "MtcnnDetector.h"
 
 class FaceDetector : public ofThread {

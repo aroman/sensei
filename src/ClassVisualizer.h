@@ -1,12 +1,12 @@
 #pragma once
 
 #include "ofxCv.h"
-#include "ofMain.h"
 #include "KinectHelper.h"
 #include <GazeEstimation.h>
 #include "FaceDetector.h"
 #include "OpenFaceModelPool.h"
 #include "Person.h"
+#include "ofMain.h"
 
 
 //We're always going to do the computation

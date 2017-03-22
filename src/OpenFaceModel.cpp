@@ -1,5 +1,4 @@
 #include "OpenFaceModel.h"
-#include "ofxCv.h"
 
 cv::Mat colorPixelsToGrayscaleMat(ofPixels colorPixels) {
   cv::Mat grayscaleMat;
