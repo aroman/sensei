@@ -12,7 +12,8 @@ project(${APP} CXX)
 set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -Wno-deprecated-declarations")
 
 set(CMAKE_MODULE_PATH ${CMAKE_MODULE_PATH} "${CMAKE_CURRENT_SOURCE_DIR}/cmake/modules/")
-set(OF_ROOT "${CMAKE_CURRENT_SOURCE_DIR}/3rdParty/of/" CACHE PATH "The root directory of ofnode/of project.")
+# set(OF_ROOT "${CMAKE_CURRENT_SOURCE_DIR}/3rdParty/of/" CACHE PATH "The root directory of ofnode/of project.")
+set(OF_ROOT "${CMAKE_CURRENT_SOURCE_DIR}/../of" CACHE PATH "The root directory of ofnode/of project.")
 include(${OF_ROOT}/openFrameworks.cmake)
 
 option(COTIRE "Use cotire" ON)

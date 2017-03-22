@@ -1,12 +1,6 @@
 [submodule "3rdParty/addons/ofxCv"]
 	path = 3rdParty/addons/ofxCv
 	url = https://github.com/kylemcdonald/ofxCv
-[submodule "3rdParty/of"]
-	path = 3rdParty/of
-	url = https://github.com/ofNode/of
-[submodule "3rdParty/OpenFace"]
-	path = 3rdParty/OpenFace
-	url = https://github.com/TadasBaltrusaitis/OpenFace
 [submodule "3rdParty/mxnet_mtcnn"]
 	path = 3rdParty/mxnet_mtcnn
 	url = https://github.com/pangyupo/mxnet_mtcnn_face_detection
