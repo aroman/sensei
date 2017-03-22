@@ -1,11 +1,11 @@
 #pragma once
 
 // These must be imported before X11
+#include "ofxCv.h"
 #include <libfreenect2/libfreenect2.hpp>
 #include <libfreenect2/frame_listener_impl.h>
 #include <libfreenect2/registration.h>
 
-#include "ofxCv.h"
 #include "ofMain.h"
 #include "ClassVisualizer.h"
 

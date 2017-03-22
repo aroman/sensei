@@ -1,7 +1,4 @@
 #include "KinectHelper.h"
-#include <libfreenect2/frame_listener_impl.h>
-#include <libfreenect2/packet_pipeline.h>
-#include <libfreenect2/logger.h>
 
 #define KINECT_FRAME_TIMEOUT 10*1000
 
