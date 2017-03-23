@@ -3,11 +3,7 @@
 #define KINECT_FRAME_TIMEOUT 10*1000
 
 KinectHelper::KinectHelper() {
-  // #ifdef __linux
-  //   libfreenect2::setGlobalLogger(libfreenect2::createConsoleLogger(libfreenect2::Logger::Nada));
-  // #else
-    // libfreenect2::setGlobalLogger(libfreenect2::createConsoleLogger(libfreenect2::Logger::None));
-  // #endif
+  libfreenect2::setGlobalLogger(libfreenect2::createConsoleLogger(libfreenect2::Logger::None));
   isConnected = false;
 }
 

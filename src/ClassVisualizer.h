@@ -1,7 +1,7 @@
 #pragma once
 
-#include "ofxCv.h"
 #include "KinectHelper.h"
+#include "ofxCv.h"
 #include <GazeEstimation.h>
 #include "FaceDetector.h"
 #include "OpenFaceModelPool.h"
