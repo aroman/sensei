@@ -1,6 +1,6 @@
 #pragma once
 
-#include "ofxCv.h"
+#include "ofxCv/Utilities.h"
 #include <GazeEstimation.h>
 #include "LandmarkCoreIncludes.h"
 #include "ofMain.h"

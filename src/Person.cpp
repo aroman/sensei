@@ -1,4 +1,3 @@
-#include "ofxCv.h"
 #include "Person.h"
 #include <math.h>
 #include "drawUtils.h"
@@ -29,7 +28,7 @@ void Person::recalculateBoundingBox() {
     h_h
   );
 
-  
+
 
   ofRectangle screen = ofRectangle(0,0,SCREEN_WIDTH,SCREEN_HEIGHT);
 
@@ -73,7 +72,7 @@ void Person::recalculateBoundingBox() {
 
 
 int Person::thresholdPixels(ofFloatPixels* depthPixels, float low, float high){
-  // Scale from meters to 0-1 (float)  
+  // Scale from meters to 0-1 (float)
   float *pixelData = depthPixels->getData();
 
   int counter = 0;
