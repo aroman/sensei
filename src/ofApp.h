@@ -1,5 +1,8 @@
 #pragma once
 
+#include "ofxCv/Utilities.h"
+#include <libfreenect2/logger.h>
+
 #include "ClassVisualizer.h"
 #include "ofMain.h"
 
