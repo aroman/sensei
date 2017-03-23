@@ -20,12 +20,12 @@ option(COTIRE "Use cotire" ON)
 
 ### source files for out project
 set(sources
+  src/KinectHelper.cpp
   src/main.cpp
   src/ofApp.cpp
   src/OpenFaceModel.cpp
   src/OpenFaceModelPool.cpp
   src/ClassVisualizer.cpp
-  src/KinectHelper.cpp
   src/FaceDetector.cpp
   src/MtcnnDetector.cpp
   src/Person.cpp

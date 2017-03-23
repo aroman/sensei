@@ -5,7 +5,7 @@
 #include <libfreenect2/registration.h>
 #include <libfreenect2/logger.h>
 #include "ofThread.h"
-#include "ofxCv.h"
+#include "ofMain.h"
 
 class KinectHelper : public ofThread {
 
