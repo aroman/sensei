@@ -94,14 +94,14 @@ target_link_libraries(${APP} PUBLIC
   ${DLIB_LIBRARIES}
 )
 
-install(TARGETS ${APP})
+install(TARGETS ${APP} DESTINATION .)
 # this is basically a repeat of the file copy instruction that copies the
 # resources in the build directory, but here we tell cmake that we want it
 # in the package
-install(DIRECTORY assets/models)
+install(DIRECTORY assets/models DESTINATION .)
 install(DIRECTORY assets/images DESTINATION data)
 install(DIRECTORY assets/fonts DESTINATION data)
-install(FILES src/mtcnn_runner.py)
+install(FILES src/mtcnn_runner.py DESTINATION .)
 
 if (COTIRE)
     cotire(${APP})
