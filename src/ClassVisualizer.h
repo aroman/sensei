@@ -1,8 +1,8 @@
 #pragma once
 
-#include "KinectHelper.h"
+#include "KinectHelper.h" // Brings in X11, but also can't depend on X11
 #include "OpenFaceModelPool.h" // Must be included before FaceDetector (python + dlib #define clash)
-#include "FaceDetector.h"
+#include "FaceDetector.h" // Brings in OpenCV, must happen before X11
 #include "ofImage.h"
 #include "ofTrueTypeFont.h"
 #include "ofGraphics.h"

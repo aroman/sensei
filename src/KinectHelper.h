@@ -5,6 +5,8 @@
 #include <libfreenect2/registration.h>
 #include <libfreenect2/logger.h>
 #include "ofThread.h"
+#undef Status
+#undef None
 #include "ofPixels.h"
 
 class KinectHelper : public ofThread {

@@ -2,6 +2,8 @@
 
 #include <vector>
 #include "ofThread.h"
+#undef Status
+#undef None
 #include "MtcnnDetector.h"
 
 class FaceDetector : public ofThread {
