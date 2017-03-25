@@ -22,7 +22,7 @@ option(COTIRE "Use cotire" ON)
 set(sources
   src/KinectHelper.cpp
   src/main.cpp
-  src/ofApp.cpp
+  src/SenseiApp.cpp
   src/OpenFaceModel.cpp
   src/OpenFaceModelPool.cpp
   src/ClassVisualizer.cpp

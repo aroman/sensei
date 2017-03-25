@@ -1,5 +1,6 @@
-#include <cstdlib>
 #include "ClassVisualizer.h"
+
+#include <cstdlib>
 #include "ofxTimeMeasurements.h"
 #include "drawUtils.h"
 
@@ -172,7 +173,7 @@ void ClassVisualizer::drawFrontalView() {
 
   ofSetColor(255,255,255);
   ofDrawRectangle(0,0,1920,1080);
-  
+
   if(showDepth){
     ofFloatPixels copy = depthPixels;
 
@@ -236,7 +237,7 @@ void ClassVisualizer::drawBirdseyeView() {
     } else{
       if(person.openFaceModel != nullptr){
         person.drawTopColor();
-        
+
         if(showHands){
           person.drawTopHandbox(ofColor::black);
         }
@@ -245,7 +246,7 @@ void ClassVisualizer::drawBirdseyeView() {
           person.drawTopLandmarks(ofColor::red);
         }
         */
-        
+
         if(showPersonInfo){
           person.drawTopPersonInfo(peopleFont);
         }

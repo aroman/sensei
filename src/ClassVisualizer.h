@@ -1,12 +1,12 @@
 #pragma once
 
 #include "KinectHelper.h"
-#include <GazeEstimation.h>
+#include "OpenFaceModelPool.h" // Must be included before FaceDetector (python + dlib #define clash)
 #include "FaceDetector.h"
-#include "OpenFaceModelPool.h"
+#include "ofImage.h"
+#include "ofTrueTypeFont.h"
+#include "ofGraphics.h"
 #include "Person.h"
-#include "ofMain.h"
-
 
 //We're always going to do the computation
 //but we'll control what we show!

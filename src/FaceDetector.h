@@ -1,7 +1,6 @@
 #pragma once
 
 #include <vector>
-#include "ofxCv/Utilities.h"
 #include "ofThread.h"
 #include "MtcnnDetector.h"
 

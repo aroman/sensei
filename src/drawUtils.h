@@ -1,12 +1,12 @@
 #pragma once
 
-#include "ofMain.h"
-
+#include "ofTrueTypeFont.h"
+#include "ofColor.h"
+#include "ofRectangle.h"
 
 void drawBoundBox(ofRectangle r, ofColor color);
 
 void drawStringCentered(ofTrueTypeFont font, string s, int xc, int yc, ofColor boxColor, ofColor textColor);
-
 
 void drawStringTopLeft(ofTrueTypeFont font, string s, int xl, int yl, ofColor boxColor, ofColor textColor);
 

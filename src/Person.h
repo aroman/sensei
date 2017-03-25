@@ -1,8 +1,9 @@
 #pragma once
 
-#include "ofMain.h"
+#include "ofGraphics.h"
+#include "ofPixels.h"
+#include "ofTrueTypeFont.h"
 #include "OpenFaceModel.h"
-
 
 static const char * const possibleNames[] = {
   "cat",
@@ -60,21 +61,10 @@ struct Person {
   void drawTopColor() const;
 
   void drawFrontDepthPoints(ofColor c) const;
-  
-
-
-
-
   ofFloatPixels thresholdDepthPixels;
   void drawFrontHandThresholded() const;
   int callThresholdPixels(float low, float high);
   int thresholdPixels(ofFloatPixels* depthPixels, float low, float high);
-
-
-
-
-
-
   void drawFrontHandbox(ofColor c) const;
   void drawFrontPose(ofColor c) const;
   void drawFrontBBox(ofColor c) const;
@@ -85,7 +75,6 @@ struct Person {
   void drawFrontPersonInfo(ofTrueTypeFont font) const;
   void drawTopPersonInfo(ofTrueTypeFont font) const;
   void drawPersonInfo(ofTrueTypeFont font, int x, int y) const;
-
 
   string getName() const;
   void recalculateBoundingBox();

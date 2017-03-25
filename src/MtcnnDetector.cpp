@@ -1,5 +1,8 @@
 #include "MtcnnDetector.h"
 
+#define NPY_NO_DEPRECATED_API NPY_1_7_API_VERSION
+#include <numpy/arrayobject.h>
+
 MtcnnDetector::MtcnnDetector() {
   Py_SetProgramName(const_cast<char*>("mtcnn-bridge"));
   Py_Initialize();

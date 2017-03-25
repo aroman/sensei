@@ -1,5 +1,8 @@
 #include "OpenFaceModel.h"
 
+#include "ofxCv/Utilities.h"
+#include <GazeEstimation.h>
+
 cv::Mat colorPixelsToGrayscaleMat(ofPixels colorPixels) {
   cv::Mat grayscaleMat;
   cv::cvtColor(ofxCv::toCv(colorPixels), grayscaleMat, CV_BGRA2GRAY);

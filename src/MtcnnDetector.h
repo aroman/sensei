@@ -2,8 +2,6 @@
 
 #include <vector>
 #include <python2.7/Python.h>
-#define NPY_NO_DEPRECATED_API NPY_1_7_API_VERSION
-#include <numpy/arrayobject.h>
 #include "ofxCv/Utilities.h"
 
 struct mtcnn_face_bbox {

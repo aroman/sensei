@@ -1,5 +1,7 @@
 #include "FaceDetector.h"
+
 #include "ofxTimeMeasurements.h"
+#include "ofxCv/Utilities.h"
 
 FaceDetector::FaceDetector() {
   detector = new MtcnnDetector();

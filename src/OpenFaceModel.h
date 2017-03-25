@@ -1,9 +1,9 @@
 #pragma once
 
-#include "ofxCv/Utilities.h"
-#include <GazeEstimation.h>
-#include "LandmarkCoreIncludes.h"
-#include "ofMain.h"
+#include "ofPixels.h"
+#include "ofRectangle.h"
+#include "ofPolyline.h"
+#include <LandmarkCoreIncludes.h>
 
 static const int MAX_MODEL_FAILURES_IN_A_ROW = 3;
 static const double MIN_CERTAINTY_FOR_VISUALIZATION = 0.35;

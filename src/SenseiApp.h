@@ -1,12 +1,9 @@
 #pragma once
 
-#include "ofxCv/Utilities.h"
-#include <libfreenect2/logger.h>
-
 #include "ClassVisualizer.h"
-#include "ofMain.h"
+#include "ofBaseApp.h"
 
-class ofApp : public ofBaseApp {
+class SenseiApp : public ofBaseApp {
 
 private:
   ClassVisualizer *visualizer;
@@ -18,7 +15,7 @@ public:
   void setup();
   void update();
   void draw();
-  ~ofApp();
+  ~SenseiApp();
 
   bool isFullScreen = true;
 

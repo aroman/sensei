@@ -1,35 +1,38 @@
-#include "ofApp.h"
-#include <math.h>
+#include "SenseiApp.h"
 
-void ofApp::setup() {
+#include <math.h>
+#include "ofAppRunner.h"
+#include "ofxCv/Utilities.h"
+
+void SenseiApp::setup() {
   visualizer = new ClassVisualizer();
 }
 
-void ofApp::update() {
+void SenseiApp::update() {
   visualizer->update();
   std::stringstream strm;
   strm << "(" << floor(ofGetFrameRate()) << " FPS)";
   ofSetWindowTitle(strm.str());
 }
 
-void ofApp::draw() {
+void SenseiApp::draw() {
   ofClear(0);
   visualizer->draw();
 }
 
-ofApp::~ofApp() {
-  ofLogNotice("ofApp", "Shutting down...");
+SenseiApp::~SenseiApp() {
+  ofLogNotice("SenseiApp", "Shutting down...");
   if (visualizer != NULL) {
     delete visualizer;
   }
 }
 
-// ofApp I/O
+// SenseiApp I/O
 
 //use keyReleased instead of keyPressed
 //because it will only register once
 //otherwise it'll flip as long as it's pressed down
-void ofApp::keyReleased(int key) {
+void SenseiApp::keyReleased(int key) {
   if (visualizer == NULL) return;
 
   //don't use case 27: //escape
@@ -173,13 +176,13 @@ void ofApp::keyReleased(int key) {
   }
 }
 
-void ofApp::keyPressed(int key) {}
-void ofApp::mouseMoved(int x, int y) {}
-void ofApp::mouseDragged(int x, int y, int button) {}
-void ofApp::mousePressed(int x, int y, int button) {}
-void ofApp::mouseReleased(int x, int y, int button) {}
-void ofApp::mouseEntered(int x, int y) {}
-void ofApp::mouseExited(int x, int y) {}
-void ofApp::windowResized(int w, int h) {}
-void ofApp::gotMessage(ofMessage msg) {}
-void ofApp::dragEvent(ofDragInfo dragInfo) {}
+void SenseiApp::keyPressed(int key) {}
+void SenseiApp::mouseMoved(int x, int y) {}
+void SenseiApp::mouseDragged(int x, int y, int button) {}
+void SenseiApp::mousePressed(int x, int y, int button) {}
+void SenseiApp::mouseReleased(int x, int y, int button) {}
+void SenseiApp::mouseEntered(int x, int y) {}
+void SenseiApp::mouseExited(int x, int y) {}
+void SenseiApp::windowResized(int w, int h) {}
+void SenseiApp::gotMessage(ofMessage msg) {}
+void SenseiApp::dragEvent(ofDragInfo dragInfo) {}
