@@ -1,7 +1,7 @@
-#include "ofAppRunner.h"
-#include "ofUtils.h"
 #include "ofxTimeMeasurements.h"
 #include "SenseiApp.h"
+#include "ofUtils.h"
+#include "ofAppRunner.h"
 
 int main() {
   // ofSetupOpenGL(640*2, 360*2, OF_WINDOW);

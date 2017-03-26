@@ -1,6 +1,8 @@
 #pragma once
 
 #include "ofPixels.h"
+#undef Status
+#undef None
 #include "ofRectangle.h"
 #include "ofPolyline.h"
 #include <LandmarkCoreIncludes.h>
