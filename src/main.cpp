@@ -1,7 +1,7 @@
-#include "ofxTimeMeasurements.h"
-#include "SenseiApp.h"
+#include "SenseiApp.h" // Include things which include Xlib.h after
 #include "ofUtils.h"
 #include "ofAppRunner.h"
+#include "ofxTimeMeasurements.h"
 
 int main() {
   // ofSetupOpenGL(640*2, 360*2, OF_WINDOW);
