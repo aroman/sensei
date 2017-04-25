@@ -83,6 +83,7 @@ target_link_libraries(${APP} PUBLIC
   ${NUMPY_LIBRARIES}
   ${OpenCV_LIBS}
   ${Boost_LIBRARIES}
+  boost_filesystem # I have no idea why, but this is now a thing we need...
   ${OPENFRAMEWORKS_LIBRARIES}
   ${TurboJPEG_LIBRARIES}
   ${LibUSB_LIBRARIES}
