@@ -63,7 +63,7 @@ Simple!
 ```
 sudo docker run -it \
   --privileged \
-  -e DISPLAY \
+  -e DISPLAY=:0 \
   -e SEEI_MODE=record \
   -v /tmp/.X11-unix:/tmp/.X11-unix \
   -v /dev/bus/usb \
