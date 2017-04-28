@@ -56,7 +56,6 @@ Simple!
 
 ## 🏃 Running
 
-- Allow X11 connections from docker: `xhost +local:root`
 - Run:
 
 ```
