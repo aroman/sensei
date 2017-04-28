@@ -56,15 +56,15 @@ Simple!
 
 ## 🏃 Running
 
-- Pull the latest image: `docker pull aroman/sensei:latest`
 - Allow X11 connections from docker: `xhost +local:root`
 - Run:
 
 ```
+xhost +local:root && \ 
 sudo docker run -it \
   --privileged \
   -e DISPLAY=:0 \
-  -e SEEI_MODE=record \
+  -e SENSEI_MODE=record \
   -v /tmp/.X11-unix:/tmp/.X11-unix \
   -v /dev/bus/usb \
   -v /dev/dri \
