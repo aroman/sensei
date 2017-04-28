@@ -49,13 +49,6 @@ ClassVisualizer::ClassVisualizer() {
   //set colors
     lightBlue = ofColor(28,154,255);
 
-  kinect = new KinectHelper();
-
-  bool didConnectSuccessfully = kinect->connect();
-  if (!didConnectSuccessfully) {
-      std::exit(1);
-  }
-
   const char *numModelsEnv = std::getenv("NUM_MODELS");
   if (numModelsEnv != NULL) {
     int numModels = atoi(numModelsEnv);
@@ -66,10 +59,10 @@ ClassVisualizer::ClassVisualizer() {
   }
 
   openFaceModelPool = new OpenFaceModelPool(openFaceModelPoolSize, CameraIntrinsics{
-    kinect->fx,
-    kinect->fy,
-    kinect->cx,
-    kinect->cy
+    this->kinect->fx,
+    this->kinect->fy,
+    this->kinect->cx,
+    this->kinect->cy
   });
 
   faceDetector = new FaceDetector();
@@ -90,18 +83,15 @@ ClassVisualizer::~ClassVisualizer() {
   faceDetector->waitForThread(true);
   delete faceDetector;
 
-  kinect->waitForThread(true);
-  kinect->disconnect();
-
   delete openFaceModelPool;
 }
 
 void ClassVisualizer::update() {
-  if (!kinect->isConnected) return;
+  if (!this->kinect->isConnected) return;
 
   TS_START("[Kinect] update frames");
-  colorPixels = kinect->getColorPixels();
-  depthPixels = kinect->getAlignedDepthPixels();
+  colorPixels = this->kinect->getColorPixels();
+  depthPixels = this->kinect->getAlignedDepthPixels();
   TS_STOP("[Kinect] update frames");
   hasData = (colorPixels.size() > 0);
 
@@ -231,7 +221,7 @@ void ClassVisualizer::drawBirdseyeView() {
   for (auto const &person : people) {
     if(showDebug){
       person.drawTopColor();
-      //person.drawTopHandbox(ofColor::black);
+      person.drawTopHandbox(ofColor::black);
       //person.drawTopLandmarks(ofColor::red);
       person.drawTopPersonInfo(peopleFont);
     } else{
@@ -277,7 +267,7 @@ void ClassVisualizer::drawLoadScreen(){
     int wordMarkHeight = 40 * 1.25;
     int wordMarkWidth = 450 * 1.25;
 
-    x = 100;
+    x = 300;
     y = (SCREEN_HEIGHT/2) - ((logoHeight + wordMarkHeight) /2) - 50 ;
 
     fullLogo.draw(x, y, logoWidth, logoHeight);
@@ -290,7 +280,7 @@ void ClassVisualizer::drawLoadScreen(){
     // drawStringTopRight(demoBoldFont, aboutText[0], 50, 120, ofColor(0,0,0,0), ofColor::white);
 
   //draw help text
-    x = 1100;
+    x = 1200;
     y = 380;
 
     ofSetColor(150, 150, 150);
@@ -301,14 +291,15 @@ void ClassVisualizer::drawLoadScreen(){
 void ClassVisualizer::drawInfoPanel() {
   int height = 180;
   int radius = 15;
-  int x = -(radius);
+  int width = 400;
+  int x = SCREEN_WIDTH - width -(radius);
   int y = SCREEN_HEIGHT - height + (radius);
 
   ofColor backgroundColor = ofColor(255, 255, 255, 255);
 
   ofFill();
   ofSetColor(ofColor(255, 255, 255, 140));
-  ofDrawRectRounded(x, y, 400, height, radius);
+  ofDrawRectRounded(x, y, width, height, radius);
   ofNoFill();
 
   x += radius*1.5;
