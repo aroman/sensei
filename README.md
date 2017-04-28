@@ -61,11 +61,18 @@ Simple!
 - Run:
 
 ```
-docker run -it \
+sudo docker run -it \
   --privileged \
   -e DISPLAY \
+  -e SEEI_MODE=record \
   -v /tmp/.X11-unix:/tmp/.X11-unix \
   -v /dev/bus/usb \
   -v /dev/dri \
-  aroman/sensei
+  aroman/sensei:2c9844c991fd4c6f31f379045a0d045bf095f04d
+```
+### Extract recordings
+
+```
+sudo docker export CONTAINER_NAME > contents.tar
+tar -xf contents.tar usr/src/sensei/install/recordings --strip-components=4
 ```
