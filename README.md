@@ -59,10 +59,10 @@ Simple!
 - Run:
 
 ```
-xhost +local:root && \ 
+DISPLAY=:0 xhost +local:root && \ 
 sudo docker run -it \
   --privileged \
-  -e DISPLAY=:0 \
+  -e DISPLAY \
   -e SENSEI_MODE=record \
   -v /tmp/.X11-unix:/tmp/.X11-unix \
   -v /dev/bus/usb \
