@@ -9,12 +9,12 @@
 class FaceDetector : public ofThread {
 
 public:
-    FaceDetector();
+    FaceDetector(double scaleFactor = 4.0);
     ~FaceDetector();
     void threadedFunction();
     void updateImage(ofPixels colorPixels);
 
-    const double scaleFactor = 4.0;
+    double scaleFactor;
     ofEvent<const vector<ofRectangle>> onDetectionResults;
 
 private:

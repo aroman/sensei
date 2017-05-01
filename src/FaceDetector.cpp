@@ -3,8 +3,9 @@
 #include "ofxTimeMeasurements.h"
 #include "ofxCv/Utilities.h"
 
-FaceDetector::FaceDetector() {
+FaceDetector::FaceDetector(double scaleFactor) {
   detector = new MtcnnDetector();
+  this->scaleFactor = scaleFactor;
   isImageDirty = false;
 }
 
