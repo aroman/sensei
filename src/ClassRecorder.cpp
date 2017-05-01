@@ -22,6 +22,8 @@ ClassRecorder::ClassRecorder() {
 
   ofAddListener(vidRecorder.outputFileCompleteEvent, this, &ClassRecorder::recordingComplete);
 
+  ofAddListener(ofEvents().exit, this, &ClassRecorder::finishRecording);
+
   // readDepthFile("/home/sensei/Developer/sensei/install/recordings/2017-04-28-01-51-48-360/depth/81.dat");
 }
 
@@ -35,10 +37,14 @@ ClassRecorder::~ClassRecorder() {
   this->kinect->disconnect();
 }
 
-void ClassRecorder::recordingComplete(ofxVideoRecorderOutputFileCompleteEventArgs& args){
-    ofLogNotice("ClassRecorder") << "The recoded video file is now complete.";
+void ClassRecorder::finishRecording(ofEventArgs& e) {
+  ofLogNotice("ClassRecorder") << "HELLLOOOO";
+  vidRecorder.close();
 }
 
+void ClassRecorder::recordingComplete(ofxVideoRecorderOutputFileCompleteEventArgs& args){
+  ofLogNotice("ClassRecorder") << "The recoded video file is now complete.";
+}
 
 void ClassRecorder::readDepthFile(std::string path) {
   igzstream compressedDepth;

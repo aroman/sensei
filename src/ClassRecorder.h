@@ -23,6 +23,7 @@ private:
   ofFloatImage depthImage;
   ofImage colorImage;
 
+  void finishRecording(ofEventArgs& e);
   void recordingComplete(ofxVideoRecorderOutputFileCompleteEventArgs& args);
   void readDepthFile(std::string path);
 
