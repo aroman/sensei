@@ -32,7 +32,7 @@ void ClassRecorder::readDepthFile(std::string path) {
   // ofLogNotice("ClassRecorder") << "file size = " << depthBufRead.size();
 
   ofFloatPixels depthPixelsRead;
-  depthPixelsRead.setFromPixels(reinterpret_cast<float *>(depthBufRead.getData()), 1920, 1082, OF_PIXELS_GRAY);
+  depthPixelsRead.setFromPixels(reinterpret_cast<float *>(depthBufRead.getData()), 512, 424, OF_PIXELS_GRAY);
   scaleDepthPixelsForDrawing(&depthPixelsRead);
   depthImage.setFromPixels(depthPixelsRead);
 }
@@ -42,7 +42,7 @@ void ClassRecorder::update() {
   if (!this->kinect->isConnected) return;
 
   ofPixels colorPixels = this->kinect->getColorPixels();
-  ofFloatPixels depthPixels = this->kinect->getAlignedDepthPixels();
+  ofFloatPixels depthPixels = this->kinect->getUnalignedDepthPixels();
 
   bool hasData = (colorPixels.size() > 0);
 
@@ -52,7 +52,13 @@ void ClassRecorder::update() {
   auto depthImagePath = ofFilePath::join(depthDirectory->getAbsolutePath(), ofToString(ofGetFrameNum()) + ".dat");
 
   TS_START("save color");
-  colorImage.setFromPixels(colorPixels.getData(), 1920, 1080, OF_IMAGE_COLOR_ALPHA, false);
+  colorImage.setFromPixels(
+    colorPixels.getData(),
+    colorPixels.getWidth(),
+    colorPixels.getHeight(),
+    OF_IMAGE_COLOR_ALPHA,
+    false // isRGBOrder -> false, because the data is encoded as BGR
+  );
   colorImage.setImageType(OF_IMAGE_COLOR);
   colorImage.save(colorImagePath, OF_IMAGE_QUALITY_MEDIUM);
   TS_STOP("save color");
