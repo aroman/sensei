@@ -18,8 +18,7 @@ OpenFaceModel::OpenFaceModel(int id, CameraIntrinsics cameraIntrinsics) {
   parameters->use_face_template = true;
   // Model should not try to re-initialising itself
   parameters->reinit_video_every = -1;
-  // TODO(avi) read from relative directory?
-  parameters->model_location = "/opt/sensei/model/main_clnf_general.txt";
+  parameters->model_location = "models/OpenFace/main_clnf_general.txt";
   parameters->track_gaze = true;
   this->model = new LandmarkDetector::CLNF(parameters->model_location);
   reset();
