@@ -17,8 +17,28 @@ ClassRecorder::ClassRecorder() {
   colorDirectory->create(true);
   depthDirectory->create(true);
 
+  vidRecorder.setPixelFormat("rgb32");
+  vidRecorder.setVideoCodec("libx264");
+
+  ofAddListener(vidRecorder.outputFileCompleteEvent, this, &ClassRecorder::recordingComplete);
+
   // readDepthFile("/home/sensei/Developer/sensei/install/recordings/2017-04-28-01-51-48-360/depth/81.dat");
 }
+
+ClassRecorder::~ClassRecorder() {
+  ofRemoveListener(vidRecorder.outputFileCompleteEvent, this, &ClassRecorder::recordingComplete);
+  vidRecorder.close();
+
+  delete colorDirectory;
+  delete depthDirectory;
+  this->kinect->waitForThread(true);
+  this->kinect->disconnect();
+}
+
+void ClassRecorder::recordingComplete(ofxVideoRecorderOutputFileCompleteEventArgs& args){
+    ofLogNotice("ClassRecorder") << "The recoded video file is now complete.";
+}
+
 
 void ClassRecorder::readDepthFile(std::string path) {
   igzstream compressedDepth;
@@ -38,7 +58,6 @@ void ClassRecorder::readDepthFile(std::string path) {
 }
 
 void ClassRecorder::update() {
-  ofLogNotice("ClassRecorder") << "writing frame #" << ofGetFrameNum();
   if (!this->kinect->isConnected) return;
 
   ofPixels colorPixels = this->kinect->getColorPixels();
@@ -48,26 +67,38 @@ void ClassRecorder::update() {
 
   if (!hasData) return;
 
-  auto colorImagePath = ofFilePath::join(colorDirectory->getAbsolutePath(), ofToString(ofGetFrameNum()) + ".jpg");
+  auto colorVideoPath = ofFilePath::join(colorDirectory->getAbsolutePath(), ofToString(ofGetFrameNum()) + ".mov");
   auto depthImagePath = ofFilePath::join(depthDirectory->getAbsolutePath(), ofToString(ofGetFrameNum()) + ".dat");
 
+  if (!vidRecorder.isInitialized()) {
+    vidRecorder.setup(colorVideoPath, colorPixels.getWidth(), colorPixels.getHeight(), 30, 0, 0);
+    vidRecorder.start();
+  }
+
+  if (ofGetFrameNum() % 10 == 0 && vidRecorder.getVideoQueueSize() != 0) {
+    ofLogNotice("ClassRecorder") << "video queue size: " << vidRecorder.getVideoQueueSize();
+  }
+
   TS_START("save color");
-  colorImage.setFromPixels(
-    colorPixels.getData(),
-    colorPixels.getWidth(),
-    colorPixels.getHeight(),
-    OF_IMAGE_COLOR_ALPHA,
-    false // isRGBOrder -> false, because the data is encoded as BGR
-  );
-  colorImage.setImageType(OF_IMAGE_COLOR);
-  colorImage.save(colorImagePath, OF_IMAGE_QUALITY_MEDIUM);
+  bool success = vidRecorder.addFrame(colorPixels);
+  if (!success) {
+    ofLogNotice("ClassRecorder") << "This frame was not added!";
+  }
+  if (vidRecorder.hasVideoError()) {
+    ofLogNotice("ClassRecorder") << "The video recorder failed to write some frames!";
+  }
   TS_STOP("save color");
 
   TS_START("save depth");
-  ofBuffer depthBuf((char*)depthPixels.getData(), depthPixels.getTotalBytes());
-  ogzstream depthFileOf(depthImagePath.c_str());
-  depthFileOf << depthBuf;
-  depthFileOf.close();
+  auto timeSinceLastDepthFrame = ofGetElapsedTimeMillis() - timeLastDepthFrameWritten;
+  if (timeSinceLastDepthFrame >= (1000 / 10.0f) ) {
+    ofLogNotice("ClassRecorder") << "writing depth frame #" << ofGetFrameNum();
+    timeLastDepthFrameWritten = ofGetElapsedTimeMillis();
+    ofBuffer depthBuf((char*)depthPixels.getData(), depthPixels.getTotalBytes());
+    ogzstream depthFileOf(depthImagePath.c_str());
+    depthFileOf << depthBuf;
+    depthFileOf.close();
+  }
   TS_STOP("save depth");
 }
 
@@ -75,11 +106,4 @@ void ClassRecorder::draw() {
   if (depthImage.isAllocated()) {
     depthImage.draw(0,0);
   }
-}
-
-ClassRecorder::~ClassRecorder() {
-  delete colorDirectory;
-  delete depthDirectory;
-  this->kinect->waitForThread(true);
-  this->kinect->disconnect();
 }

@@ -30,6 +30,7 @@ set(sources
   src/ClassRecorder.cpp
   src/FaceDetector.cpp
   src/MtcnnDetector.cpp
+  src/ofxVideoRecorder.cpp
   src/Person.cpp
   src/drawUtils.cpp
   src/gzstream/gzstream.cpp
@@ -61,7 +62,7 @@ include_directories(${NUMPY_INCLUDES})
 include_directories(${PYTHON_INCLUDE_DIRS})
 
 ### addons
-ofxaddon(ofxGui)
+# ofxaddon(ofxGui)
 ofxaddon(3rdParty/addons/ofxCv)
 ofxaddon(3rdParty/addons/ofxTimeMeasurements)
 
