@@ -15,11 +15,16 @@ bool KinectHelper::connect() {
   }
 
   libfreenect2::PacketPipeline *pipeline = new libfreenect2::OpenCLPacketPipeline();
+
   device = freenect2.openDevice(freenect2.getDefaultDeviceSerialNumber(), pipeline);
   if (device == NULL) {
     std::cerr << "Failure opening Kinect device" << std::endl;
     return false;
   }
+
+  libfreenect2::Freenect2Device::Config config;
+  config.MaxDepth = 10;
+  device->setConfiguration(config);
 
   std::cout << "device serial: " << device->getSerialNumber() << std::endl;
 
