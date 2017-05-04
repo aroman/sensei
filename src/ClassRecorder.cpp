@@ -17,19 +17,19 @@ ClassRecorder::ClassRecorder() {
   colorDirectory->create(true);
   depthDirectory->create(true);
 
-  vidRecorder.setPixelFormat("rgb32");
-  vidRecorder.setVideoCodec("libx264");
+  // vidRecorder.setPixelFormat("rgb32");
+  // vidRecorder.setVideoCodec("libx264");
 
-  ofAddListener(vidRecorder.outputFileCompleteEvent, this, &ClassRecorder::recordingComplete);
+  // ofAddListener(vidRecorder.outputFileCompleteEvent, this, &ClassRecorder::recordingComplete);
 
-  ofAddListener(ofEvents().exit, this, &ClassRecorder::finishRecording);
+  // ofAddListener(ofEvents().exit, this, &ClassRecorder::finishRecording);
 
   // readDepthFile("/home/sensei/Developer/sensei/install/recordings/2017-04-28-01-51-48-360/depth/81.dat");
 }
 
 ClassRecorder::~ClassRecorder() {
-  ofRemoveListener(vidRecorder.outputFileCompleteEvent, this, &ClassRecorder::recordingComplete);
-  vidRecorder.close();
+  // ofRemoveListener(vidRecorder.outputFileCompleteEvent, this, &ClassRecorder::recordingComplete);
+  // vidRecorder.close();
 
   delete colorDirectory;
   delete depthDirectory;
@@ -37,14 +37,14 @@ ClassRecorder::~ClassRecorder() {
   this->kinect->disconnect();
 }
 
-void ClassRecorder::finishRecording(ofEventArgs& e) {
-  ofLogNotice("ClassRecorder") << "HELLLOOOO";
-  vidRecorder.close();
-}
-
-void ClassRecorder::recordingComplete(ofxVideoRecorderOutputFileCompleteEventArgs& args){
-  ofLogNotice("ClassRecorder") << "The recoded video file is now complete.";
-}
+// void ClassRecorder::finishRecording(ofEventArgs& e) {
+//   ofLogNotice("ClassRecorder") << "HELLLOOOO";
+//   vidRecorder.close();
+// }
+//
+// void ClassRecorder::recordingComplete(ofxVideoRecorderOutputFileCompleteEventArgs& args){
+//   ofLogNotice("ClassRecorder") << "The recoded video file is now complete.";
+// }
 
 void ClassRecorder::readDepthFile(std::string path) {
   igzstream compressedDepth;
@@ -73,26 +73,36 @@ void ClassRecorder::update() {
 
   if (!hasData) return;
 
-  auto colorVideoPath = ofFilePath::join(colorDirectory->getAbsolutePath(), ofToString(ofGetFrameNum()) + ".mov");
-  auto depthImagePath = ofFilePath::join(depthDirectory->getAbsolutePath(), ofToString(ofGetFrameNum()) + ".dat");
+  // auto colorVideoPath = ofFilePath::join(colorDirectory->getAbsolutePath(), ofToString(ofGetFrameNum()) + ".mov");
+  auto colorImagePath = ofFilePath::join(colorDirectory->getAbsolutePath(), ofToString(ofGetElapsedTimeMillis()) + ".jpg");
+  auto depthImagePath = ofFilePath::join(depthDirectory->getAbsolutePath(), ofToString(ofGetElapsedTimeMillis()) + ".dat");
 
-  if (!vidRecorder.isInitialized()) {
-    vidRecorder.setup(colorVideoPath, colorPixels.getWidth(), colorPixels.getHeight(), 30, 0, 0);
-    vidRecorder.start();
-  }
-
-  if (ofGetFrameNum() % 10 == 0 && vidRecorder.getVideoQueueSize() != 0) {
-    ofLogNotice("ClassRecorder") << "video queue size: " << vidRecorder.getVideoQueueSize();
-  }
+  // if (!vidRecorder.isInitialized()) {
+  //   vidRecorder.setup(colorVideoPath, colorPixels.getWidth(), colorPixels.getHeight(), 30, 0, 0);
+  //   vidRecorder.start();
+  // }
+  //
+  // if (ofGetFrameNum() % 10 == 0 && vidRecorder.getVideoQueueSize() != 0) {
+  //   ofLogNotice("ClassRecorder") << "video queue size: " << vidRecorder.getVideoQueueSize();
+  // }
 
   TS_START("save color");
-  bool success = vidRecorder.addFrame(colorPixels);
-  if (!success) {
-    ofLogNotice("ClassRecorder") << "This frame was not added!";
-  }
-  if (vidRecorder.hasVideoError()) {
-    ofLogNotice("ClassRecorder") << "The video recorder failed to write some frames!";
-  }
+  // bool success = vidRecorder.addFrame(colorPixels);
+  // if (!success) {
+  //   ofLogNotice("ClassRecorder") << "This frame was not added!";
+  // }
+  // if (vidRecorder.hasVideoError()) {
+  //   ofLogNotice("ClassRecorder") << "The video recorder failed to write some frames!";
+  // }
+  colorImage.setFromPixels(
+    colorPixels.getData(),
+    colorPixels.getWidth(),
+    colorPixels.getHeight(),
+    OF_IMAGE_COLOR_ALPHA,
+    false // isRGBOrder -> false, because the data is encoded as BGR
+  );
+  colorImage.setImageType(OF_IMAGE_COLOR);
+  colorImage.save(colorImagePath, OF_IMAGE_QUALITY_MEDIUM);
   TS_STOP("save color");
 
   TS_START("save depth");
