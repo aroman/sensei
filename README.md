@@ -61,7 +61,7 @@ Simple!
 ```
 DISPLAY=:0 xhost +local:root
 
-sudo docker run -it \
+DISPLAY=:0 docker run -it \
   --privileged \
   -e DISPLAY=:0 \
   -e SENSEI_MODE=record \
