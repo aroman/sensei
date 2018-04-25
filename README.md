@@ -76,3 +76,4 @@ DISPLAY=:0 docker run -it \
 sudo docker export CONTAINER_NAME > contents.tar
 tar -xf contents.tar usr/src/sensei/install/recordings --strip-components=4
 ```
+# sensei
